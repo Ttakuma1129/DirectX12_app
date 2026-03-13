@@ -88,14 +88,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="Shaders\PixelShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </CustomBuild>
     <CustomBuild Include="Shaders\VertexShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

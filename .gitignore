@@ -1,0 +1,22 @@
+# ビルド出力
+x64/
+Debug/
+Release/
+
+# Visual Studio ユーザー設定
+.vs/
+*.user
+*.suo
+
+# NuGet パッケージ（packages.configから復元できる）
+packages/
+
+# コンパイル済みシェーダー
+*.cso
+
+# その他
+*.log
+*.obj
+*.pdb
+*.ilk
+*.exe

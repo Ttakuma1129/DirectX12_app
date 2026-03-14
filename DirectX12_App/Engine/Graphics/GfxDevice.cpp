@@ -215,6 +215,22 @@ bool GfxDevice::InitializeFrameResources() {
 		return false;
 	}
 
+	// 頂点バッファをGPUに転送(マッピング)
+	Vertex vertices[] = {
+		{ {0.0f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },	// 上・赤
+		{ {0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f} },	// 右下・緑
+		{ {-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f} },	// 左下・青
+	};
+
+	void* mapped = nullptr;
+	hr = m_vertexBuffer->Map(0, nullptr, &mapped);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	memcpy(mapped, vertices, sizeof(vertices));
+	m_vertexBuffer->Unmap(0, nullptr);
+
 	return true;
 }
 

@@ -56,11 +56,22 @@ private:
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
 
+	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+
+	// リソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT];
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
 	FrameResources m_frames[FRAME_COUNT];
 
 	UINT64 m_fenceValue = 0;
 	HANDLE m_fenceEvent = nullptr;
 	uint32_t m_frameIndex = 0;
+	uint32_t m_width;
+	uint32_t m_height;
+
+	struct Vertex{
+		float position[3];
+		float color[4];
+	};
 	
 };

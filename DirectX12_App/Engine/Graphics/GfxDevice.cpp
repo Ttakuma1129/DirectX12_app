@@ -214,6 +214,23 @@ void GfxDevice::BeginFrame() {
 	// レンダーターゲットをクリア
 	const float clearColor[] = { 0.0f, 0.2f,0.4f,1.0f };
 	m_commandContext.ClearRenderTarget(m_rtvHeap.GetCPUHandle(m_frameIndex), clearColor);
+
+	// グラフィックのルートシグネチャを設定
+
+	// どのパイプラインか設定
+
+	// 描画領域の大きさを設定
+
+	// 切り抜きの範囲を設定
+
+	// 描画する場所を設定
+
+	// PrimitiveTopologyを設定
+
+	// VertexBufferの場所を設定
+
+	// 描画
+
 }
 
 void GfxDevice::EndFrame() {

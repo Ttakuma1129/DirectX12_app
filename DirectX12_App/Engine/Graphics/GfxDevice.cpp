@@ -191,7 +191,7 @@ bool GfxDevice::InitializeFrameResources() {
 		return false;
 	}
 
-	// 頂点バッファ作成
+	// 頂点バッファの作成
 	D3D12_HEAP_PROPERTIES heapProps = {};
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
@@ -231,6 +231,12 @@ bool GfxDevice::InitializeFrameResources() {
 	memcpy(mapped, vertices, sizeof(vertices));
 	m_vertexBuffer->Unmap(0, nullptr);
 
+	// 頂点バッファビューの作成
+	D3D12_VERTEX_BUFFER_VIEW vbView = {};
+	vbView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	vbView.SizeInBytes = sizeof(Vertex) * 3; // バッファ全体のサイズ
+	vbView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
+
 	return true;
 }
 
@@ -255,7 +261,7 @@ void GfxDevice::BeginFrame() {
 	const float clearColor[] = { 0.0f, 0.2f,0.4f,1.0f };
 	m_commandContext.ClearRenderTarget(m_rtvHeap.GetCPUHandle(m_frameIndex), clearColor);
 
-	// グラフィックのルートシグネチャを設定
+	// グラフィックのルートシグネチャを設定.
 
 	// どのパイプラインか設定
 

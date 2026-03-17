@@ -26,6 +26,8 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 #endif // _DEBUG
 
 	HRESULT hr;
+	m_width = width;
+	m_height = height;
 
 	// DXGIファクトリーの作成
 	hr = CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory));
@@ -202,6 +204,7 @@ bool GfxDevice::InitializeFrameResources() {
 	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
 	resDesc.Format = DXGI_FORMAT_UNKNOWN;
+	resDesc.SampleDesc.Count = 1;
 	resDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 	hr = m_device->CreateCommittedResource(
@@ -217,7 +220,7 @@ bool GfxDevice::InitializeFrameResources() {
 
 	// 頂点バッファをGPUに転送(マッピング)
 	Vertex vertices[] = {
-		{ {0.0f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },	// 上・赤
+		{ {0.0f, 0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },	// 上・赤
 		{ {0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f} },	// 右下・緑
 		{ {-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f} },	// 左下・青
 	};
@@ -232,10 +235,9 @@ bool GfxDevice::InitializeFrameResources() {
 	m_vertexBuffer->Unmap(0, nullptr);
 
 	// 頂点バッファビューの作成
-	D3D12_VERTEX_BUFFER_VIEW vbView = {};
-	vbView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-	vbView.SizeInBytes = sizeof(Vertex) * 3; // バッファ全体のサイズ
-	vbView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.SizeInBytes = sizeof(Vertex) * 3; // バッファ全体のサイズ
+	m_vertexBufferView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
 
 	return true;
 }
@@ -261,21 +263,45 @@ void GfxDevice::BeginFrame() {
 	const float clearColor[] = { 0.0f, 0.2f,0.4f,1.0f };
 	m_commandContext.ClearRenderTarget(m_rtvHeap.GetCPUHandle(m_frameIndex), clearColor);
 
-	// グラフィックのルートシグネチャを設定.
+	// コマンドリストを取得
+	auto* cmdList = m_commandContext.GetCommandList();
+	
+	// パイプライン設定
+	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
+	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
 
-	// どのパイプラインか設定
+	// Viewportを設定
+	D3D12_VIEWPORT viewport = {
+		0.0f,
+		0.0f,
+		static_cast<float>(m_width),
+		static_cast<float>(m_height),
+		0.0f,
+		1.0f,
+	};
+	cmdList->RSSetViewports(1, &viewport);
 
-	// 描画領域の大きさを設定
+	// ScissorRectを設定
+	D3D12_RECT scissorRect = {
+		0,
+		0,
+		static_cast<LONG>(m_width),
+		static_cast<LONG>(m_height)
+	};
+	cmdList->RSSetScissorRects(1, &scissorRect);
 
-	// 切り抜きの範囲を設定
-
-	// 描画する場所を設定
+	// RenderTargetを設定
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap.GetCPUHandle(m_frameIndex);
+	cmdList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
 
 	// PrimitiveTopologyを設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// VertexBufferの場所を設定
+	cmdList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
 	// 描画
+	cmdList->DrawInstanced(3, 1, 0, 0);
 
 }
 

@@ -239,6 +239,9 @@ bool GfxDevice::InitializeFrameResources() {
 	m_vertexBufferView.SizeInBytes = sizeof(Vertex) * 3; // バッファ全体のサイズ
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
 
+	// 開始時間を記録
+	m_startTime = std::chrono::high_resolution_clock::now();
+
 	return true;
 }
 
@@ -273,17 +276,24 @@ void GfxDevice::BeginFrame() {
 	// 行列の計算
 	using namespace DirectX;
 
+	// 経過時間を秒で取得
+	auto now = std::chrono::high_resolution_clock::now();
+	float elapsed = std::chrono::duration<float>(now - m_startTime).count();
+
+	// 回転の軸を設定
+	XMVECTOR axis = XMVectorSet(0.0f, 1.0f, 0.5f, 0.0f);
+
 	// Model行列
-	XMMATRIX model = XMMatrixIdentity();
+	XMMATRIX model = XMMatrixRotationAxis(axis, elapsed * XM_2PI * 0.5f);
 
 	// View行列 (カメラの設定)
-	XMVECTOR eye = XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f); // カメラ位置
+	XMVECTOR eye = XMVectorSet(0.0f, 0.5f, -3.0f, 0.0f); // カメラ位置
 	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // 注視点
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // 上方向
 	XMMATRIX view = XMMatrixLookAtLH(eye, target, up); // View行列
 
 	// Projection行列　(透視投影)
-	float fov = XMConvertToRadians(60.0f); // 視野角
+	float fov = XMConvertToRadians(45.0f); // 視野角
 	float aspect = static_cast<float>(m_width) / m_height;
 	XMMATRIX proj = XMMatrixPerspectiveFovLH(fov, aspect, 0.1f, 100.0f);
 
@@ -297,8 +307,7 @@ void GfxDevice::BeginFrame() {
 	// 定数バッファをGPUにセット
 	cmdList->SetGraphicsRootConstantBufferView(
 		0,
-		m_frames[m_frameIndex].GetConstantBuffer()->GetGPUVirtualAddress()
-	);
+		m_frames[m_frameIndex].GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// Viewportを設定
 	D3D12_VIEWPORT viewport = {
@@ -332,7 +341,6 @@ void GfxDevice::BeginFrame() {
 
 	// 描画
 	cmdList->DrawInstanced(3, 1, 0, 0);
-
 }
 
 void GfxDevice::EndFrame() {

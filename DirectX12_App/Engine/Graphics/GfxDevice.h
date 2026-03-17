@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include <chrono>
 
 #include "DescriptorHeap.h"
 #include "../Resources/FrameResources.h"
@@ -70,6 +71,7 @@ private:
 	uint32_t m_frameIndex = 0;
 	uint32_t m_width;
 	uint32_t m_height;
+	std::chrono::high_resolution_clock::time_point m_startTime;
 
 	struct Vertex{
 		float position[3];

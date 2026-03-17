@@ -4,6 +4,8 @@
 #include <wrl/client.h>
 #include <cstdint>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
+
 #include "DescriptorHeap.h"
 #include "../Resources/FrameResources.h"
 #include "CommandContext.h"

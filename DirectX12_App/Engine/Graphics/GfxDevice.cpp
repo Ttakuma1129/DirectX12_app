@@ -270,6 +270,36 @@ void GfxDevice::BeginFrame() {
 	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
 	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
 
+	// 行列の計算
+	using namespace DirectX;
+
+	// Model行列
+	XMMATRIX model = XMMatrixIdentity();
+
+	// View行列 (カメラの設定)
+	XMVECTOR eye = XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f); // カメラ位置
+	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // 注視点
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // 上方向
+	XMMATRIX view = XMMatrixLookAtLH(eye, target, up); // View行列
+
+	// Projection行列　(透視投影)
+	float fov = XMConvertToRadians(60.0f); // 視野角
+	float aspect = static_cast<float>(m_width) / m_height;
+	XMMATRIX proj = XMMatrixPerspectiveFovLH(fov, aspect, 0.1f, 100.0f);
+
+	// MVP行列 (Model x View x Projection)
+	XMMATRIX mvp = model * view * proj;
+
+	// 定数バッファに書き込み
+	SceneConstant* mapped = m_frames[m_frameIndex].GetConstantMapped();
+	XMStoreFloat4x4(&mapped->mvp, XMMatrixTranspose(mvp));
+
+	// 定数バッファをGPUにセット
+	cmdList->SetGraphicsRootConstantBufferView(
+		0,
+		m_frames[m_frameIndex].GetConstantBuffer()->GetGPUVirtualAddress()
+	);
+
 	// Viewportを設定
 	D3D12_VIEWPORT viewport = {
 		0.0f,

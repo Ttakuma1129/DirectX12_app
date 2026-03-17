@@ -54,16 +54,19 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue; // コマンドキュー
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain; // スワップチェーン
 	Microsoft::WRL::ComPtr<ID3D12Fence> m_fence; // フェンス
+
 	DescriptorHeap m_rtvHeap; // RTV
 	CommandContext m_commandContext; //コマンドリスト
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
 
 	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+	D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
 
 	// リソース
-	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT];
-	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
 	FrameResources m_frames[FRAME_COUNT];
 
 	UINT64 m_fenceValue = 0;
@@ -71,7 +74,7 @@ private:
 	uint32_t m_frameIndex = 0;
 	uint32_t m_width;
 	uint32_t m_height;
-	std::chrono::high_resolution_clock::time_point m_startTime;
+	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 
 	struct Vertex{
 		float position[3];

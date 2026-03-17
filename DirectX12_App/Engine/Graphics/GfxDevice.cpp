@@ -193,13 +193,50 @@ bool GfxDevice::InitializeFrameResources() {
 		return false;
 	}
 
+	// 立方体の頂点データ
+	Vertex vertices[] = {
+		// 手前の面 (z = -0.5)
+		{ {-0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f, 1.0f} },	// 0・赤
+		{ {0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f, 1.0f} },	// 1・青
+		{ {-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f, 1.0f} },// 2・緑
+		{ {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 0.0f, 1.0f} },	// 3・黄
+
+		// 奥の面 (z = +0.5)
+		{ {-0.5f, 0.5f, 0.5f}, {0.5f, 0.0f, 0.0f, 1.0f} },	// 4・暗赤
+		{ {0.5f, 0.5f, 0.5f}, {1.0f, 0.5f, 0.0f, 1.0f} },	// 5・橙
+		{ {-0.5f, -0.5f, 0.5f}, {0.0f, 0.5f, 0.5f, 1.0f} },	// 6・暗緑
+		{ {0.5f, -0.5f, 0.5f}, {0.5f, 1.0f, 0.0f, 1.0f} },	// 7・黄緑
+	};
+
+	// インデックスデータ
+	uint16_t indices[] = {
+		// 手前 (z = -0.5)
+		0, 1, 2,
+		2, 1, 3,
+		// 奥 (z = 0.5)
+		5, 4, 7,
+		7, 4, 6,
+		// 左 (x = -0.5)
+		4, 0, 6,
+		6, 0, 2,
+		// 右 (x = 0.5)
+		1, 5, 3,
+		3, 5, 7,
+		// 上 (y = 0.5)
+		4, 5, 0,
+		0, 5, 1,
+		// 下 (y = -0.5)
+		2, 3, 6,
+		6, 3, 7,
+	};
+
 	// 頂点バッファの作成
 	D3D12_HEAP_PROPERTIES heapProps = {};
 	heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	D3D12_RESOURCE_DESC resDesc = {};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeof(Vertex) * 3;
+	resDesc.Width = sizeof(vertices);
 	resDesc.Height = 1;
 	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
@@ -219,12 +256,6 @@ bool GfxDevice::InitializeFrameResources() {
 	}
 
 	// 頂点バッファをGPUに転送(マッピング)
-	Vertex vertices[] = {
-		{ {0.0f, 0.75f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f} },	// 上・赤
-		{ {0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f} },	// 右下・緑
-		{ {-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f} },	// 左下・青
-	};
-
 	void* mapped = nullptr;
 	hr = m_vertexBuffer->Map(0, nullptr, &mapped);
 	if (FAILED(hr)) {
@@ -236,7 +267,7 @@ bool GfxDevice::InitializeFrameResources() {
 
 	// 頂点バッファビューの作成
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-	m_vertexBufferView.SizeInBytes = sizeof(Vertex) * 3; // バッファ全体のサイズ
+	m_vertexBufferView.SizeInBytes = sizeof(vertices); // バッファ全体のサイズ
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
 
 	// 開始時間を記録

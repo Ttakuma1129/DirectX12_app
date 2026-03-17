@@ -270,6 +270,41 @@ bool GfxDevice::InitializeFrameResources() {
 	m_vertexBufferView.SizeInBytes = sizeof(vertices); // バッファ全体のサイズ
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
 
+	// インデックスバッファの設定
+	D3D12_HEAP_PROPERTIES ibHeapProps = {};
+	ibHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+	D3D12_RESOURCE_DESC ibResDesc = {};
+	ibResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	ibResDesc.Width = sizeof(indices);
+	ibResDesc.Height = 1;
+	ibResDesc.DepthOrArraySize = 1;
+	ibResDesc.MipLevels = 1;
+	ibResDesc.Format = DXGI_FORMAT_UNKNOWN;
+	ibResDesc.SampleDesc.Count = 1;
+	ibResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// インデックスバッファの作成
+	hr = m_device->CreateCommittedResource(
+		&ibHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&ibResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_indexBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	void* ibMapped = nullptr;
+	m_indexBuffer->Map(0, nullptr, &ibMapped);
+	memcpy(ibMapped, indices, sizeof(indices));
+	m_indexBuffer->Unmap(0, nullptr);
+
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.SizeInBytes = sizeof(indices);
+	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+
 	// 開始時間を記録
 	m_startTime = std::chrono::high_resolution_clock::now();
 

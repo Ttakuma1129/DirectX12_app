@@ -90,7 +90,7 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 	// IDXGISwapChain4にキャストして保存
 	swapChain.As(&m_swapChain);
 
-	// ディスクリプタヒープの作成
+	// RTV用ディスクリプタヒープの作成
 	if (!m_rtvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, FRAME_COUNT, false)) {
 		return false;
 	}
@@ -105,6 +105,44 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 			nullptr,
 			m_rtvHeap.GetCPUHandle(i)
 		);
+	}
+
+	// DSV用ディスクリプタヒープの作成
+	if (!m_dsvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false)) {
+		return false;
+	}
+
+	// 深度バッファの設定
+	D3D12_HEAP_PROPERTIES depthHeapProps = {};
+	depthHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = width;
+	depthResDesc.Height = height;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.MipLevels = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	// クリア値設定
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	clearValue.DepthStencil.Depth = 1.0f;
+	clearValue.DepthStencil.Stencil = 0;
+
+	// 深度バッファの作成
+	hr = m_device->CreateCommittedResource(
+		&depthHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&clearValue,
+		IID_PPV_ARGS(&m_depthBuffer));
+	if (FAILED(hr)) {
+		return false;
 	}
 
 	return true;

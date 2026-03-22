@@ -16,9 +16,9 @@ bool PipelineState::Initialize(
 			0
 		},
 		{
-			"COLOR",
+			"TEXCOORD",
 			0,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32_FLOAT,
 			0,
 			12,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,

@@ -450,7 +450,7 @@ void GfxDevice::BeginFrame() {
 
 	// RenderTarget‚ðÝ’è
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap.GetCPUHandle(m_frameIndex);
-	cmdList->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+	cmdList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 
 	// PrimitiveTopology‚ðÝ’è
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

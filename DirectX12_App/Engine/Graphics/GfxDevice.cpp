@@ -145,6 +145,17 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 		return false;
 	}
 
+	//DSV�̍쐬
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	m_device->CreateDepthStencilView(
+		m_depthBuffer.Get(),
+		&dsvDesc,
+		m_dsvHeap.GetCPUHandle(0));
+
 	return true;
 }
 

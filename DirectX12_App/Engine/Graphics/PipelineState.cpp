@@ -67,8 +67,13 @@ bool PipelineState::Initialize(
 	psoDesc.BlendState = blendDesc;
 
 	// DepthStencil
-	psoDesc.DepthStencilState.DepthEnable = FALSE;
+	psoDesc.DepthStencilState.DepthEnable = TRUE;
+	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
+
+	// 深度バッファのフォーマットを指定
+	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// トポロジータイプ
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

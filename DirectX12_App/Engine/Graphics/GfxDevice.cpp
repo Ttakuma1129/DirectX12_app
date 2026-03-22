@@ -384,6 +384,10 @@ void GfxDevice::BeginFrame() {
 	// コマンドリストを取得
 	auto* cmdList = m_commandContext.GetCommandList();
 	
+	// 深度バッファをクリア
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap.GetCPUHandle(0);
+	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
 	// パイプライン設定
 	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
 	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());

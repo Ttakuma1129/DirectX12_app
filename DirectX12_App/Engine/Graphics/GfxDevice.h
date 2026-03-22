@@ -56,6 +56,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Fence> m_fence; // フェンス
 
 	DescriptorHeap m_rtvHeap; // RTV
+	DescriptorHeap m_dsvHeap; // DSV
 	CommandContext m_commandContext; //コマンドリスト
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
@@ -67,6 +68,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
 	FrameResources m_frames[FRAME_COUNT];
 
 	UINT64 m_fenceValue = 0;

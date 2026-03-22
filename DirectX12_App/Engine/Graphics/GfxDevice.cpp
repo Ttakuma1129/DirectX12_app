@@ -405,8 +405,11 @@ void GfxDevice::BeginFrame() {
 	// VertexBuffer‚ÌêŠ‚ðÝ’è
 	cmdList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 
+	// IndexBuffer‚ðÝ’è
+	cmdList->IASetIndexBuffer(&m_indexBufferView);
+
 	// •`‰æ
-	cmdList->DrawInstanced(3, 1, 0, 0);
+	cmdList->DrawIndexedInstanced(36, 1, 0, 0, 0);
 }
 
 void GfxDevice::EndFrame() {

@@ -346,7 +346,11 @@ bool GfxDevice::InitializeFrameResources() {
 	}
 
 	void* ibMapped = nullptr;
-	m_indexBuffer->Map(0, nullptr, &ibMapped);
+	hr = m_indexBuffer->Map(0, nullptr, &ibMapped);
+	if (FAILED(hr)) {
+		return true;
+	}
+
 	memcpy(ibMapped, indices, sizeof(indices));
 	m_indexBuffer->Unmap(0, nullptr);
 

@@ -8,7 +8,7 @@ Window::Window(uint32_t width, uint32_t height, const wchar_t* title) : m_width(
 	m_wndClass.lpfnWndProc = WindowProc;
 	m_wndClass.hInstance = GetModuleHandle(nullptr);
 	m_wndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	m_wndClass.lpszClassName = L"DX12GameWindwClass";
+	m_wndClass.lpszClassName = L"DX12GameWindowClass";
 
 	RegisterClassEx(&m_wndClass);
 

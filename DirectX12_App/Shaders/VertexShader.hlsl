@@ -5,7 +5,7 @@ cbuffer SceneConstant : register(b0){
 
 struct VSInput{
     float3 pos : POSITION;
-    float4 color : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 struct VSOutput{

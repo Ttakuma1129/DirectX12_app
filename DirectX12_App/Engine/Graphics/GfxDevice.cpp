@@ -403,7 +403,7 @@ void GfxDevice::BeginFrame() {
 	XMVECTOR axis = XMVectorSet(0.0f, 1.0f, 0.5f, 0.0f);
 
 	// Model行列
-	XMMATRIX model = XMMatrixRotationAxis(axis, elapsed * XM_2PI * 0.5f);
+	XMMATRIX model = XMMatrixRotationY(elapsed * XM_2PI * 0.5f);
 
 	// View行列 (カメラの設定)
 	XMVECTOR eye = XMVectorSet(0.0f, 0.5f, -3.0f, 0.0f); // カメラ位置

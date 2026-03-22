@@ -61,7 +61,7 @@ private:
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
 
-	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};
 	D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
 
 	// リソース

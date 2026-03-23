@@ -63,6 +63,9 @@
     <ClCompile Include="Engine\Resources\FrameResources.cpp">
       <Filter>ソース ファイル\Engine\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Resources\Texture.cpp">
+      <Filter>ソース ファイル\Engine\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -84,6 +87,9 @@
       <Filter>ヘッダー ファイル\Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Resources\FrameResources.h">
+      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Resources\Texture.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
   </ItemGroup>

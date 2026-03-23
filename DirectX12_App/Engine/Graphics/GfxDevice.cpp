@@ -426,6 +426,13 @@ void GfxDevice::BeginFrame() {
 	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
 	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
 
+	// SRVヒープをセット
+	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
+	cmdList->SetDescriptorHeaps(1, heaps);
+
+	// ルートパラメータ1にSRVテーブルをバインド
+	cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
+
 	// 行列の計算
 	using namespace DirectX;
 

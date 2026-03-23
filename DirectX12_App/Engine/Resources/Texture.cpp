@@ -105,4 +105,13 @@ bool Texture::Create(
 
 	cmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
+	// COPY_DEST ¨ PIXEL_SHADER_RESOURCE‚ÖƒoƒŠƒA‚ð‘JˆÚ
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource = m_texture.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+	cmdList->ResourceBarrier(1, &barrier);
+
+
 }

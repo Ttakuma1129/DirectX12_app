@@ -92,4 +92,17 @@ bool Texture::Create(
 	}
 	m_uploadBuffer->Unmap(0, nullptr);
 
+	// 中間バッファからテクスチャリソースへのコピーを記録
+	D3D12_TEXTURE_COPY_LOCATION dst = {};
+	dst.pResource = m_texture.Get();
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	dst.SubresourceIndex = 0;
+
+	D3D12_TEXTURE_COPY_LOCATION src = {};
+	src.pResource = m_uploadBuffer.Get();
+	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+	src.PlacedFootprint = footprint;
+
+	cmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
 }

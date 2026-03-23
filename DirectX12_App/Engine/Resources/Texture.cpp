@@ -37,4 +37,19 @@ bool Texture::Create(
 		return false;
 	}
 
+	// ƒAƒ‰ƒCƒƒ“ƒgî•ñ‚ÌŽæ“¾
+	D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint = {};
+	UINT64 totalBytes = 0;
+	device->GetCopyableFootprints(
+		&texResDesc,
+		0,
+		1,
+		0,
+		&footprint,
+		nullptr,
+		nullptr,
+		&totalBytes);
+
+
+
 }

@@ -156,6 +156,11 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 		&dsvDesc,
 		m_dsvHeap.GetCPUHandle(0));
 
+	// SRV用ディスクリプタヒープの作成
+	if(!m_srvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)){
+		return false;
+	}
+
 	return true;
 }
 

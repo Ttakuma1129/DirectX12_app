@@ -57,6 +57,7 @@ private:
 
 	DescriptorHeap m_rtvHeap; // RTV
 	DescriptorHeap m_dsvHeap; // DSV
+	DescriptorHeap m_srvHeap; // SRV
 	CommandContext m_commandContext; //コマンドリスト
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート

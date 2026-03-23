@@ -56,8 +56,8 @@ bool Texture::Create(
 
 	D3D12_RESOURCE_DESC uploadResDesc = {};
 	uploadResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	uploadResDesc.Width = width;
-	uploadResDesc.Height = height;
+	uploadResDesc.Width = totalBytes;
+	uploadResDesc.Height = 1;
 	uploadResDesc.DepthOrArraySize = 1;
 	uploadResDesc.MipLevels = 1;
 	uploadResDesc.Format = DXGI_FORMAT_UNKNOWN;

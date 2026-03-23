@@ -76,4 +76,20 @@ bool Texture::Create(
 		return false;
 	}
 
+	// ピクセルデータを中間バッファに書き込み
+	uint8_t* mapped = nullptr;
+	hr = m_uploadBuffer->Map(0, nullptr, reinterpret_cast<void**>(&mapped));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	uint32_t srcRowBytes = width * 4; // RGBA (4バイト/ピクセル)
+	for (uint32_t y = 0; y < height; ++y) {
+		memcpy(
+			mapped + y * footprint.Footprint.RowPitch,
+			static_cast<const uint8_t*>(pixels) + y * srcRowBytes,
+			srcRowBytes);
+	}
+	m_uploadBuffer->Unmap(0, nullptr);
+
 }

@@ -50,6 +50,30 @@ bool Texture::Create(
 		nullptr,
 		&totalBytes);
 
+	// アップロード用中間バッファの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProps = {};
+	uploadHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
+	D3D12_RESOURCE_DESC uploadResDesc = {};
+	uploadResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	uploadResDesc.Width = width;
+	uploadResDesc.Height = height;
+	uploadResDesc.DepthOrArraySize = 1;
+	uploadResDesc.MipLevels = 1;
+	uploadResDesc.Format = DXGI_FORMAT_UNKNOWN;
+	uploadResDesc.SampleDesc.Count = 1;
+	uploadResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	// アップロード用中間バッファの作成
+	hr = device->CreateCommittedResource(
+		&uploadHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&uploadResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&m_uploadBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
 
 }

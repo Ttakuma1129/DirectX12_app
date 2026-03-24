@@ -388,6 +388,33 @@ bool GfxDevice::InitializeFrameResources() {
 	m_indexBufferView.SizeInBytes = sizeof(indices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
+	// チェッカーパターン
+	const uint32_t texWidth = 4;
+	const uint32_t texHeight = 4;
+	uint32_t checkerPixels[16] = {
+		0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF, 0xFF333333,
+		0xFF333333, 0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF,
+		0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF, 0xFF333333,
+		0xFF333333, 0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF,
+	};
+
+	m_commandContext.Begin(m_frames[0].GetAllocator());
+
+	// テクスチャの作成
+	m_texture.Create(m_device.Get(), m_commandContext.GetCommandList(), texWidth, texHeight, checkerPixels, m_srvHeap.GetCPUHandle(0));
+
+	// コマンド実行・GPUの完了待ち
+	m_commandContext.End();
+	m_commandContext.Execute(m_commandQueue.Get());
+
+	m_fenceValue++;
+	m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
+	m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
+	WaitForSingleObject(m_fenceEvent, INFINITE);
+
+	// GPUの完了後に中間バッファを解放
+	m_texture.ReleaseUploadBuffer();
+
 	// 開始時間を記録
 	m_startTime = std::chrono::high_resolution_clock::now();
 

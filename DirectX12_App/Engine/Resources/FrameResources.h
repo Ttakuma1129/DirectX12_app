@@ -4,8 +4,15 @@
 #include <cstdint>
 #include <DirectXMath.h>
 
+// シーン全体で共通(VP行列)
 struct alignas(256) SceneConstant {
-	DirectX::XMFLOAT4X4 mvp;
+	DirectX::XMFLOAT4X4 view;
+	DirectX::XMFLOAT4X4 proj;
+};
+
+// オブジェクトごと(M行列)
+struct alignas(256) ObjectConstant {
+	DirectX::XMFLOAT4X4 model;
 };
 
 class FrameResources{

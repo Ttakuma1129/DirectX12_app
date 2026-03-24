@@ -485,12 +485,10 @@ void GfxDevice::BeginFrame() {
 	float aspect = static_cast<float>(m_width) / m_height;
 	XMMATRIX proj = XMMatrixPerspectiveFovLH(fov, aspect, 0.1f, 100.0f);
 
-	// MVP行列 (Model x View x Projection)
-	XMMATRIX mvp = model * view * proj;
-
-	// 定数バッファに書き込み
+	// 定数バッファを書き込み
 	SceneConstant* mapped = m_frames[m_frameIndex].GetConstantMapped();
-	XMStoreFloat4x4(&mapped->mvp, XMMatrixTranspose(mvp));
+	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(view));
+	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(proj));
 
 	// 定数バッファをGPUにセット
 	cmdList->SetGraphicsRootConstantBufferView(

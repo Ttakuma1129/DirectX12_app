@@ -74,8 +74,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][OBJECT_COUNT]; // オブジェクトごとの定数バッファ
 	FrameResources m_frames[FRAME_COUNT]; // フレームリソース
 	Texture m_texture; // テクスチャリソース
+
+	ObjectConstant* m_objectMapped[FRAME_COUNT][OBJECT_COUNT] = {}; // オブジェクトごとのマップ
 
 	UINT64 m_fenceValue = 0;
 	HANDLE m_fenceEvent = nullptr;

@@ -401,7 +401,7 @@ bool GfxDevice::InitializeFrameResources() {
 	m_commandContext.Begin(m_frames[0].GetAllocator());
 
 	// テクスチャの作成
-	m_texture.Create(m_device.Get(), m_commandContext.GetCommandList(), texWidth, texHeight, checkerPixels, m_srvHeap.GetCPUHandle(0));
+	m_texture.Create(m_device.Get(), m_commandContext.GetCommandList(), static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), pixels, m_srvHeap.GetCPUHandle(0));
 
 	// コマンド実行・GPUの完了待ち
 	m_commandContext.End();

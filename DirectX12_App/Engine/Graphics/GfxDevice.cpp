@@ -391,7 +391,7 @@ bool GfxDevice::InitializeFrameResources() {
 	// 画像読み込み
 	int texWidth, texHeight, channels;
 	unsigned char* pixels = stbi_load(
-		"Textures/sample.ping",	// 画像ファイルのパス
+		"App/Textures/sample.png",	// 画像ファイルのパス(実行ファイルからのパス)
 		&texWidth, &texHeight, &channels, 4);
 
 	if (!pixels) {

@@ -413,6 +413,7 @@ bool GfxDevice::InitializeFrameResources() {
 	WaitForSingleObject(m_fenceEvent, INFINITE);
 
 	// GPUの完了後に中間バッファを解放
+	stbi_image_free(pixels);
 	m_texture.ReleaseUploadBuffer();
 
 	// 開始時間を記録

@@ -10,8 +10,10 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	srvRange.RegisterSpace = 0;
 	srvRange.OffsetInDescriptorsFromTableStart = 0;
 
+	// ルートパラメータの数
+	D3D12_ROOT_PARAMETER rootParam[3] = {};
+
 	// CBVをルートパラメータとして追加
-	D3D12_ROOT_PARAMETER rootParam[2] = {};
 	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParam[0].Descriptor.ShaderRegister = 0;
 	rootParam[0].Descriptor.RegisterSpace = 0;

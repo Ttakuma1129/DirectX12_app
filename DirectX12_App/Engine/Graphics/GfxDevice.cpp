@@ -458,8 +458,8 @@ void GfxDevice::BeginFrame() {
 	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
 	cmdList->SetDescriptorHeaps(1, heaps);
 
-	// ルートパラメータ1にSRVテーブルをバインド
-	cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
+	// ルートパラメータ2にSRVテーブルをバインド
+	cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
 
 	// 行列の計算
 	using namespace DirectX;

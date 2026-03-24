@@ -12,6 +12,7 @@
 #include "CommandContext.h"
 #include "RootSignature.h"
 #include "PipelineState.h"
+#include "../Resources/Texture.h"
 
 // ライブラリのリンクを指定
 #pragma comment(lib, "d3d12.lib")
@@ -70,7 +71,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
-	FrameResources m_frames[FRAME_COUNT];
+	FrameResources m_frames[FRAME_COUNT]; // フレームリソース
+	Texture m_texture; // テクスチャリソース
 
 	UINT64 m_fenceValue = 0;
 	HANDLE m_fenceEvent = nullptr;

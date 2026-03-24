@@ -32,7 +32,7 @@ public:
 	bool InitializeFrameResources();
 
 	void BeginFrame();
-	
+
 	void EndFrame();
 
 	// 外部からデバイスを取得するためのゲッター
@@ -87,9 +87,9 @@ private:
 	uint32_t m_height;
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 
-	struct Vertex{
+	struct Vertex {
 		float position[3];
 		float uv[2];
 	};
-	
+
 };

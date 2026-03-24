@@ -349,36 +349,46 @@ bool GfxDevice::InitializeFrameResources() {
 	m_vertexBufferView.SizeInBytes = sizeof(vertices); // バッファ全体のサイズ
 	m_vertexBufferView.StrideInBytes = sizeof(Vertex);	// 1頂点のバッファサイズ
 
-	// インデックスバッファの設定
-	D3D12_HEAP_PROPERTIES ibHeapProps = {};
-	ibHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+	// 定数バッファ作成をフレーム*オブジェクト分ループする
+	for (uint32_t f = 0; f < FRAME_COUNT; ++f) {
+		for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
+			// インデックスバッファの設定
+			D3D12_HEAP_PROPERTIES ibHeapProps = {};
+			ibHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-	D3D12_RESOURCE_DESC ibResDesc = {};
-	ibResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	ibResDesc.Width = sizeof(indices);
-	ibResDesc.Height = 1;
-	ibResDesc.DepthOrArraySize = 1;
-	ibResDesc.MipLevels = 1;
-	ibResDesc.Format = DXGI_FORMAT_UNKNOWN;
-	ibResDesc.SampleDesc.Count = 1;
-	ibResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+			D3D12_RESOURCE_DESC ibResDesc = {};
+			ibResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+			ibResDesc.Width = sizeof(indices);
+			ibResDesc.Height = 1;
+			ibResDesc.DepthOrArraySize = 1;
+			ibResDesc.MipLevels = 1;
+			ibResDesc.Format = DXGI_FORMAT_UNKNOWN;
+			ibResDesc.SampleDesc.Count = 1;
+			ibResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-	// インデックスバッファの作成
-	hr = m_device->CreateCommittedResource(
-		&ibHeapProps,
-		D3D12_HEAP_FLAG_NONE,
-		&ibResDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&m_indexBuffer));
-	if (FAILED(hr)) {
-		return false;
+			// インデックスバッファの作成
+			hr = m_device->CreateCommittedResource(
+				&ibHeapProps,
+				D3D12_HEAP_FLAG_NONE,
+				&ibResDesc,
+				D3D12_RESOURCE_STATE_GENERIC_READ,
+				nullptr,
+				IID_PPV_ARGS(&m_objectCB[f][o]));
+			if (FAILED(hr)) {
+				return false;
+			}
+
+			hr = m_objectCB[f][o]->Map(0, nullptr, reinterpret_cast<void**>(&m_objectMapped[f][o]));
+			if (FAILED(hr)) {
+				return false;
+			}
+		}
 	}
 
 	void* ibMapped = nullptr;
 	hr = m_indexBuffer->Map(0, nullptr, &ibMapped);
 	if (FAILED(hr)) {
-		return true;
+		return false;
 	}
 
 	memcpy(ibMapped, indices, sizeof(indices));

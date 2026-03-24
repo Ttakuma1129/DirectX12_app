@@ -136,6 +136,7 @@
     <ClCompile Include="Engine\Graphics\RootSignature.cpp" />
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
     <ClCompile Include="Engine\Resources\Texture.cpp" />
+    <ClCompile Include="Engine\ThirdParty\stb_image_impl.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="Engine\Graphics\RootSignature.h" />
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Texture.h" />
+    <ClInclude Include="Engine\ThirdParty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

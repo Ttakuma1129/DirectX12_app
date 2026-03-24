@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\Engine\Resources">
       <UniqueIdentifier>{da6316f6-378e-456b-b1ef-600fa954d4ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\ThirdParty">
+      <UniqueIdentifier>{6be76dd5-b9d6-4b16-ae01-a0c047d79150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ThirdParty">
+      <UniqueIdentifier>{460d7cac-79bd-4f75-af9e-c57be817f517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -66,6 +72,9 @@
     <ClCompile Include="Engine\Resources\Texture.cpp">
       <Filter>ソース ファイル\Engine\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\stb_image_impl.cpp">
+      <Filter>ソース ファイル\ThirdParty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -91,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Resources\Texture.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\stb_image.h">
+      <Filter>ヘッダー ファイル\ThirdParty</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

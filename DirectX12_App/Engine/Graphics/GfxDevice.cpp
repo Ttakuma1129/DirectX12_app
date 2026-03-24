@@ -366,7 +366,6 @@ bool GfxDevice::InitializeFrameResources() {
 			ibResDesc.SampleDesc.Count = 1;
 			ibResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-			// インデックスバッファの作成
 			hr = m_device->CreateCommittedResource(
 				&ibHeapProps,
 				D3D12_HEAP_FLAG_NONE,
@@ -481,9 +480,6 @@ void GfxDevice::BeginFrame() {
 	// 回転の軸を設定
 	XMVECTOR axis = XMVectorSet(0.0f, 1.0f, 0.5f, 0.0f);
 
-	// Model行列
-	XMMATRIX model = XMMatrixRotationY(elapsed * XM_2PI * 0.5f);
-
 	// View行列 (カメラの設定)
 	XMVECTOR eye = XMVectorSet(0.0f, 0.7f, -3.0f, 0.0f); // カメラ位置
 	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // 注視点
@@ -500,7 +496,7 @@ void GfxDevice::BeginFrame() {
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(view));
 	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(proj));
 
-	// 定数バッファをGPUにセット
+	// 定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(
 		0,
 		m_frames[m_frameIndex].GetConstantBuffer()->GetGPUVirtualAddress());
@@ -538,8 +534,28 @@ void GfxDevice::BeginFrame() {
 	// IndexBufferを設定
 	cmdList->IASetIndexBuffer(&m_indexBufferView);
 
-	// 描画
-	cmdList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+	// 描画ループ
+	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
+		// オブジェクトごとのModel行列を計算
+		XMMATRIX model;
+		if (o == 0) {
+			model = XMMatrixRotationY(elapsed * XM_2PI * 0.5f) * XMMatrixTranslation(-1.5f, 0.0f, 0.0f);
+			
+		}
+		else {
+			model = XMMatrixRotationY(-elapsed * XM_2PI * 0.5f) * XMMatrixTranslation(1.5f, 0.0f, 0.0f);
+
+		}
+
+		// 定数バッファに書き込み
+		XMStoreFloat4x4(&m_objectMapped[m_frameIndex][o]->model, XMMatrixTranspose(model));
+		
+		// オブジェクト定数をバインド
+		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[m_frameIndex][o]->GetGPUVirtualAddress());
+	
+		// 描画
+		cmdList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+	}
 }
 
 void GfxDevice::EndFrame() {

@@ -388,15 +388,15 @@ bool GfxDevice::InitializeFrameResources() {
 	m_indexBufferView.SizeInBytes = sizeof(indices);
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
-	// チェッカーパターン
-	const uint32_t texWidth = 4;
-	const uint32_t texHeight = 4;
-	uint32_t checkerPixels[16] = {
-		0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF, 0xFF333333,
-		0xFF333333, 0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF,
-		0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF, 0xFF333333,
-		0xFF333333, 0xFFFFFFFF, 0xFF333333, 0xFFFFFFFF,
-	};
+	// 画像読み込み
+	int texWidth, texHeight, channels;
+	unsigned char* pixels = stbi_load(
+		"Textures/sample.ping",	// 画像ファイルのパス
+		&texWidth, &texHeight, &channels, 4);
+
+	if (!pixels) {
+		return false;
+	}
 
 	m_commandContext.Begin(m_frames[0].GetAllocator());
 

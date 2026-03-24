@@ -13,6 +13,7 @@
 #include "RootSignature.h"
 #include "PipelineState.h"
 #include "../Resources/Texture.h"
+#include "../ThirdParty/stb_image.h"
 
 // ライブラリのリンクを指定
 #pragma comment(lib, "d3d12.lib")

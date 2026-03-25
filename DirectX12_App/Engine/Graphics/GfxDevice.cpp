@@ -477,11 +477,8 @@ void GfxDevice::BeginFrame() {
 	// PrimitiveTopology‚ğİ’è
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// VertexBuffer‚ÌêŠ‚ğİ’è
-	cmdList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
-
-	// IndexBuffer‚ğİ’è
-	cmdList->IASetIndexBuffer(&m_indexBufferView);
+	// VertexBuffer‚ÆIndexBuffer‚ÌêŠ‚ğİ’è
+	m_cubeMesh.Bind(cmdList);
 
 	// •`‰æƒ‹[ƒv
 	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
@@ -503,7 +500,7 @@ void GfxDevice::BeginFrame() {
 		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[m_frameIndex][o]->GetGPUVirtualAddress());
 	
 		// •`‰æ
-		cmdList->DrawIndexedInstanced(36, 1, 0, 0, 0);
+		m_cubeMesh.Draw(cmdList);
 	}
 }
 

@@ -288,6 +288,32 @@ bool GfxDevice::InitializeFrameResources() {
 
 	};
 
+	// インデックスデータ
+	uint16_t indices[] = {
+		// 手前 (z = -0.5)
+		0, 1, 2,
+		2, 1, 3,
+		// 左 (z = 0.5)
+		4, 5, 6,
+		6, 5, 7,
+		// 右 (x = -0.5)
+		8, 9, 10,
+		10, 9, 11,
+		// 奥 (x = 0.5)
+		13, 12, 15,
+		15, 12, 14,
+		// 下 (y = 0.5)
+		16, 17, 18,
+		18, 17, 19,
+		// 上 (y = -0.5)
+		20, 21, 22,
+		22, 21, 23,
+	};
+
+	// 頂点バッファとインデックスバッファの作成
+	if (!m_cubeMesh.Create(m_device.Get(), vertices, sizeof(vertices), sizeof(Vertex), indices, 36)) {
+		return false;
+	}
 
 	// 定数バッファ作成をフレーム*オブジェクト分ループする
 	for (uint32_t f = 0; f < FRAME_COUNT; ++f) {

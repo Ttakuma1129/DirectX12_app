@@ -234,7 +234,7 @@ bool GfxDevice::InitializeFrameResources() {
 		if (errorBlob) {
 			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
 		}
-		OutputDebugStringA("VS compile failed\n");
+		OutputDebugStringA("PS compile failed\n");
 		return false;
 	}
 

@@ -352,24 +352,23 @@ bool GfxDevice::InitializeFrameResources() {
 	// 定数バッファ作成をフレーム*オブジェクト分ループする
 	for (uint32_t f = 0; f < FRAME_COUNT; ++f) {
 		for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
-			// インデックスバッファの設定
-			D3D12_HEAP_PROPERTIES ibHeapProps = {};
-			ibHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+			D3D12_HEAP_PROPERTIES cbHeapProps = {};
+			cbHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-			D3D12_RESOURCE_DESC ibResDesc = {};
-			ibResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-			ibResDesc.Width = sizeof(indices);
-			ibResDesc.Height = 1;
-			ibResDesc.DepthOrArraySize = 1;
-			ibResDesc.MipLevels = 1;
-			ibResDesc.Format = DXGI_FORMAT_UNKNOWN;
-			ibResDesc.SampleDesc.Count = 1;
-			ibResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+			D3D12_RESOURCE_DESC cbResDesc = {};
+			cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+			cbResDesc.Width = sizeof(ObjectConstant);
+			cbResDesc.Height = 1;
+			cbResDesc.DepthOrArraySize = 1;
+			cbResDesc.MipLevels = 1;
+			cbResDesc.Format = DXGI_FORMAT_UNKNOWN;
+			cbResDesc.SampleDesc.Count = 1;
+			cbResDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 			hr = m_device->CreateCommittedResource(
-				&ibHeapProps,
+				&cbHeapProps,
 				D3D12_HEAP_FLAG_NONE,
-				&ibResDesc,
+				&cbResDesc,
 				D3D12_RESOURCE_STATE_GENERIC_READ,
 				nullptr,
 				IID_PPV_ARGS(&m_objectCB[f][o]));

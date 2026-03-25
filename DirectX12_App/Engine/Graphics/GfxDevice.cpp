@@ -503,9 +503,6 @@ void GfxDevice::BeginFrame() {
 	auto now = std::chrono::high_resolution_clock::now();
 	float elapsed = std::chrono::duration<float>(now - m_startTime).count();
 
-	// 回転の軸を設定
-	XMVECTOR axis = XMVectorSet(0.0f, 1.0f, 0.5f, 0.0f);
-
 	// View行列 (カメラの設定)
 	XMVECTOR eye = XMVectorSet(0.0f, 0.7f, -3.0f, 0.0f); // カメラ位置
 	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // 注視点

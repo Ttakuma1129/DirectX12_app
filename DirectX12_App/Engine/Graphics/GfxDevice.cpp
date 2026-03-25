@@ -1,4 +1,5 @@
 #include "GfxDevice.h"
+#include "../ThirdParty/stb_image.h"
 #include <iostream>
 
 GfxDevice::~GfxDevice() {

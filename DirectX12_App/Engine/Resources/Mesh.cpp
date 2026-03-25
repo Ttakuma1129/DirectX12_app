@@ -9,7 +9,7 @@ bool Mesh::Create(ID3D12Device* device, const void* vertices, uint32_t vertexSiz
 
 	D3D12_RESOURCE_DESC resDesc = {};
 	resDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resDesc.Width = sizeof(vertices);
+	resDesc.Width = vertexSize;
 	resDesc.Height = 1;
 	resDesc.DepthOrArraySize = 1;
 	resDesc.MipLevels = 1;
@@ -35,21 +35,23 @@ bool Mesh::Create(ID3D12Device* device, const void* vertices, uint32_t vertexSiz
 		return false;
 	}
 
-	memcpy(mapped, vertices, sizeof(vertices));
+	memcpy(mapped, vertices, vertexSize);
 	m_vertexBuffer->Unmap(0, nullptr);
 
 	// 頂点バッファビューの作成
 	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
-	m_vertexBufferView.SizeInBytes = sizeof(vertices); // バッファ全体のサイズ
-	m_vertexBufferView.StrideInBytes = sizeof(vertexSize);	// 1頂点のバッファサイズ
+	m_vertexBufferView.SizeInBytes = vertexSize; // バッファ全体のサイズ
+	m_vertexBufferView.StrideInBytes = stride;	// 1頂点のバッファサイズ
 
 	// インデックスバッファの作成
+	uint32_t indexBufferSize = indexCount * sizeof(uint16_t);
+
 	D3D12_HEAP_PROPERTIES ibHeapProps = {};
 	ibHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
 	D3D12_RESOURCE_DESC ibResDesc = {};
 	ibResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	ibResDesc.Width = sizeof(indices);
+	ibResDesc.Width = indexBufferSize;
 	ibResDesc.Height = 1;
 	ibResDesc.DepthOrArraySize = 1;
 	ibResDesc.MipLevels = 1;
@@ -75,12 +77,12 @@ bool Mesh::Create(ID3D12Device* device, const void* vertices, uint32_t vertexSiz
 		return false;
 	}
 
-	memcpy(ibMapped, indices, sizeof(indices));
+	memcpy(ibMapped, indices, indexBufferSize);
 	m_indexBuffer->Unmap(0, nullptr);
 
 	// インデックスバッファビューの作成
 	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
-	m_indexBufferView.SizeInBytes = sizeof(indices);
+	m_indexBufferView.SizeInBytes = indexBufferSize;
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 
 	m_indexCount = indexCount;

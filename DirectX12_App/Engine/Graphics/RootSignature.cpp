@@ -44,7 +44,7 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
-	desc.NumParameters = 2;
+	desc.NumParameters = 3;
 	desc.pParameters = rootParam;
 	desc.NumStaticSamplers = 1;
 	desc.pStaticSamplers = &smpDesc;

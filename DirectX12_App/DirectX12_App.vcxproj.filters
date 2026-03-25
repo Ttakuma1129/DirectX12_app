@@ -43,6 +43,12 @@
     <Filter Include="ソース ファイル\ThirdParty">
       <UniqueIdentifier>{460d7cac-79bd-4f75-af9e-c57be817f517}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App">
+      <UniqueIdentifier>{f24a6350-9153-4e11-84fc-043c68ffa640}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\App">
+      <UniqueIdentifier>{818f4469-d30e-4efb-b25d-6b37ef5ca01d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,6 +84,9 @@
     <ClCompile Include="Engine\Resources\Mesh.cpp">
       <Filter>ソース ファイル\Engine\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="App\Scene.cpp">
+      <Filter>ソース ファイル\App</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -109,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Resources\Mesh.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="App\Scene.h">
+      <Filter>ヘッダー ファイル\App</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

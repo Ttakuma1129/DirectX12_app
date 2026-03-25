@@ -13,6 +13,7 @@
 #include "RootSignature.h"
 #include "PipelineState.h"
 #include "../Resources/Texture.h"
+#include "../Resources/Mesh.h"
 
 // ライブラリのリンクを指定
 #pragma comment(lib, "d3d12.lib")
@@ -64,14 +65,10 @@ private:
 	CommandContext m_commandContext; //コマンドリスト
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
-
-	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};
-	D3D12_INDEX_BUFFER_VIEW m_indexBufferView = {};
+	Mesh m_cubeMesh; // メッシュ
 
 	// リソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
-	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][OBJECT_COUNT]; // オブジェクトごとの定数バッファ
 	FrameResources m_frames[FRAME_COUNT]; // フレームリソース

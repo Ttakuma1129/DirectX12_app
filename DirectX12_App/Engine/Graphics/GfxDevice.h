@@ -19,9 +19,6 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
-static constexpr uint32_t FRAME_COUNT = 2;
-static constexpr uint32_t OBJECT_COUNT = 2;
-
 class GfxDevice {
 public:
 	~GfxDevice();
@@ -50,6 +47,9 @@ public:
 
 
 private:
+	static constexpr uint32_t FRAME_COUNT = 2;
+	static constexpr uint32_t OBJECT_COUNT = 2;
+
 	// ComptrでReleaseを自動化
 	Microsoft::WRL::ComPtr<IDXGIFactory7> m_dxgiFactory; // ファクトリ
 	Microsoft::WRL::ComPtr<IDXGIAdapter1> m_adapter; // アダプター

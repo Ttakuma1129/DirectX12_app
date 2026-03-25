@@ -87,6 +87,9 @@
     <ClCompile Include="App\Scene.cpp">
       <Filter>ソース ファイル\App</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Graphics\Renderer.cpp">
+      <Filter>ソース ファイル\Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="App\Scene.h">
       <Filter>ヘッダー ファイル\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphics\Renderer.h">
+      <Filter>ヘッダー ファイル\Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

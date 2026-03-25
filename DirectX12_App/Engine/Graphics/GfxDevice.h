@@ -81,7 +81,6 @@ private:
 	uint32_t m_frameIndex = 0;
 	uint32_t m_width;
 	uint32_t m_height;
-	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 
 	struct Vertex {
 		float position[3];

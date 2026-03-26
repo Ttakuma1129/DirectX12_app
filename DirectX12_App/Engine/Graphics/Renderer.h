@@ -2,6 +2,8 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 #include <cstdint>
+#include <d3dcompiler.h>
+
 #include "../Resources/FrameResources.h"
 #include "../Resources/Mesh.h"
 #include "RootSignature.h"

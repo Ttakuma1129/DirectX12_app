@@ -27,13 +27,18 @@ public:
 		uint32_t width,
 		uint32_t height);
 
+	DescriptorHeap& GetImGuiSrvHeap() {
+		return m_imguiSrvHeap;
+	}
+
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	static constexpr uint32_t OBJECT_COUNT = 2;
 
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
-	DescriptorHeap m_srvHeap;
+	DescriptorHeap m_srvHeap; // srv
+	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	Texture m_texture;
 	Mesh m_cubeMesh; // メッシュ
 

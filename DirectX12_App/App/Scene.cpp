@@ -10,6 +10,7 @@ void Scene::Update() {
 	// Œo‰ßŠÔ‚ğ•b‚Åæ“¾
 	auto now = std::chrono::high_resolution_clock::now();
 	float elapsed = std::chrono::duration<float>(now - m_startTime).count();
+	m_elapsed = elapsed;
 }
 
 DirectX::XMMATRIX Scene::GetViewMatrix()const {
@@ -25,7 +26,7 @@ DirectX::XMMATRIX Scene::GetProjMatrix() const {
 	using namespace DirectX;
 	// Projections—ñ@(“§‹“Š‰e)
 	float fov = XMConvertToRadians(45.0f); // ‹–ìŠp
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(fov, m_aspect, 0.1f, 100.0f);
+	return XMMatrixPerspectiveFovLH(fov, m_aspect, 0.1f, 100.0f);
 }
 
 DirectX::XMMATRIX Scene::GetModelMatrix(uint32_t index) const {

@@ -102,6 +102,15 @@
     <ClCompile Include="Engine\Graphics\Renderer.cpp">
       <Filter>ソース ファイル\Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\ThirdParty\imgui\imgui.cpp">
       <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
     </ClCompile>
@@ -110,15 +119,6 @@
     </ClCompile>
     <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp">
       <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp">
-      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp">
-      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

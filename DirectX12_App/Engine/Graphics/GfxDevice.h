@@ -78,6 +78,7 @@ private:
 
 	DescriptorHeap m_rtvHeap; // RTV
 	DescriptorHeap m_dsvHeap; // DSV
+	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	CommandContext m_commandContext; //コマンドリスト
 
 	// リソース

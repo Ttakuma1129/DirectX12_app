@@ -165,6 +165,11 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		}
 	}
 
+	// SRV用ディスクリプタヒープの作成
+	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
+		return false;
+	}
+
 	// 画像読み込み
 	int texWidth, texHeight, channels;
 	unsigned char* pixels = stbi_load(
@@ -203,4 +208,81 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	m_texture.ReleaseUploadBuffer();
 
 	return true;
+}
+
+void Renderer::Render(
+	ID3D12GraphicsCommandList* cmdList,
+	const Scene& scene,
+	uint32_t frameIndex,
+	FrameResources& frame,
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle,
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle,
+	uint32_t width,
+	uint32_t height) {
+
+	using namespace DirectX;
+
+	// パイプライン設定
+	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
+	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
+
+	// SRVヒープをセット
+	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
+	cmdList->SetDescriptorHeaps(1, heaps);
+
+	// ルートパラメータ2にSRVテーブルをバインド
+	cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
+
+	// 定数バッファを書き込み
+	SceneConstant* mapped = frame.GetConstantMapped();
+	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(scene.GetViewMatrix()));
+	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(scene.GetProjMatrix()));
+
+	// 定数バッファをバインド
+	cmdList->SetGraphicsRootConstantBufferView(0 ,frame.GetConstantBuffer()->GetGPUVirtualAddress());
+
+	// Viewportを設定
+	D3D12_VIEWPORT viewport = {
+		0.0f,
+		0.0f,
+		static_cast<float>(width),
+		static_cast<float>(height),
+		0.0f,
+		1.0f,
+	};
+	cmdList->RSSetViewports(1, &viewport);
+
+	// ScissorRectを設定
+	D3D12_RECT scissorRect = {
+		0,
+		0,
+		static_cast<LONG>(width),
+		static_cast<LONG>(height)
+	};
+	cmdList->RSSetScissorRects(1, &scissorRect);
+
+	// RenderTargetを設定
+	cmdList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
+
+	// PrimitiveTopologyを設定
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// VertexBufferとIndexBufferの場所を設定
+	m_cubeMesh.Bind(cmdList);
+
+	// 描画ループ
+	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
+		// オブジェクトごとのModel行列を計算
+		XMMATRIX model = scene.GetModelMatrix(o);
+
+
+		// 定数バッファに書き込み
+		XMStoreFloat4x4(&m_objectMapped[frameIndex][o]->model, XMMatrixTranspose(model));
+
+		// オブジェクト定数をバインド
+		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
+
+		// 描画
+		m_cubeMesh.Draw(cmdList);
+	}
 }

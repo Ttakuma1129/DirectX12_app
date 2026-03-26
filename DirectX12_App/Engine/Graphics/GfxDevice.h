@@ -70,6 +70,7 @@ private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	// ComptrでReleaseを自動化
 	Microsoft::WRL::ComPtr<IDXGIFactory7> m_dxgiFactory; // ファクトリ
+	Microsoft::WRL::ComPtr<IDXGIAdapter1> m_adapter; // アダプタ
 	Microsoft::WRL::ComPtr<ID3D12Device> m_device; // デバイス
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> m_commandQueue; // コマンドキュー
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> m_swapChain; // スワップチェーン

@@ -157,11 +157,6 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 		&dsvDesc,
 		m_dsvHeap.GetCPUHandle(0));
 
-	// SRV用ディスクリプタヒープの作成
-	if(!m_srvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)){
-		return false;
-	}
-
 	return true;
 }
 
@@ -221,76 +216,6 @@ void GfxDevice::BeginFrame() {
 	// 深度バッファをクリア
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap.GetCPUHandle(0);
 	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-	// パイプライン設定
-	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
-	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
-
-	// SRVヒープをセット
-	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
-	cmdList->SetDescriptorHeaps(1, heaps);
-
-	// ルートパラメータ2にSRVテーブルをバインド
-	cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
-
-	// 行列の計算
-	using namespace DirectX;
-
-	// 定数バッファを書き込み
-	SceneConstant* mapped = m_frames[m_frameIndex].GetConstantMapped();
-	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(view));
-	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(proj));
-
-	// 定数バッファをバインド
-	cmdList->SetGraphicsRootConstantBufferView(
-		0,
-		m_frames[m_frameIndex].GetConstantBuffer()->GetGPUVirtualAddress());
-
-	// Viewportを設定
-	D3D12_VIEWPORT viewport = {
-		0.0f,
-		0.0f,
-		static_cast<float>(m_width),
-		static_cast<float>(m_height),
-		0.0f,
-		1.0f,
-	};
-	cmdList->RSSetViewports(1, &viewport);
-
-	// ScissorRectを設定
-	D3D12_RECT scissorRect = {
-		0,
-		0,
-		static_cast<LONG>(m_width),
-		static_cast<LONG>(m_height)
-	};
-	cmdList->RSSetScissorRects(1, &scissorRect);
-
-	// RenderTargetを設定
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap.GetCPUHandle(m_frameIndex);
-	cmdList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
-
-	// PrimitiveTopologyを設定
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	// VertexBufferとIndexBufferの場所を設定
-	m_cubeMesh.Bind(cmdList);
-
-	// 描画ループ
-	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
-		// オブジェクトごとのModel行列を計算
-		XMMATRIX model;
-		
-
-		// 定数バッファに書き込み
-		XMStoreFloat4x4(&m_objectMapped[m_frameIndex][o]->model, XMMatrixTranspose(model));
-		
-		// オブジェクト定数をバインド
-		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[m_frameIndex][o]->GetGPUVirtualAddress());
-	
-		// 描画
-		m_cubeMesh.Draw(cmdList);
-	}
 }
 
 void GfxDevice::EndFrame() {

@@ -4,17 +4,18 @@
 #include <cstdint>
 #include <d3dcompiler.h>
 
-#include "../Resources/FrameResources.h"
-#include "../Resources/Mesh.h"
 #include "RootSignature.h"
 #include "PipelineState.h"
 #include "DescriptorHeap.h"
+#include "../Resources/FrameResources.h"
+#include "../Resources/Mesh.h"
+#include "../Resources/Texture.h"
 
 class  Scene;
 
 class Renderer{
 public:
-	bool Initialize(ID3D12Device* device);
+	bool Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator);
 
 	void Render(
 		ID3D12GraphicsCommandList* cmdList,
@@ -32,8 +33,15 @@ private:
 
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
+	DescriptorHeap m_srvHeap;
+	Texture m_texture;
 	Mesh m_cubeMesh; // メッシュ
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][OBJECT_COUNT]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][OBJECT_COUNT] = {}; // オブジェクトごとのマップ
+
+	struct Vertex {
+		float position[3];
+		float uv[2];
+	};
 };

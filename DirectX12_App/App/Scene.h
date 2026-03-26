@@ -8,13 +8,11 @@ public:
 	void Initialize(float aspectRatio);
 	void Update();
 
-	DirectX::XMMATRIX GetViewMatrix() const {
+	DirectX::XMMATRIX GetViewMatrix() const;
 
-	}
+	DirectX::XMMATRIX GetProjMatrix() const;
 
-	DirectX::XMMATRIX GetProjMatrix() const {
-
-	}
+	DirectX::XMMATRIX GetModelMatrix() const;
 
 	uint32_t GetObjectCount() const {
 		return OBJECT_COUNT;

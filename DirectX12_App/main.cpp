@@ -1,5 +1,6 @@
 #include "Engine/Core/Window.h"
 #include "Engine/Graphics/GfxDevice.h"
+#include "App/Scene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ウィンドウ作成
@@ -14,8 +15,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	Scene scene;
+	scene.Initialize(static_cast<float>(window.GetWidth()) / window.GetHeight());
+
 	// メインループ
 	while (window.ProcessMessage()){
+		scene.Update();
 		gfxDevice.BeginFrame();
 		gfxDevice.EndFrame();
 	}

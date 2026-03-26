@@ -12,7 +12,7 @@ public:
 
 	DirectX::XMMATRIX GetProjMatrix() const;
 
-	DirectX::XMMATRIX GetModelMatrix() const;
+	DirectX::XMMATRIX GetModelMatrix(uint32_t index) const;
 
 	uint32_t GetObjectCount() const {
 		return OBJECT_COUNT;

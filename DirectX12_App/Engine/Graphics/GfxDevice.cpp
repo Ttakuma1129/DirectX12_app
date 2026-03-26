@@ -422,17 +422,6 @@ void GfxDevice::BeginFrame() {
 	// 行列の計算
 	using namespace DirectX;
 
-	// View行列 (カメラの設定)
-	XMVECTOR eye = XMVectorSet(0.0f, 0.7f, -3.0f, 0.0f); // カメラ位置
-	XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // 注視点
-	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // 上方向
-	XMMATRIX view = XMMatrixLookAtLH(eye, target, up); // View行列
-
-	// Projection行列　(透視投影)
-	float fov = XMConvertToRadians(45.0f); // 視野角
-	float aspect = static_cast<float>(m_width) / m_height;
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(fov, aspect, 0.1f, 100.0f);
-
 	// 定数バッファを書き込み
 	SceneConstant* mapped = m_frames[m_frameIndex].GetConstantMapped();
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(view));
@@ -477,14 +466,7 @@ void GfxDevice::BeginFrame() {
 	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
 		// オブジェクトごとのModel行列を計算
 		XMMATRIX model;
-		if (o == 0) {
-			model = XMMatrixRotationY(elapsed * XM_2PI * 0.5f) * XMMatrixTranslation(-1.5f, 0.0f, 0.0f);
-			
-		}
-		else {
-			model = XMMatrixRotationY(-elapsed * XM_2PI * 0.5f) * XMMatrixTranslation(1.5f, 0.0f, 0.0f);
-
-		}
+		
 
 		// 定数バッファに書き込み
 		XMStoreFloat4x4(&m_objectMapped[m_frameIndex][o]->model, XMMatrixTranspose(model));

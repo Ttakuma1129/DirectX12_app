@@ -377,9 +377,6 @@ bool GfxDevice::InitializeFrameResources() {
 	stbi_image_free(pixels);
 	m_texture.ReleaseUploadBuffer();
 
-	// 開始時間を記録
-	m_startTime = std::chrono::high_resolution_clock::now();
-
 	return true;
 }
 
@@ -424,10 +421,6 @@ void GfxDevice::BeginFrame() {
 
 	// 行列の計算
 	using namespace DirectX;
-
-	// 経過時間を秒で取得
-	auto now = std::chrono::high_resolution_clock::now();
-	float elapsed = std::chrono::duration<float>(now - m_startTime).count();
 
 	// View行列 (カメラの設定)
 	XMVECTOR eye = XMVectorSet(0.0f, 0.7f, -3.0f, 0.0f); // カメラ位置

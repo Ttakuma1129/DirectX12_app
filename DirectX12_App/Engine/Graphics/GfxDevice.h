@@ -66,6 +66,10 @@ public:
 		return m_height;
 	}
 
+	DescriptorHeap& GetImGuiSrvHeap() {
+		return m_imguiSrvHeap;
+	}
+
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	// Comptr‚ÅRelease‚ðŽ©“®‰»

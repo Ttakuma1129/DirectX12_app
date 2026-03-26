@@ -170,6 +170,11 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		return false;
 	}
 
+	// ImGui用SRV用ディスクリプタヒープの作成
+	if (!m_imguiSrvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
+		return false;
+	}
+
 	// 画像読み込み
 	int texWidth, texHeight, channels;
 	unsigned char* pixels = stbi_load(

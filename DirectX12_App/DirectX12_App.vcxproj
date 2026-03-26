@@ -139,6 +139,12 @@
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
     <ClCompile Include="Engine\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\Resources\Texture.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\ThirdParty\stb_image_impl.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -154,6 +160,14 @@
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Mesh.h" />
     <ClInclude Include="Engine\Resources\Texture.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imconfig.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui_internal.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_textedit.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\ThirdParty\stb_image.h" />
   </ItemGroup>
   <ItemGroup>

@@ -49,6 +49,18 @@
     <Filter Include="ヘッダー ファイル\App">
       <UniqueIdentifier>{818f4469-d30e-4efb-b25d-6b37ef5ca01d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ThirdParty\ImGUI">
+      <UniqueIdentifier>{662f2054-37c9-4352-bd2b-3fd68546c9fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ThirdParty\ImGUI">
+      <UniqueIdentifier>{2cd10417-4650-492a-9955-ace12772ed09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\ThirdParty\ImGUI\backends">
+      <UniqueIdentifier>{65935121-31dd-45a2-9aaf-bd5d9a428fae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ThirdParty\ImGUI\backends">
+      <UniqueIdentifier>{b758be67-2a04-4f56-acc7-51362f2ec075}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +102,24 @@
     <ClCompile Include="Engine\Graphics\Renderer.cpp">
       <Filter>ソース ファイル\Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_draw.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp">
+      <Filter>ソース ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -127,6 +157,30 @@
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Renderer.h">
       <Filter>ヘッダー ファイル\Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imconfig.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui_internal.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_rectpack.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_textedit.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_truetype.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h">
+      <Filter>ヘッダー ファイル\ThirdParty\ImGUI\backends</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

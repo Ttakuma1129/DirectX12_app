@@ -32,20 +32,46 @@ public:
 
 	void EndFrame();
 
-	// 外部からデバイスを取得するためのゲッター
+	// 外部から取得するためのゲッター
 	ID3D12Device* GetDevice() const {
 		return m_device.Get();
 	}
 
-	// 外部からコマンドキューを取得するためのゲッター
+	ID3D12GraphicsCommandList* GetCommandList() {
+
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GerCurrentRTV() {
+
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() {
+
+	}
+
 	ID3D12CommandQueue* GetCommandQueue() const {
 		return m_commandQueue.Get();
 	}
-	// 外部からスワップチェーンを取得するためのゲッター
+
 	IDXGISwapChain4* GetSwapChain() const {
 		return m_swapChain.Get();
 	}
 
+	FrameResources& GetCurrentFrame() {
+
+	}
+
+	uint32_t GetFrameIndex() const {
+		return m_frameIndex;
+	}
+
+	uint32_t GetWidth() const {
+		return m_width;
+	}
+
+	uint32_t GetHeight() const {
+		return m_height;
+	}
 
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;

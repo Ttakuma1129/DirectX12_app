@@ -66,8 +66,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::Begin("Debug");
-		ImGui::Text("ImGui!");
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::Separator();
+		ImGui::SliderFloat("Rotation Speed", &scene.GetRotationSpeed(), 0.0f, 3.0f);
+		ImGui::SliderFloat("FOV", &scene.GetFov(), 10.0f, 120.0f);
+		ImGui::Separator();
+		ImGui::Text("Camera Position");
+		ImGui::SliderFloat("X", &scene.GetCameraPos()[0], -10.0f, 10.0f);
+		ImGui::SliderFloat("Y", &scene.GetCameraPos()[1], -10.0f, 10.0f);
+		ImGui::SliderFloat("Z", &scene.GetCameraPos()[2], -10.0f, -0.5f);
 		ImGui::End();
 		ImGui::Render();
 

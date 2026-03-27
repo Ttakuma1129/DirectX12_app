@@ -35,14 +35,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ImGui::StyleColorsDark();
 
 	ImGui_ImplWin32_Init(window.GetHwnd());
-	ImGui_ImplDX12_Init(
-		gfxDevice.GetDevice(),
-		2,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
-		renderer.GetImGuiSrvHeap().GetHeap(),
-		renderer.GetImGuiSrvHeap().GetCPUHandle(0),
-		renderer.GetImGuiSrvHeap().GetGPUHandle(0));
 
+	ImGui_ImplDX12_InitInfo initInfo = {};
+	initInfo.Device = gfxDevice.GetDevice();
+	initInfo.CommandQueue = gfxDevice.GetCommandQueue();
+	initInfo.NumFramesInFlight = 2;
+	initInfo.RTVFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+	initInfo.SrvDescriptorHeap = renderer.GetImGuiSrvHeap().GetHeap();
+	initInfo.LegacySingleSrvCpuDescriptor = renderer.GetImGuiSrvHeap().GetCPUHandle(0);
+	initInfo.LegacySingleSrvGpuDescriptor = renderer.GetImGuiSrvHeap().GetGPUHandle(0);
+
+	ImGui_ImplDX12_Init(&initInfo);
 	// ÉÅÉCÉìÉãÅ[Év
 	while (window.ProcessMessage()){
 		scene.Update();
@@ -65,6 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("Debug");
 		ImGui::Text("Hello, DirectX12 + ImGui!");
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::End();
 		ImGui::Render();
 
 		auto* cmdList = gfxDevice.GetCommandList();

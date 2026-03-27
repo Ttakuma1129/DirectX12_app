@@ -1,5 +1,8 @@
 #include "Window.h"
 #include "../ThirdParty/imgui/imgui.h"
+#include "../ThirdParty/imgui/backends/imgui_impl_win32.h"
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // コンストラクタ
 Window::Window(uint32_t width, uint32_t height, const wchar_t* title) : m_width(width), m_height(height) {
@@ -57,6 +60,11 @@ bool Window::ProcessMessage() {
 
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+	// Imguiのメッセージを転送
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
+		return true;
+	}
+
 	switch (msg)
 	{
 	case WM_DESTROY: // ウィンドウが閉じられたとき

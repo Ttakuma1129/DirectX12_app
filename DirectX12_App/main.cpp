@@ -66,7 +66,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 		ImGui::Begin("Debug");
-		ImGui::Text("Hello, DirectX12 + ImGui!");
+		ImGui::Text("ImGui!");
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 		ImGui::End();
 		ImGui::Render();

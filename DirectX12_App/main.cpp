@@ -60,5 +60,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		gfxDevice.EndFrame();
 	}
+
+	// ImGuiシャットダウン
+	ImGui_ImplDX12_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	return 0;
 }

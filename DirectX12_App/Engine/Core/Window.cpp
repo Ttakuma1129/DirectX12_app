@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "../ThirdParty/imgui/imgui.h"
 
 // コンストラクタ
 Window::Window(uint32_t width, uint32_t height, const wchar_t* title) : m_width(width), m_height(height) {

@@ -29,6 +29,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	// ImGui‰Šú‰»
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+
+	ImGui_ImplWin32_Init(window.GetHwnd());
+	ImGui_ImplDX12_Init(
+		gfxDevice.GetDevice(),
+		2,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		renderer.GetImGuiSrvHeap().GetHeap(),
+		renderer.GetImGuiSrvHeap().GetCPUHandle(0),
+		renderer.GetImGuiSrvHeap().GetGPUHandle(0));
+
 	// ƒƒCƒ“ƒ‹[ƒv
 	while (window.ProcessMessage()){
 		scene.Update();

@@ -3,6 +3,11 @@
 #include "App/Scene.h"
 #include "Engine/Graphics/Renderer.h"
 
+// ImGui
+#include "Engine/ThirdParty/imgui/imgui.h"
+#include "Engine/ThirdParty/imgui/backends/imgui_impl_dx12.h"
+#include "Engine/ThirdParty/imgui/backends/imgui_impl_win32.h"
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ウィンドウ作成
 	Window window(1280, 720, L"DirectX12 APP");

@@ -58,6 +58,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			gfxDevice.GetWidth(),
 			gfxDevice.GetHeight());
 
+		// ImGui•`‰æ
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+		ImGui::Begin("Debug");
+		ImGui::Text("Hello, DirectX12 + ImGui!");
+		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+		ImGui::Render();
+
+		auto* cmdList = gfxDevice.GetCommandList();
+		ID3D12DescriptorHeap* imguiHeaps[] = { renderer.GetImGuiSrvHeap().GetHeap() };
+		cmdList->SetDescriptorHeaps(1, imguiHeaps);
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), cmdList);
+
 		gfxDevice.EndFrame();
 	}
 

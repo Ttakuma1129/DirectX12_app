@@ -146,6 +146,7 @@
     <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp" />
     <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Engine\ThirdParty\stb_image_impl.cpp" />
+    <ClCompile Include="Engine\ThirdParty\tiny_object_loader_impl.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="Engine\ThirdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\ThirdParty\stb_image.h" />
+    <ClInclude Include="Engine\ThirdParty\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

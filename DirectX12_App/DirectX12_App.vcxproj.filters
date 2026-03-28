@@ -120,6 +120,9 @@
     <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp">
       <Filter>ソース ファイル\ThirdParty\ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\tiny_object_loader_impl.cpp">
+      <Filter>ソース ファイル\ThirdParty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -181,6 +184,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h">
       <Filter>ヘッダー ファイル\ThirdParty\ImGUI\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\tiny_obj_loader.h">
+      <Filter>ヘッダー ファイル\ThirdParty</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

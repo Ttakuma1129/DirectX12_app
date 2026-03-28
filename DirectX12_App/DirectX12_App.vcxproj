@@ -138,6 +138,7 @@
     <ClCompile Include="Engine\Graphics\RootSignature.cpp" />
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
     <ClCompile Include="Engine\Resources\Mesh.cpp" />
+    <ClCompile Include="Engine\Resources\ModelLoader.cpp" />
     <ClCompile Include="Engine\Resources\Texture.cpp" />
     <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp" />
     <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Engine\Graphics\RootSignature.h" />
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Mesh.h" />
+    <ClInclude Include="Engine\Resources\ModelLoader.h" />
     <ClInclude Include="Engine\Resources\Texture.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h" />

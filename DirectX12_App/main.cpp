@@ -75,6 +75,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("X", &scene.GetCameraPos()[0], -10.0f, 10.0f);
 		ImGui::SliderFloat("Y", &scene.GetCameraPos()[1], -10.0f, 10.0f);
 		ImGui::SliderFloat("Z", &scene.GetCameraPos()[2], -10.0f, -0.5f);
+		ImGui::Separator();
+		ImGui::Text("Object Scale");
+		ImGui::SliderFloat("Model Scale", &scene.GetModelScale(), 0.1f, 20.0f);
 		ImGui::End();
 		ImGui::Render();
 

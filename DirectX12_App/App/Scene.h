@@ -26,6 +26,10 @@ public:
 		return m_fov;
 	}
 
+	float& GetModelScale() {
+		return m_scale;
+	}
+
 	uint32_t GetObjectCount() const {
 		return OBJECT_COUNT;
 	}

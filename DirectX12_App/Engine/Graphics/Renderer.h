@@ -10,6 +10,7 @@
 #include "../Resources/FrameResources.h"
 #include "../Resources/Mesh.h"
 #include "../Resources/Texture.h"
+#include "../Resources/ModelLoader.h"
 
 class  Scene;
 

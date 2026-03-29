@@ -64,70 +64,21 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		return false;
 	}
 
-	// 立方体の頂点データ
-	Vertex vertices[] = {
-		// 面0: 手前の面 (頂点0～3)
-		{ {-0.5f,  0.5f, -0.5f}, {0.0f, 0.0f} }, // 左上
-		{ { 0.5f,  0.5f, -0.5f}, {1.0f, 0.0f} }, // 右上
-		{ {-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f} }, // 左下
-		{ { 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f} }, // 右下
+	// OBJモデル読み込み
+	ModelData modelData;
+	if (!ModelLoader::LoadOBJ("App/ModelModels/uploads_files_2787791_Mercedes+Benz+GLS+580.obj", modelData)) {
+		OutputDebugStringA("Failed to load OBJ model\n");
+		return false;
+	}
 
-		// 面1: 向かって左の面 (頂点4～7)
-		{ {-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f} }, // 左上
-		{ {-0.5f,  0.5f, -0.5f}, {1.0f, 0.0f} }, // 右上
-		{ {-0.5f, -0.5f,  0.5f}, {0.0f, 1.0f} }, // 左下
-		{ {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f} }, // 右下
-
-		// 面2: 向かって右の面 (頂点8～11)
-		{ { 0.5f,  0.5f, -0.5f}, {0.0f, 0.0f} }, // 左上
-		{ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f} }, // 右上
-		{ { 0.5f, -0.5f, -0.5f}, {0.0f, 1.0f} }, // 左下
-		{ { 0.5f, -0.5f,  0.5f}, {1.0f, 1.0f} }, // 右下
-
-		// 面3: 奥の面 (頂点12～15)
-		{ {-0.5f,  0.5f, 0.5f}, {0.0f, 0.0f} },	// 左上
-		{ { 0.5f,  0.5f, 0.5f}, {1.0f, 0.0f} },	// 右上
-		{ {-0.5f, -0.5f, 0.5f}, {0.0f, 1.0f} },	// 左下
-		{ { 0.5f, -0.5f, 0.5f}, {1.0f, 1.0f} },	// 右下
-
-		// 面4: 下の面 (頂点16～19)		
-		{ {-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f} }, // 左上
-		{ { 0.5f, -0.5f, -0.5f}, {1.0f, 1.0f} }, // 右上	
-		{ {-0.5f, -0.5f,  0.5f}, {0.0f, 0.0f} }, // 左下
-		{ { 0.5f, -0.5f,  0.5f}, {1.0f, 0.0f} }, // 右下
-
-		// 面5: 上の面 (頂点20～23)
-		{ {-0.5f,  0.5f,  0.5f}, {0.0f, 0.0f} }, // 左上
-		{ { 0.5f,  0.5f,  0.5f}, {1.0f, 0.0f} }, // 右上
-		{ {-0.5f,  0.5f, -0.5f}, {0.0f, 1.0f} }, // 左上
-		{ { 0.5f,  0.5f, -0.5f}, {1.0f, 1.0f} }, // 右下
-
-	};
-
-	// インデックスデータ
-	uint16_t indices[] = {
-		// 手前 (z = -0.5)
-		0, 1, 2,
-		2, 1, 3,
-		// 左 (z = 0.5)
-		4, 5, 6,
-		6, 5, 7,
-		// 右 (x = -0.5)
-		8, 9, 10,
-		10, 9, 11,
-		// 奥 (x = 0.5)
-		13, 12, 15,
-		15, 12, 14,
-		// 下 (y = 0.5)
-		16, 17, 18,
-		18, 17, 19,
-		// 上 (y = -0.5)
-		20, 21, 22,
-		22, 21, 23,
-	};
-
-	// 頂点バッファとインデックスバッファの作成
-	if (!m_cubeMesh.Create(device, vertices, sizeof(vertices), sizeof(Vertex), indices, 36)) {
+	//頂点バッファ・インデックスバッファの作成
+	if (!m_cubeMesh.Create(
+		device,
+		modelData.vertices.data(),
+		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
+		sizeof(ModelVertex),
+		modelData.indices.data(),
+		static_cast<uint32_t>(modelData.indices.size()))) {
 		return false;
 	}
 

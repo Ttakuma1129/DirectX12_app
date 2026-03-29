@@ -31,13 +31,12 @@ DirectX::XMMATRIX Scene::GetProjMatrix() const {
 
 DirectX::XMMATRIX Scene::GetModelMatrix(uint32_t index) const {
 	using namespace DirectX;
-	float scale = 5.0f;
 	if (index == 0) {
-		return XMMatrixScaling(scale,scale,scale) * XMMatrixRotationY(m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(-1.5f, 0.0f, 0.0f);
+		return XMMatrixScaling(m_scale, m_scale, m_scale) * XMMatrixRotationY(m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(-1.5f, 0.0f, 0.0f);
 
 	}
 	else {
-		return XMMatrixScaling(scale, scale, scale) * XMMatrixRotationY(-m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(1.5f, 0.0f, 0.0f);
+		return XMMatrixScaling(m_scale, m_scale, m_scale) * XMMatrixRotationY(-m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(1.5f, 0.0f, 0.0f);
 
 	}
 }

@@ -66,7 +66,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 
 	// OBJÉÇÉfÉãì«Ç›çûÇ›
 	ModelData modelData;
-	if (!ModelLoader::LoadOBJ("App/ModelModels/uploads_files_2787791_Mercedes+Benz+GLS+580.obj", modelData)) {
+	if (!ModelLoader::LoadOBJ("App/Models/sphere.obj", modelData)) {
 		OutputDebugStringA("Failed to load OBJ model\n");
 		return false;
 	}

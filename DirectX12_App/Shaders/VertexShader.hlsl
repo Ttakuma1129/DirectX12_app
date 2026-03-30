@@ -25,10 +25,14 @@ struct VSOutput{
 
 VSOutput main(VSInput input){
     VSOutput output;
-    // MVP行列で変換
-    output.pos = mul(float4(input.pos, 1.0f), model); // Model行列での変換
-    output.pos = mul(output.pos, view); // View行列での変換
-    output.pos = mul(output.pos, proj); // Projection行列での変換
+    // 行列計算
+    float4 worldPos = mul(float4(input.pos, 1.0), model); 
+    float4 viewPos = mul(worldPos, view); 
+    output.pos = mul(viewPos, proj); // Projection行列での変換
+    
+    // 法線をワールド空間座標に変換
+    output.normal = mul(input.normal, (float3x3) model);
+    
     output.uv = input.uv;
     return output;
 }

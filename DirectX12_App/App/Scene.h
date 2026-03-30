@@ -34,15 +34,25 @@ public:
 		return OBJECT_COUNT;
 	}
 
+	// Renderer—p
 	const float* GetLightDir() const {
 		return m_lightDir;
 	}
-
 	const float* GetLightColor() const {
 		return m_lightColor;
 	}
-
 	const float* GetAmbientColor() const {
+		return m_ambientColor;
+	}
+
+	// ImGui—p
+	float* GetLightDir() {
+		return m_lightDir;
+	}
+	float* GetLightColor() {
+		return m_lightColor;
+	}
+	float* GetAmbientColor() {
 		return m_ambientColor;
 	}
 

@@ -5,16 +5,17 @@
 // 頂点の一致判定用ハッシュ
 struct VertexKey{
 	int posIndex;
+	int normalIndex;
 	int uvIndex;
 
 	bool operator == (const VertexKey& other) const {
-		return posIndex == other.posIndex && uvIndex == other.uvIndex;
+		return posIndex == other.posIndex && normalIndex == other.posIndex && uvIndex == other.uvIndex;
 	}
 };
 
 struct VertexKeyHash{
 	size_t operator()(const VertexKey& k) const {
-		return std::hash<int>()(k.posIndex) ^ (std::hash<int>()(k.uvIndex) << 16);
+		return std::hash<int>()(k.posIndex) ^ (std::hash<int>()(k.posIndex) << 11) ^ (std::hash<int>()(k.uvIndex) << 22);
 	}
 };
 

@@ -194,6 +194,16 @@ void Renderer::Render(
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(scene.GetViewMatrix()));
 	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(scene.GetProjMatrix()));
 
+	// ライト情報を書き込み
+	const float* dir = scene.GetLightDir();
+	mapped->lightDir = { dir[0], dir[1], dir[2], 0.0f };
+
+	const float* color = scene.GetLightColor();
+	mapped->lightColor = { color[0], color[1], color[2], 1.0f };
+
+	const float* ambient = scene.GetAmbientColor();
+	mapped->lightColor = { ambient[0], ambient[1], ambient[2], 1.0f };
+
 	// 定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(0 ,frame.GetConstantBuffer()->GetGPUVirtualAddress());
 

@@ -4,13 +4,14 @@ cbuffer SceneConstant : register(b0){
     float4 lightDir;
     float4 lightColor;
     float4 ambientColot;
-}
+};
 
 Texture2D tex : register(t0);
 SamplerState smp : register(s0);
 
 struct PSInput{
     float4 pos : SV_POSITION;
+    float3 normal : NORMAL;
     float2 uv : TEXCOORD;
 };
 

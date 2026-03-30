@@ -41,7 +41,7 @@ bool ModelLoader::LoadOBJ(const std::string& filepath, ModelData& outData) {
 	// 全シェイプの全フェイスを処理
 	for (const auto& shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
-			VertexKey key = { index.vertex_index, index.texcoord_index };
+			VertexKey key = { index.vertex_index, index.normal_index, index.texcoord_index };
 
 			//同じ頂点が既にあればインデックスを再利用
 			auto it = vertexMap.find(key);
@@ -56,6 +56,18 @@ bool ModelLoader::LoadOBJ(const std::string& filepath, ModelData& outData) {
 				vertex.position[0] = attrib.vertices[3 * index.vertex_index + 0];
 				vertex.position[1] = attrib.vertices[3 * index.vertex_index + 1];
 				vertex.position[2] = attrib.vertices[3 * index.vertex_index + 2];
+
+				// 法線を設定
+				if (index.normal_index >= 0) {
+					vertex.normal[0] = attrib.normals[3 * index.normal_index + 0];
+					vertex.normal[1] = attrib.normals[3 * index.normal_index + 1];
+					vertex.normal[2] = attrib.normals[3 * index.normal_index + 2];
+				}
+				else {
+					vertex.normal[0] = 0.0f;
+					vertex.normal[1] = 1.0f;
+					vertex.normal[2] = 0.0f;
+				}
 
 				// UVがあれば使う、なければ0にする
 				if (index.texcoord_index >= 0) {

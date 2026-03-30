@@ -34,15 +34,15 @@ public:
 		return OBJECT_COUNT;
 	}
 
-	float* GetLightDir() {
+	const float* GetLightDir() const {
 		return m_lightDir;
 	}
 
-	float* GetLightColor() {
+	const float* GetLightColor() const {
 		return m_lightColor;
 	}
 
-	float* GetAmbientColor() {
+	const float* GetAmbientColor() const {
 		return m_ambientColor;
 	}
 

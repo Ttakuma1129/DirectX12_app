@@ -202,7 +202,7 @@ void Renderer::Render(
 	mapped->lightColor = { color[0], color[1], color[2], 1.0f };
 
 	const float* ambient = scene.GetAmbientColor();
-	mapped->lightColor = { ambient[0], ambient[1], ambient[2], 1.0f };
+	mapped->ambientColor = { ambient[0], ambient[1], ambient[2], 1.0f };
 
 	// 定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(0 ,frame.GetConstantBuffer()->GetGPUVirtualAddress());

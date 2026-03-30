@@ -8,6 +8,9 @@
 struct alignas(256) SceneConstant {
 	DirectX::XMFLOAT4X4 view;
 	DirectX::XMFLOAT4X4 proj;
+	DirectX::XMFLOAT4 lightDir; // ライトの方向
+	DirectX::XMFLOAT4 lightColor; // ライトの色
+	DirectX::XMFLOAT4 ambientColor; // 環境色
 };
 
 // オブジェクトごと(M行列)

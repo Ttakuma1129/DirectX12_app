@@ -16,5 +16,22 @@ struct PSInput{
 };
 
 float4 main(PSInput input) : SV_TARGET{
-    return tex.Sample(smp,input.uv);
+    // 法線を正規化する
+    float3 N = normalize(input.normal);
+    
+    // ライト方向を正規化　(CPU側から渡される方向の逆が光が来る方向)
+    float3 L = normalize(-lightDir.xyz);
+    
+    // ランバート反射
+    float NdotL = max(0.0, dot(N, L));
+    
+    // テクスチャ色を取得
+    float4 texColor = tex.Sample(smp, input.uv);
+    
+    // 出力される最終色
+    float3 diffuse = lightColor.rgb * NdotL;
+    float3 ambient = ambientColot.rgb;
+    float3 finalColor = texColor.rgb * (ambient + diffuse);
+    
+    return float4(finalColor, texColor.a);
 }

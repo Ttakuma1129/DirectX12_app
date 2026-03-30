@@ -13,11 +13,11 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	// ルートパラメータの数
 	D3D12_ROOT_PARAMETER rootParam[3] = {};
 
-	// シーン行列(VP行列)をルートパラメータとして追加
+	// シーン行列(VP行列)、ライト情報をルートパラメータとして追加
 	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParam[0].Descriptor.ShaderRegister = 0;
 	rootParam[0].Descriptor.RegisterSpace = 0;
-	rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 
 	// オブジェクト定数(M行列)をルートパラメータとして追加
 	rootParam[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;

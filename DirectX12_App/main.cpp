@@ -78,6 +78,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Separator();
 		ImGui::Text("Object Scale");
 		ImGui::SliderFloat("Model Scale", &scene.GetModelScale(), 0.1f, 20.0f);
+		ImGui::Separator();
+		ImGui::Text("Lighting");
+		ImGui::SliderFloat3("Light Direction", scene.GetLightDir(), -1.0f, 1.0f);
+		ImGui::ColorEdit3("Light Color", scene.GetLightColor());
+		ImGui::ColorEdit3("Ambient", scene.GetAmbientColor());
 		ImGui::End();
 		ImGui::Render();
 

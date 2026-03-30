@@ -1,13 +1,15 @@
 // 定数バッファ
-cbuffer SceneConstant : register(b0){ 
+cbuffer SceneConstant : register(b0){
     float4x4 view;
     float4x4 proj;
-}
+    float4 lightDir;
+    float4 lightColor;
+    float4 ambientColot;
+};
 
-cbuffer ObjectConstant : register(b1)
-{
+cbuffer ObjectConstant : register(b1){
     float4x4 model;
-}
+};
 
 struct VSInput{
     float3 pos : POSITION;

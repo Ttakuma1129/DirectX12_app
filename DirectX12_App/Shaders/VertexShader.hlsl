@@ -5,6 +5,8 @@ cbuffer SceneConstant : register(b0){
     float4 lightDir;
     float4 lightColor;
     float4 ambientColor;
+    float4 cameraPos;
+    float4 specularParams; // x:‹­“x y:‰s‚³
 };
 
 cbuffer ObjectConstant : register(b1){

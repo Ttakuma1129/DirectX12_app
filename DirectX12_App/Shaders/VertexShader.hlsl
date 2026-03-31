@@ -21,8 +21,9 @@ struct VSInput{
 
 struct VSOutput{
     float4 pos : SV_POSITION;
+    float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float2 uv : TEXCOORD0;
 };
 
 VSOutput main(VSInput input){

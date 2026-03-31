@@ -3,7 +3,9 @@ cbuffer SceneConstant : register(b0){
     float4x4 proj;
     float4 lightDir;
     float4 lightColor;
-    float4 ambientColot;
+    float4 ambientColor;
+    float4 cameraPos; 
+    float4 specularParams; // x:強度 y:鋭さ
 };
 
 Texture2D tex : register(t0);
@@ -30,7 +32,7 @@ float4 main(PSInput input) : SV_TARGET{
     
     // 出力される最終色
     float3 diffuse = lightColor.rgb * NdotL;
-    float3 ambient = ambientColot.rgb;
+    float3 ambient = ambientColor.rgb;
     float3 finalColor = texColor.rgb * (ambient + diffuse);
     
     return float4(finalColor, texColor.a);

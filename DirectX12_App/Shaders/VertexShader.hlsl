@@ -4,7 +4,7 @@ cbuffer SceneConstant : register(b0){
     float4x4 proj;
     float4 lightDir;
     float4 lightColor;
-    float4 ambientColot;
+    float4 ambientColor;
 };
 
 cbuffer ObjectConstant : register(b1){

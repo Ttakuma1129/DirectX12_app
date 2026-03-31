@@ -11,8 +11,7 @@ cbuffer SceneConstant : register(b0){
 Texture2D tex : register(t0);
 SamplerState smp : register(s0);
 
-struct PSInput
-{
+struct PSInput{
     float4 pos : SV_POSITION;
     float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
@@ -29,13 +28,19 @@ float4 main(PSInput input) : SV_TARGET{
     // ランバート反射
     float NdotL = max(0.0, dot(N, L));
     
+    // スペキュラー反射
+    float3 V = normalize(cameraPos.xyz - input.worldPos); // 視線方向のベクトル
+    float3 H = normalize(L + V); // ハーフベクトル
+    float NdotH = max(0.0, dot(N, H));
+    float specular = pow(NdotH, specularParams.y) * specularParams.x;
+    
     // テクスチャ色を取得
     float4 texColor = tex.Sample(smp, input.uv);
     
     // 出力される最終色
     float3 diffuse = lightColor.rgb * NdotL;
     float3 ambient = ambientColor.rgb;
-    float3 finalColor = texColor.rgb * (ambient + diffuse);
+    float3 finalColor = texColor.rgb * (ambient + diffuse) + lightColor.rgb * specular;
     
     return float4(finalColor, texColor.a);
 }

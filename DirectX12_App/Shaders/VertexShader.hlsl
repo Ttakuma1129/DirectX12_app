@@ -30,6 +30,8 @@ VSOutput main(VSInput input){
     VSOutput output;
     // s—ñŒvZ
     float4 worldPos = mul(float4(input.pos, 1.0), model); 
+    output.worldPos = worldPos.xyz;
+    
     float4 viewPos = mul(worldPos, view); 
     output.pos = mul(viewPos, proj); // Projections—ñ‚Å‚Ì•ÏŠ·
     

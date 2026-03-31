@@ -11,10 +11,12 @@ cbuffer SceneConstant : register(b0){
 Texture2D tex : register(t0);
 SamplerState smp : register(s0);
 
-struct PSInput{
+struct PSInput
+{
     float4 pos : SV_POSITION;
+    float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
-    float2 uv : TEXCOORD;
+    float2 uv : TEXCOORD0;
 };
 
 float4 main(PSInput input) : SV_TARGET{

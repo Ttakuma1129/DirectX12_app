@@ -83,7 +83,7 @@ public:
 	}
 
 private:
-	static constexpr uint32_t OBJECT_COUNT = 2;
+	std::vector<SceneObject> m_Objects;;
 
 	float m_elapsed = 0.0f;
 	float m_aspect = 1.0f;

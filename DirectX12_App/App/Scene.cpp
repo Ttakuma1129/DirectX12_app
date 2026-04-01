@@ -4,6 +4,23 @@ void Scene::Initialize(float aspectRatio) {
 	m_aspect = aspectRatio;
 	// 開始時間を記録
 	m_startTime = std::chrono::high_resolution_clock::now();
+
+	// 起動時にオブジェクトを2つ設置
+	SceneObject obj1;
+	strcpy_s(obj1.name, "Sword L");
+	obj1.modelPath = "App/Models/sword.obj";
+	obj1.meshIndex = 0;
+	obj1.position[0] = -1.5f;
+	obj1.scale = 0.1f;
+	m_objects.push_back(obj1);
+
+	SceneObject obj2;
+	strcpy_s(obj1.name, "Sword R");
+	obj2.modelPath = "App/Models/sword.obj";
+	obj2.meshIndex = 0;
+	obj2.position[0] = 1.5f;
+	obj2.scale = 0.1f;
+	m_objects.push_back(obj2);
 }
 
 void Scene::Update() {

@@ -65,7 +65,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// OBJƒ‚ƒfƒ‹“Ç‚İ‚İ
-	if (LoadMesh(device, "App/mdoels/sword.obj") < 0) {
+	if (LoadMesh(device, "App/Models/sword.obj") < 0) {
 		return false;
 	}
 

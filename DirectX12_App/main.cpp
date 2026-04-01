@@ -67,17 +67,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::NewFrame();
 		ImGui::Begin("Debug");
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+
 		ImGui::Separator();
 		ImGui::SliderFloat("Rotation Speed", &scene.GetRotationSpeed(), 0.0f, 3.0f);
 		ImGui::SliderFloat("FOV", &scene.GetFov(), 10.0f, 120.0f);
+
 		ImGui::Separator();
 		ImGui::Text("Camera Position");
 		ImGui::SliderFloat("X", &scene.GetCameraPos()[0], -10.0f, 10.0f);
 		ImGui::SliderFloat("Y", &scene.GetCameraPos()[1], -10.0f, 10.0f);
 		ImGui::SliderFloat("Z", &scene.GetCameraPos()[2], -10.0f, -0.5f);
+
 		ImGui::Separator();
 		ImGui::Text("Object Scale");
 		ImGui::SliderFloat("Model Scale", &scene.GetModelScale(), 0.1f, 20.0f);
+
 		ImGui::Separator();
 		ImGui::Text("Lighting");
 		ImGui::SliderFloat3("Light Direction", scene.GetLightDir(), -1.0f, 1.0f);
@@ -85,6 +89,38 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Shininess", &scene.GetSpecShiciness(), 1.0f, 256.0f);
 		ImGui::ColorEdit3("Light Color", scene.GetLightColor());
 		ImGui::ColorEdit3("Ambient", scene.GetAmbientColor());
+
+		ImGui::Separator();
+		ImGui::Text("Objects (%d)", scene.GetObjectCount());
+
+		auto& objects = scene.GetObjects();
+		for (uint32_t i = 0; i < objects.size(); ++i) {
+			ImGui::PushID(i);
+			if (ImGui::TreeNode(objects[i].name)) {
+				ImGui::InputText("Name", objects[i].name, sizeof(objects[i].name));
+				ImGui::SliderFloat3("Position", objects[i].position, -10.0f, 10.0f);
+				ImGui::SliderFloat3("Rotaion", objects[i].rotation, -180.0f, 180.0f);
+				ImGui::SliderFloat("Scale", &objects[i].scale, 0.01f, 5.0f);
+
+				if (ImGui::Button("Delete") && objects.size() > 1) {
+					objects.erase(objects.begin() + 1);
+					ImGui::TreePop();
+					ImGui::PopID();
+					break;
+				}
+				ImGui::TreePop();
+			}
+			ImGui::PopID();
+		}
+
+		if (objects.size() < 16 && ImGui::Button("+ Add Object")) {
+			SceneObject newObj;
+			sprintf_s(newObj.name, "Object %d", (int)objects.size());
+			newObj.meshIndex = 0;
+			newObj.scale = 0.1f;
+			objects.push_back(newObj);
+		}
+
 		ImGui::End();
 		ImGui::Render();
 

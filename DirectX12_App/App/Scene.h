@@ -39,10 +39,13 @@ public:
 	}
 
 	uint32_t GetObjectCount() const {
-		return OBJECT_COUNT;
+		return static_cast<uint32_t>(m_objects.size());
 	}
 
 	// Renderer—p
+	const std::vector<SceneObject>& GetObjects() const {
+		return m_objects;
+	}
 	const float* GetLightDir() const {
 		return m_lightDir;
 	}
@@ -63,6 +66,9 @@ public:
 	}
 
 	// ImGui—p
+	std::vector<SceneObject>& GetObjects() {
+		return m_objects;
+	}
 	float* GetLightDir() {
 		return m_lightDir;
 	}
@@ -83,7 +89,7 @@ public:
 	}
 
 private:
-	std::vector<SceneObject> m_Objects;
+	std::vector<SceneObject> m_objects;
 
 	float m_elapsed = 0.0f;
 	float m_aspect = 1.0f;

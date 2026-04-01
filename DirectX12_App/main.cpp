@@ -81,6 +81,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Separator();
 		ImGui::Text("Lighting");
 		ImGui::SliderFloat3("Light Direction", scene.GetLightDir(), -1.0f, 1.0f);
+		ImGui::SliderFloat("Specular", &scene.GetSapcIntensity(), 0.0f, 2.0f);
+		ImGui::SliderFloat("Shininess", &scene.GetSpecShiciness(), 1.0f, 256.0f);
 		ImGui::ColorEdit3("Light Color", scene.GetLightColor());
 		ImGui::ColorEdit3("Ambient", scene.GetAmbientColor());
 		ImGui::End();

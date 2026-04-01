@@ -194,6 +194,10 @@ void Renderer::Render(
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(scene.GetViewMatrix()));
 	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(scene.GetProjMatrix()));
 
+	// カメラ位置を書き込み
+	const float* cam = scene.GetCameraPos();
+	mapped->cameraPos = { cam[0],cam[1],cam[2],1.0f };
+
 	// ライト情報を書き込み
 	const float* dir = scene.GetLightDir();
 	mapped->lightDir = { dir[0], dir[1], dir[2], 0.0f };
@@ -203,6 +207,8 @@ void Renderer::Render(
 
 	const float* ambient = scene.GetAmbientColor();
 	mapped->ambientColor = { ambient[0], ambient[1], ambient[2], 1.0f };
+
+	mapped->specularParams = { scene.GetSapcIntensity(),scene.GetSpecShiciness(),0.0f,0.0f };
 
 	// 定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(0 ,frame.GetConstantBuffer()->GetGPUVirtualAddress());

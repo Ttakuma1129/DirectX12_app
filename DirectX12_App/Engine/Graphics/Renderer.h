@@ -21,6 +21,9 @@ class Renderer{
 public:
 	bool Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator);
 
+	// メッシュを読み込みインデックスを返す
+	int LoadMesh(ID3D12Device* device, const std::string& filepath);
+
 	void Render(
 		ID3D12GraphicsCommandList* cmdList,
 		const Scene& scene,

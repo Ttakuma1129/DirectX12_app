@@ -65,26 +65,13 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// OBJモデル読み込み
-	ModelData modelData;
-	if (!ModelLoader::LoadOBJ("App/Models/sword.obj", modelData)) {
-		OutputDebugStringA("Failed to load OBJ model\n");
+	if (LoadMesh(device, "App/mdoels/sword.obj") < 0) {
 		return false;
 	}
 
-	//頂点バッファ・インデックスバッファの作成
-	if (!m_cubeMesh.Create(
-		device,
-		modelData.vertices.data(),
-		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
-		sizeof(ModelVertex),
-		modelData.indices.data(),
-		static_cast<uint32_t>(modelData.indices.size()))) {
-		return false;
-	}
-
-	// 定数バッファ作成をフレーム*オブジェクト分ループする
+	// 定数バッファ作成をMAX_OBJECTS分ループする
 	for (uint32_t f = 0; f < FRAME_COUNT; ++f) {
-		for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
+		for (uint32_t o = 0; o < MAX_OBJECTS; ++o) {
 			D3D12_HEAP_PROPERTIES cbHeapProps = {};
 			cbHeapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 

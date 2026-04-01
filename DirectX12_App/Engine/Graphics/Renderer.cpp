@@ -259,14 +259,20 @@ void Renderer::Render(
 	// PrimitiveTopologyを設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// VertexBufferとIndexBufferの場所を設定
-	m_cubeMesh.Bind(cmdList);
-
+	// 描画オブジェクト数
+	const auto& objects = scene.GetObjects();
+	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 	// 描画ループ
-	for (uint32_t o = 0; o < OBJECT_COUNT; ++o) {
+	for (uint32_t o = 0; o < count; ++o) {
+		const auto& obj = objects[o];
+
+		// メッシュが存在するかを確認
+		if (obj.meshIndex >= m_meshes.size()) {
+			continue;
+		}
+
 		// オブジェクトごとのModel行列を計算
 		XMMATRIX model = scene.GetModelMatrix(o);
-
 
 		// 定数バッファに書き込み
 		XMStoreFloat4x4(&m_objectMapped[frameIndex][o]->model, XMMatrixTranspose(model));
@@ -274,7 +280,8 @@ void Renderer::Render(
 		// オブジェクト定数をバインド
 		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
 
-		// 描画
-		m_cubeMesh.Draw(cmdList);
+		// メッシュをバインドして描画
+		m_meshes[obj.meshIndex].Bind(cmdList);
+		m_meshes[obj.meshIndex].Draw(cmdList);
 	}
 }

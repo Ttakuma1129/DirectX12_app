@@ -18,10 +18,6 @@ public:
 		return m_rotationSpeed;
 	}
 
-	float* GetCameraPos() {
-		return m_cameraPos;
-	}
-
 	float& GetFov() {
 		return m_fov;
 	}
@@ -44,6 +40,15 @@ public:
 	const float* GetAmbientColor() const {
 		return m_ambientColor;
 	}
+	const float* GetCameraPos() const {
+		return m_cameraPos;
+	}
+	float GetSapcIntensity() const {
+		return m_specIntensity;
+	}
+	float GetSpecShiciness() const {
+		return m_specShininess;
+	}
 
 	// ImGui—p
 	float* GetLightDir() {
@@ -54,6 +59,15 @@ public:
 	}
 	float* GetAmbientColor() {
 		return m_ambientColor;
+	}
+	float* GetCameraPos() {
+		return m_cameraPos;
+	}
+	float& GetSapcIntensity() {
+		return m_specIntensity;
+	}
+	float& GetSpecShiciness() {
+		return m_specShininess;
 	}
 
 private:

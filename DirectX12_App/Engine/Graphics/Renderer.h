@@ -3,6 +3,9 @@
 #include <wrl/client.h>
 #include <cstdint>
 #include <d3dcompiler.h>
+#include <vector>
+#include <string>
+#include <unordered_map>
 
 #include "RootSignature.h"
 #include "PipelineState.h"

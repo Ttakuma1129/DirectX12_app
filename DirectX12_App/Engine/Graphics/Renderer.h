@@ -37,6 +37,9 @@ public:
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}
+	const std::vector<std::string>& getModelPaths() const {
+		return m_modelPaths;
+	}
 
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
@@ -47,13 +50,12 @@ private:
 	DescriptorHeap m_srvHeap; // srv
 	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	Texture m_texture;
-	Mesh m_cubeMesh; // メッシュ
+	
+	// メッシュ管理
+	std::vector<Mesh> m_meshes;
+	std::vector<std::string> m_modelPaths;
+	std::unordered_map<std::string, uint32_t> m_meshMap;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ
-
-	struct Vertex {
-		float position[3];
-		float uv[2];
-	};
 };

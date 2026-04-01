@@ -166,6 +166,10 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	return true;
 }
 
+int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
+	
+}
+
 void Renderer::Render(
 	ID3D12GraphicsCommandList* cmdList,
 	const Scene& scene,

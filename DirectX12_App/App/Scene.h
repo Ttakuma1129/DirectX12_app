@@ -2,6 +2,8 @@
 #include <DirectXMath.h>
 #include <chrono>
 #include <cstdint>
+#include <vector>
+#include <string>
 
 class Scene {
 public:

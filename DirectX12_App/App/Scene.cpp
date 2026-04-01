@@ -48,12 +48,19 @@ DirectX::XMMATRIX Scene::GetProjMatrix() const {
 
 DirectX::XMMATRIX Scene::GetModelMatrix(uint32_t index) const {
 	using namespace DirectX;
-	if (index == 0) {
-		return XMMatrixScaling(m_scale, m_scale, m_scale) * XMMatrixRotationY(m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(-1.5f, 0.0f, 0.0f);
-
+	if (index >= m_objects.size()) {
+		return XMMatrixIdentity();
 	}
-	else {
-		return XMMatrixScaling(m_scale, m_scale, m_scale) * XMMatrixRotationY(-m_elapsed * XM_2PI * m_rotationSpeed) * XMMatrixTranslation(1.5f, 0.0f, 0.0f);
 
-	}
+	const auto& obj = m_objects[index];
+
+	XMMATRIX S = XMMatrixScaling(obj.scale, obj.scale, obj.scale);
+	XMMATRIX R = XMMatrixRotationRollPitchYaw(
+		XMConvertToRadians(obj.rotation[0]),
+		XMConvertToRadians(obj.rotation[1]) + m_elapsed * XM_2PI * m_rotationSpeed,
+		XMConvertToDegrees(obj.rotation[2])
+	);
+	XMMATRIX T = XMMatrixTranslation(obj.position[0], obj.position[1], obj.position[2]);
+	
+	return S * R * T;
 }

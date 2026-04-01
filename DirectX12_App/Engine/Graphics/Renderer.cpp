@@ -167,7 +167,36 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 }
 
 int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
-	
+	// 読み込み済みならインデックスを返す
+	auto it = m_meshMap.find(filepath);
+	if (it != m_meshMap.end()) {
+		return it->second;
+	}
+
+	// OBJ読み込み
+	ModelData modelData;
+	if (!ModelLoader::LoadOBJ(filepath, modelData)) {
+		return -1;
+	}
+
+	// メッシュ作成
+	Mesh mesh;
+	if (!mesh.Create(
+		device,
+		modelData.vertices.data(),
+		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
+		sizeof(ModelVertex),
+		modelData.indices.data(),
+		static_cast<uint32_t>(modelData.indices.size()))) {
+		return -1;
+
+	}
+
+	uint32_t index = static_cast<uint32_t>(m_meshes.size());
+	m_meshes.push_back(std::move(mesh));
+	m_modelPaths.push_back(filepath);
+	m_meshMap[filepath] = index;
+	return index;
 }
 
 void Renderer::Render(

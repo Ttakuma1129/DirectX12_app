@@ -83,7 +83,7 @@ public:
 	}
 
 private:
-	std::vector<SceneObject> m_Objects;;
+	std::vector<SceneObject> m_Objects;
 
 	float m_elapsed = 0.0f;
 	float m_aspect = 1.0f;

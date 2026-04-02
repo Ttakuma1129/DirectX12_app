@@ -126,6 +126,9 @@
     <ClCompile Include="Engine\Resources\ModelLoader.cpp">
       <Filter>ソース ファイル\Engine\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Resources\CubeMapTexture.cpp">
+      <Filter>ソース ファイル\Engine\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -194,6 +197,9 @@
     <ClInclude Include="Engine\Resources\ModelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Resources\CubeMapTexture.h">
+      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -205,5 +211,13 @@
     <CustomBuild Include="Shaders\VertexShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\SkyboxPS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyboxVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

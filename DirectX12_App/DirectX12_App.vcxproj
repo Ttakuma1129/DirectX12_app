@@ -136,6 +136,7 @@
     <ClCompile Include="Engine\Graphics\PipelineState.cpp" />
     <ClCompile Include="Engine\Graphics\Renderer.cpp" />
     <ClCompile Include="Engine\Graphics\RootSignature.cpp" />
+    <ClCompile Include="Engine\Resources\CubeMapTexture.cpp" />
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
     <ClCompile Include="Engine\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\Resources\ModelLoader.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Engine\Graphics\PipelineState.h" />
     <ClInclude Include="Engine\Graphics\Renderer.h" />
     <ClInclude Include="Engine\Graphics\RootSignature.h" />
+    <ClInclude Include="Engine\Resources\CubeMapTexture.h" />
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Mesh.h" />
     <ClInclude Include="Engine\Resources\ModelLoader.h" />
@@ -200,6 +202,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\SkyboxPS.hlsl" />
+    <FxCompile Include="Shaders\SkyboxVS.hlsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

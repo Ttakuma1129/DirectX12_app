@@ -8,4 +8,6 @@ class CubeMapTexture {
 public:
 	
 private:
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_texture;
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_uploadBuffer;
 };

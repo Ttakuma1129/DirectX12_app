@@ -4,7 +4,7 @@
 bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string faceFiles[6]) {
 	HRESULT hr;
 
-	// ルートシグネチャ設定
+	// SRVレンジ設定
 	D3D12_DESCRIPTOR_RANGE srvRange = {};
 	srvRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	srvRange.NumDescriptors = 1;
@@ -25,4 +25,14 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	rootParam[1].DescriptorTable.NumDescriptorRanges = 1;
 	rootParam[1].DescriptorTable.pDescriptorRanges = &srvRange;
 	rootParam[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	// サンプラー設定
+	D3D12_STATIC_SAMPLER_DESC smpDesc = {};
+	smpDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	smpDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	smpDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	smpDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+	smpDesc.ShaderRegister = 0;
+	smpDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	smpDesc.MaxLOD = D3D12_FLOAT32_MAX;
 }

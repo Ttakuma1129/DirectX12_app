@@ -13,4 +13,12 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	srvRange.OffsetInDescriptorsFromTableStart = 0;
 
 	D3D12_ROOT_PARAMETER rootParam[2] = {};
+
+	// シーン定数(View・Proj行列)
+	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParam[0].Descriptor.ShaderRegister = 0;
+	rootParam[0].Descriptor.RegisterSpace = 0;
+	rootParam[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+
+
 }

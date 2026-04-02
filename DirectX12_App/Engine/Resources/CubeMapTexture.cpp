@@ -139,3 +139,7 @@ bool CubeMapTexture::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmd
 
 	return true;
 }
+
+void CubeMapTexture::ReleaseUploadBuffer() {
+	m_uploadBuffer.Reset();
+}

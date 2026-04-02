@@ -35,4 +35,24 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	smpDesc.ShaderRegister = 0;
 	smpDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	smpDesc.MaxLOD = D3D12_FLOAT32_MAX;
+
+	// ルートシグネチャ作成
+	D3D12_ROOT_SIGNATURE_DESC resDesc = {};
+	resDesc.NumParameters = 2;
+	resDesc.pParameters = rootParam;
+	resDesc.NumStaticSamplers = 1;
+	resDesc.pStaticSamplers = &smpDesc;
+	resDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	
+	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob;
+	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
+	hr = D3D12SerializeRootSignature(&resDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&m_rootSignature));
+	if (FAILED(hr)) {
+		return false;
+	}
 }

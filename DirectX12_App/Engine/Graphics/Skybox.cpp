@@ -43,7 +43,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	resDesc.NumStaticSamplers = 1;
 	resDesc.pStaticSamplers = &smpDesc;
 	resDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	
+
 	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob;
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob;
 	hr = D3D12SerializeRootSignature(&resDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
@@ -98,4 +98,13 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 		OutputDebugStringA("PS compile failed\n");
 		return false;
 	}
+
+	//パイプラインステート
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] = { { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 } };
+
+	D3D12_RASTERIZER_DESC  rastDesc = {};
+	rastDesc.FillMode = D3D12_FILL_MODE_SOLID;
+	rastDesc.CullMode = D3D12_CULL_MODE_NONE;
+	rastDesc.FrontCounterClockwise = FALSE;
+	rastDesc.DepthClipEnable = TRUE;
 }

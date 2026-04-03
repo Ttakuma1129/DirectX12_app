@@ -55,4 +55,47 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	if (FAILED(hr)) {
 		return false;
 	}
+
+	// シェーダーコンパイル
+	Microsoft::WRL::ComPtr<ID3D10Blob> vsBlob, psBlob, errorBlob;
+
+	hr = D3DCompileFromFile(
+		L"Shaders/SkyboxVS.hlsl",
+		nullptr,
+		nullptr,
+		"main",
+		"vs_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&vsBlob,
+		&errorBlob
+	);
+	if (FAILED(hr)) {
+		// ファイルが見つからない場合はerrorBlobもnull
+		if (errorBlob) {
+			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+		}
+		OutputDebugStringA("VS compile failed\n");
+		return false;
+	}
+
+	hr = D3DCompileFromFile(
+		L"Shaders/SkyboxPS.hlsl",
+		nullptr,
+		nullptr,
+		"main",
+		"ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+		0,
+		&psBlob,
+		&errorBlob
+	);
+	if (FAILED(hr)) {
+		// ファイルが見つからない場合はerrorBlobもnull
+		if (errorBlob) {
+			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+		}
+		OutputDebugStringA("PS compile failed\n");
+		return false;
+	}
 }

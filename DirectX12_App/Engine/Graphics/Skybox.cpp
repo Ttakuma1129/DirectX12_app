@@ -122,4 +122,31 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	psoDesc.InputLayout = { inputLayout, 1 };
 	psoDesc.RasterizerState = rastDesc;
 	psoDesc.BlendState = blendDesc;
+
+	// デプスステンシル設定
+	psoDesc.DepthStencilState.DepthEnable = TRUE;
+	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	psoDesc.DepthStencilState.StencilEnable = FALSE;
+
+	// 深度バッファのフォーマットを指定
+	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+
+	// トポロジータイプ
+	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	// レンダーターゲット設定(スワップチェーンと一致させる)
+	psoDesc.NumRenderTargets = 1;
+	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	// マルチサンプル設定
+	psoDesc.SampleDesc.Count = 1;
+	psoDesc.SampleMask = UINT_MAX;
+
+	// パイプラインステートオブジェクトの作成
+	HRESULT hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+
+	if (FAILED(hr)) {
+		return false;
+	}
 }

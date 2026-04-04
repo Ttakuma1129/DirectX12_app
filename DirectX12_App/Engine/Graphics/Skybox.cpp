@@ -102,9 +102,17 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	//パイプラインステート
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = { { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 } };
 
+	// ラスタライザ設定
 	D3D12_RASTERIZER_DESC  rastDesc = {};
 	rastDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	rastDesc.CullMode = D3D12_CULL_MODE_NONE;
 	rastDesc.FrontCounterClockwise = FALSE;
 	rastDesc.DepthClipEnable = TRUE;
+
+	// ブレンド設定
+	D3D12_BLEND_DESC blendDesc = {};
+	blendDesc.AlphaToCoverageEnable = FALSE;
+	blendDesc.IndependentBlendEnable = FALSE;
+	blendDesc.RenderTarget[0].BlendEnable = FALSE;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 }

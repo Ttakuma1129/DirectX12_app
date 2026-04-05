@@ -1,3 +1,5 @@
+#include <string>
+
 #include "Engine/Core/Window.h"
 #include "Engine/Graphics/GfxDevice.h"
 #include "App/Scene.h"
@@ -29,6 +31,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	// スカイボックス初期化
+	std::string skyFaces[6] = {
+		"App/Texture/skybox/sh_back.png"
+		"App/Texture/skybox/sh_bottom.png"
+		"App/Texture/skybox/sh_front.png"
+		"App/Texture/skybox/sh_left.png"
+		"App/Texture/skybox/sh_right.png"
+		"App/Texture/skybox/sh_top.png"
+	};
+	renderer.InitializeSkybox(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), skyFaces);
+
 	// ImGui初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -46,6 +59,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	initInfo.LegacySingleSrvGpuDescriptor = renderer.GetImGuiSrvHeap().GetGPUHandle(0);
 
 	ImGui_ImplDX12_Init(&initInfo);
+
 	// メインループ
 	while (window.ProcessMessage()){
 		scene.Update();

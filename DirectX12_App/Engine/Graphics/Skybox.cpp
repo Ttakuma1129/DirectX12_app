@@ -213,3 +213,9 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 
 	return true;
 }
+
+void Skybox::Render(ID3D12GraphicsCommandList* cmdList, const SceneConstant* sceneConstant, D3D12_GPU_VIRTUAL_ADDRESS sceneCBAddress) {
+	// スカイボックス用パイプライン設定
+	cmdList->SetGraphicsRootSignature(m_rootSignature.Get());
+	cmdList->SetPipelineState(m_pipelineState.Get());
+}

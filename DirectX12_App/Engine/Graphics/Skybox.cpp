@@ -184,4 +184,15 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
 		return false;
 	}
+
+	CommandContext uploadContext;
+	uploadContext.Initialize(device, allocator);
+	uploadContext.Begin(allocator);
+
+	if (!m_cubeMap.Create(device, uploadContext.GetCommandList(), faceFiles, m_srvHeap.GetCPUHandle(0))) {
+		return false;
+	}
+
+	uploadContext.End();
+	uploadContext.Execute(commandQueue);
 }

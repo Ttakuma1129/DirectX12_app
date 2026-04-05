@@ -226,4 +226,8 @@ void Skybox::Render(ID3D12GraphicsCommandList* cmdList, const SceneConstant* sce
 	ID3D12DescriptorHeap* heap[] = { m_srvHeap.GetHeap() };
 	cmdList->SetDescriptorHeaps(1, heap);
 	cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
+
+	// •`‰æ
+	m_cubeMesh.Bind(cmdList);
+	m_cubeMesh.Draw(cmdList);
 }

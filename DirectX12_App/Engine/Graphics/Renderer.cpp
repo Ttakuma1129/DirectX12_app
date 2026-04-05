@@ -269,6 +269,22 @@ void Renderer::Render(
 	// PrimitiveTopologyを設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// スカイボックス描画
+	if (m_skyboxEnabled) {
+		m_skybox.Render(cmdList, mapped, frame.GetConstantBuffer()->GetGPUVirtualAddress());
+		
+		// スカイボックス描画後、パイプラインを元に戻す
+		cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
+		cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
+
+		ID3D12DescriptorHeap* heap[] = { m_srvHeap.GetHeap() };
+		cmdList->SetDescriptorHeaps(1, heaps);
+		cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
+		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
+	}
+
 	// 描画オブジェクト数
 	const auto& objects = scene.GetObjects();
 	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);

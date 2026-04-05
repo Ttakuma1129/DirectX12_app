@@ -51,6 +51,9 @@ private:
 	DescriptorHeap m_srvHeap; // srv
 	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	Texture m_texture;
+	Skybox m_skybox;
+
+	bool m_skyboxEnabled = false;
 	
 	// メッシュ管理
 	std::vector<Mesh> m_meshes;

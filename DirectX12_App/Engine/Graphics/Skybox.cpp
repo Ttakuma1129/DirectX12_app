@@ -222,4 +222,8 @@ void Skybox::Render(ID3D12GraphicsCommandList* cmdList, const SceneConstant* sce
 	// シーン定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(0, sceneCBAddress);
 
+	// キューブマップSRVをバインド
+	ID3D12DescriptorHeap* heap[] = { m_srvHeap.GetHeap() };
+	cmdList->SetDescriptorHeaps(1, heap);
+	cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
 }

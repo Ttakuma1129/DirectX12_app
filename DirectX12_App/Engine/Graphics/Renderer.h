@@ -10,6 +10,7 @@
 #include "RootSignature.h"
 #include "PipelineState.h"
 #include "DescriptorHeap.h"
+#include "Skybox.h"
 #include "../Resources/FrameResources.h"
 #include "../Resources/Mesh.h"
 #include "../Resources/Texture.h"

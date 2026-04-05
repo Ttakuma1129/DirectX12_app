@@ -153,6 +153,16 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	return true;
 }
 
+bool Renderer::InitializeSkybox(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string faceFiles[6]) {
+	// スカイボックスキューブ作成
+	if (!m_skybox.Initialize(device, commandQueue, allocator, faceFiles)) {
+		OutputDebugStringA("Skybox Initialization failed\n");
+		return false;
+	}
+	m_skyboxEnabled = true;
+	return true;
+}
+
 int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
 	// 読み込み済みならインデックスを返す
 	auto it = m_meshMap.find(filepath);

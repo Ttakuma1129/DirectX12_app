@@ -195,4 +195,21 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 
 	uploadContext.End();
 	uploadContext.Execute(commandQueue);
+
+	// GPUŠ®—¹‘Ò‚¿
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	commandQueue->Signal(fence.Get(), 1);
+	fence->SetEventOnCompletion(1, event);
+	WaitForSingleObject(event, INFINITE);
+	CloseHandle(event);
+
+	m_cubeMap.ReleaseUploadBuffer();
+
+	return true;
 }

@@ -22,6 +22,8 @@ class Renderer{
 public:
 	bool Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator);
 
+	bool InitializeSkybox(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string faceFiles[6]);
+
 	// メッシュを読み込みインデックスを返す
 	int LoadMesh(ID3D12Device* device, const std::string& filepath);
 
@@ -40,6 +42,10 @@ public:
 	}
 	const std::vector<std::string>& getModelPaths() const {
 		return m_modelPaths;
+	}
+
+	bool IsSkyboxEnabled() const {
+		return m_skyboxEnabled;
 	}
 
 private:

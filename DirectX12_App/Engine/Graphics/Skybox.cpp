@@ -57,7 +57,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	}
 
 	// シェーダーコンパイル
-	Microsoft::WRL::ComPtr<ID3D10Blob> vsBlob, psBlob, errorBlob;
+	Microsoft::WRL::ComPtr<ID3D10Blob> vsBlob, psBlob;
 
 	hr = D3DCompileFromFile(
 		L"Shaders/SkyboxVS.hlsl",
@@ -144,7 +144,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	psoDesc.SampleMask = UINT_MAX;
 
 	// パイプラインステートオブジェクトの作成
-	HRESULT hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
+	hr = device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&m_pipelineState));
 
 	if (FAILED(hr)) {
 		return false;

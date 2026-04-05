@@ -217,13 +217,11 @@
     <CustomBuild Include="Shaders\VertexShader.hlsl">
       <Filter>リソース ファイル</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Shaders\SkyboxPS.hlsl">
+    <CustomBuild Include="Shaders\SkyboxVS.hlsl">
       <Filter>リソース ファイル</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyboxVS.hlsl">
+    </CustomBuild>
+    <CustomBuild Include="Shaders\SkyboxPS.hlsl">
       <Filter>リソース ファイル</Filter>
-    </FxCompile>
+    </CustomBuild>
   </ItemGroup>
 </Project>

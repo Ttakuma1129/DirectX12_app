@@ -179,4 +179,9 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	if (!m_cubeMesh.Create(device, skyVertices, sizeof(skyVertices), sizeof(float) * 3, skyIndices, 36)) {
 		return false;
 	}
+
+	// SRVヒープ、キューブマップ読み込み
+	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
+		return false;
+	}
 }

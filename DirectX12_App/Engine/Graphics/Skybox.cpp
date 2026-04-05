@@ -218,4 +218,8 @@ void Skybox::Render(ID3D12GraphicsCommandList* cmdList, const SceneConstant* sce
 	// スカイボックス用パイプライン設定
 	cmdList->SetGraphicsRootSignature(m_rootSignature.Get());
 	cmdList->SetPipelineState(m_pipelineState.Get());
+
+	// シーン定数バッファをバインド
+	cmdList->SetGraphicsRootConstantBufferView(0, sceneCBAddress);
+
 }

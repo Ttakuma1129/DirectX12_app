@@ -9,7 +9,7 @@ struct VertexKey{
 	int uvIndex;
 
 	bool operator == (const VertexKey& other) const {
-		return posIndex == other.posIndex && normalIndex == other.posIndex && uvIndex == other.uvIndex;
+		return posIndex == other.posIndex && normalIndex == other.normalIndex && uvIndex == other.uvIndex;
 	}
 };
 

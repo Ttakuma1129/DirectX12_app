@@ -33,12 +33,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// スカイボックス初期化
 	std::string skyFaces[6] = {
-		"App/Texture/skybox/sh_back.png"
-		"App/Texture/skybox/sh_bottom.png"
-		"App/Texture/skybox/sh_front.png"
-		"App/Texture/skybox/sh_left.png"
-		"App/Texture/skybox/sh_right.png"
-		"App/Texture/skybox/sh_top.png"
+		"App/Textures/skybox/sh_back.png",
+		"App/Textures/skybox/sh_bottom.png",
+		"App/Textures/skybox/sh_front.png",
+		"App/Textures/skybox/sh_left.png",
+		"App/Textures/skybox/sh_right.png",
+		"App/Textures/skybox/sh_top.png",
 	};
 	renderer.InitializeSkybox(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), skyFaces);
 

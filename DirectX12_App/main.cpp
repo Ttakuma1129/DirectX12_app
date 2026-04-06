@@ -37,8 +37,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		"App/Textures/skybox/sh_left.png",
 		"App/Textures/skybox/sh_top.png",
 		"App/Textures/skybox/sh_bottom.png",
-		"App/Textures/skybox/sh_front.png",
 		"App/Textures/skybox/sh_back.png",
+		"App/Textures/skybox/sh_front.png",
 	};
 	renderer.InitializeSkybox(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), skyFaces);
 

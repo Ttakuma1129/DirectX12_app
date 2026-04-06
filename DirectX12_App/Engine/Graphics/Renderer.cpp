@@ -137,7 +137,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
 	hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	if (FAILED(hr)) {
-		return true;
+		return false;
 	}
 
 	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);

@@ -269,8 +269,6 @@ void Renderer::Render(
 	// PrimitiveTopologyを設定
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
 	// スカイボックス描画
 	if (m_skyboxEnabled) {
 		m_skybox.Render(cmdList, mapped, frame.GetConstantBuffer()->GetGPUVirtualAddress());

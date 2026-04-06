@@ -281,7 +281,7 @@ void Renderer::Render(
 
 		ID3D12DescriptorHeap* heap[] = { m_srvHeap.GetHeap() };
 		cmdList->SetDescriptorHeaps(1, heaps);
-		cmdList->SetGraphicsRootDescriptorTable(1, m_srvHeap.GetGPUHandle(0));
+		cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
 		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
 	}
 

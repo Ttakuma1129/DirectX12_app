@@ -72,7 +72,7 @@ bool ModelLoader::LoadOBJ(const std::string& filepath, ModelData& outData) {
 				// UV‚ª‚ ‚ê‚ÎŽg‚¤A‚È‚¯‚ê‚Î0‚É‚·‚é
 				if (index.texcoord_index >= 0) {
 					vertex.uv[0] = attrib.texcoords[2 * index.texcoord_index + 0];
-					vertex.uv[1] = 1.0f - attrib.texcoords[2 * index.texcoord_index + 0];
+					vertex.uv[1] = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1];
 				}
 				else {
 					vertex.uv[0] = 0.0f;

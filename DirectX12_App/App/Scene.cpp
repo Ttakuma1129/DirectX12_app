@@ -15,7 +15,7 @@ void Scene::Initialize(float aspectRatio) {
 	m_objects.push_back(obj1);
 
 	SceneObject obj2;
-	strcpy_s(obj1.name, "Sword R");
+	strcpy_s(obj2.name, "Sword R");
 	obj2.modelPath = "App/Models/sword.obj";
 	obj2.meshIndex = 0;
 	obj2.position[0] = 1.5f;

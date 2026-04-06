@@ -117,7 +117,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ImGui::SliderFloat("Scale", &objects[i].scale, 0.01f, 5.0f);
 
 				if (ImGui::Button("Delete") && objects.size() > 1) {
-					objects.erase(objects.begin() + 1);
+					objects.erase(objects.begin() + i);
 					ImGui::TreePop();
 					ImGui::PopID();
 					break;

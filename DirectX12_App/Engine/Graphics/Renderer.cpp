@@ -277,7 +277,7 @@ void Renderer::Render(
 		cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
 		cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
 
-		ID3D12DescriptorHeap* heap[] = { m_srvHeap.GetHeap() };
+		ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
 		cmdList->SetDescriptorHeaps(1, heaps);
 		cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
 		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());

@@ -15,7 +15,7 @@ struct VertexKey{
 
 struct VertexKeyHash{
 	size_t operator()(const VertexKey& k) const {
-		return std::hash<int>()(k.posIndex) ^ (std::hash<int>()(k.posIndex) << 11) ^ (std::hash<int>()(k.uvIndex) << 22);
+		return std::hash<int>()(k.posIndex) ^ (std::hash<int>()(k.normalIndex) << 11) ^ (std::hash<int>()(k.uvIndex) << 22);
 	}
 };
 

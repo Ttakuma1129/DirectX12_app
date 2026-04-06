@@ -77,7 +77,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 
 			D3D12_RESOURCE_DESC cbResDesc = {};
 			cbResDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-			cbResDesc.Width = sizeof(ObjectConstant);
+			cbResDesc.Width = (sizeof(ObjectConstant) + 255) & ~255;
 			cbResDesc.Height = 1;
 			cbResDesc.DepthOrArraySize = 1;
 			cbResDesc.MipLevels = 1;

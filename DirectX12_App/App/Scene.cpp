@@ -58,7 +58,7 @@ DirectX::XMMATRIX Scene::GetModelMatrix(uint32_t index) const {
 	XMMATRIX R = XMMatrixRotationRollPitchYaw(
 		XMConvertToRadians(obj.rotation[0]),
 		XMConvertToRadians(obj.rotation[1]) + m_elapsed * XM_2PI * m_rotationSpeed,
-		XMConvertToDegrees(obj.rotation[2])
+		XMConvertToRadians(obj.rotation[2])
 	);
 	XMMATRIX T = XMMatrixTranslation(obj.position[0], obj.position[1], obj.position[2]);
 	

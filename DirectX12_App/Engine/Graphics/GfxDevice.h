@@ -17,8 +17,10 @@ class GfxDevice {
 public:
 	~GfxDevice();
 
+	// GPUリソースの作成
 	bool Initialize(HWND hwnd, uint32_t width, uint32_t height);
 
+	// フレーム制御関連の作成
 	bool InitializeFrameResources();
 
 	void BeginFrame();

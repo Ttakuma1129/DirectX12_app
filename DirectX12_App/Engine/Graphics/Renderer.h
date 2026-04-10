@@ -15,6 +15,7 @@
 #include "../Resources/Mesh.h"
 #include "../Resources/Texture.h"
 #include "../Resources/ModelLoader.h"
+#include "../Resources/SceneObject.h"
 
 class  Scene;
 

@@ -134,6 +134,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
 			newObj.modelPath = "App/Models/sword.obj";
 			newObj.scale = 0.1f;
+			renderer.RegisterObject(gfxDevice.GetDevice(), newObj);
 			objects.push_back(newObj);
 		}
 

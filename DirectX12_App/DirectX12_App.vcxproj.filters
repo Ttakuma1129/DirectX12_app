@@ -206,6 +206,9 @@
     <ClInclude Include="Engine\Graphics\Skybox.h">
       <Filter>ヘッダー ファイル\Engine\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Resources\SceneObject.h">
+      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

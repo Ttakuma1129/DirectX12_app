@@ -166,6 +166,7 @@
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Mesh.h" />
     <ClInclude Include="Engine\Resources\ModelLoader.h" />
+    <ClInclude Include="Engine\Resources\SceneObject.h" />
     <ClInclude Include="Engine\Resources\Texture.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h" />

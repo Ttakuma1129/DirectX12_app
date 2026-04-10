@@ -37,6 +37,8 @@ public:
 		uint32_t width,
 		uint32_t height);
 
+	int RegisterObject(ID3D12Device* device, SceneObject& obj);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}

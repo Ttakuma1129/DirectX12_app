@@ -93,10 +93,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Z", &scene.GetCameraPos()[2], -10.0f, -0.5f);
 
 		ImGui::Separator();
-		ImGui::Text("Object Scale");
-		ImGui::SliderFloat("Model Scale", &scene.GetModelScale(), 0.1f, 20.0f);
-
-		ImGui::Separator();
 		ImGui::Text("Lighting");
 		ImGui::SliderFloat3("Light Direction", scene.GetLightDir(), -1.0f, 1.0f);
 		ImGui::SliderFloat("Specular", &scene.GetSapcIntensity(), 0.0f, 2.0f);

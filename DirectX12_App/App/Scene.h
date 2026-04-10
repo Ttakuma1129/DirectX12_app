@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 
+#include "../Engine/Resources/SceneObject.h"
+
 class Scene {
 public:
 	void Initialize(float aspectRatio);

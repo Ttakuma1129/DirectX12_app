@@ -64,11 +64,6 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		return false;
 	}
 
-	// OBJモデル読み込み
-	if (LoadMesh(device, "App/Models/sword.obj") < 0) {
-		return false;
-	}
-
 	// 定数バッファ作成をMAX_OBJECTS分ループする
 	for (uint32_t f = 0; f < FRAME_COUNT; ++f) {
 		for (uint32_t o = 0; o < MAX_OBJECTS; ++o) {

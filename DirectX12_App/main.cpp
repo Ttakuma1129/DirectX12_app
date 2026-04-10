@@ -31,6 +31,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	// 全オブジェクトを登録
+	auto& objects = scene.GetObjects();
+	for (auto& obj : objects) {
+		renderer.RegisterObject(gfxDevice.GetDevice(), obj);
+	}
+
 	// スカイボックス初期化
 	std::string skyFaces[6] = {
 		"App/Textures/skybox/sh_right.png",
@@ -126,7 +132,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		if (objects.size() < 16 && ImGui::Button("+ Add Object")) {
 			SceneObject newObj;
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
-			newObj.meshIndex = 0;
+			newObj.modelPath = "App/Models/sword.obj";
 			newObj.scale = 0.1f;
 			objects.push_back(newObj);
 		}

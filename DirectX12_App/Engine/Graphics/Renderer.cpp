@@ -304,3 +304,11 @@ void Renderer::Render(
 		m_meshes[obj.meshIndex].Draw(cmdList);
 	}
 }
+
+int Renderer::RegisterObject(ID3D12Device* device, SceneObject& obj) {
+	int index = LoadMesh(device, obj.modelPath);
+	if (index>=0) {
+		obj.meshIndex = index;
+	}
+	return index;
+}

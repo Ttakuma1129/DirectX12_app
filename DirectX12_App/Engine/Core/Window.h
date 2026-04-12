@@ -25,6 +25,8 @@ public:
 		return m_mouse;
 	}
 
+	void ResetMouseDelta();
+
 	// DirectXの初期化に必要なハンドル
 	HWND GetHwnd() const {
 		return m_hwnd;

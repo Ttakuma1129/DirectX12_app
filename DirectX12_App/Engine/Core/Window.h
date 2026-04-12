@@ -2,6 +2,14 @@
 #include <Windows.h>
 #include <cstdint>
 
+struct MouseInput {
+	int deltaX = 0; // フレーム内の移動量
+	int deltaY = 0;
+	int wheelDelta = 0;
+	bool leftDown = false;
+	bool middleDown = false;
+};
+
 class Window {
 public:
 	// コンストラクタ

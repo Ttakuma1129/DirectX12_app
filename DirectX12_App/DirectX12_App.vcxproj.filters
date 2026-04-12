@@ -213,7 +213,7 @@
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Camera.h">
-      <Filter>ソース ファイル\Engine\Core</Filter>
+      <Filter>ヘッダー ファイル\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

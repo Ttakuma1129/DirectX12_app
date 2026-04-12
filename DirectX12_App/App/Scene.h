@@ -9,7 +9,7 @@
 
 class Scene {
 public:
-	void Initialize(float aspectRatio);
+	void Initialize();
 	void Update();
 
 	DirectX::XMMATRIX GetViewMatrix() const;
@@ -20,10 +20,6 @@ public:
 
 	float& GetRotationSpeed() {
 		return m_rotationSpeed;
-	}
-
-	float& GetFov() {
-		return m_fov;
 	}
 
 	float& GetModelScale() {
@@ -47,9 +43,6 @@ public:
 	const float* GetAmbientColor() const {
 		return m_ambientColor;
 	}
-	const float* GetCameraPos() const {
-		return m_cameraPos;
-	}
 	float GetSapcIntensity() const {
 		return m_specIntensity;
 	}
@@ -70,9 +63,6 @@ public:
 	float* GetAmbientColor() {
 		return m_ambientColor;
 	}
-	float* GetCameraPos() {
-		return m_cameraPos;
-	}
 	float& GetSapcIntensity() {
 		return m_specIntensity;
 	}
@@ -84,10 +74,7 @@ private:
 	std::vector<SceneObject> m_objects;
 
 	float m_elapsed = 0.0f;
-	float m_aspect = 1.0f;
 	float m_rotationSpeed = 0.5f;
-	float m_cameraPos[3] = { 0.0f,0.7f,-3.0f };
-	float m_fov = 45.0f;
 	float m_scale = 2.0f;
 
 	// ライトパラメータ

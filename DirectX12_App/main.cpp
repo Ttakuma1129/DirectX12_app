@@ -141,10 +141,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::PopID();
 		}
 
+		// パス入力用のバッファ
+		static char modelPathBuffer[256] = "App/Models/sword.obj";
+
+		ImGui::InputText("Model Path", modelPathBuffer, sizeof(modelPathBuffer));
+
 		if (objects.size() < 16 && ImGui::Button("+ Add Object")) {
 			SceneObject newObj;
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
-			newObj.modelPath = "App/Models/sword.obj";
+			newObj.modelPath = modelPathBuffer;
 			newObj.scale = 0.1f;
 			renderer.RegisterObject(gfxDevice.GetDevice(), newObj);
 			objects.push_back(newObj);

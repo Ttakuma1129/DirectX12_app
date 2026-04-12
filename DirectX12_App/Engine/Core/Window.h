@@ -20,6 +20,11 @@ public:
 	// メッセージループの処理
 	bool ProcessMessage();
 
+	// マウス入力を返す
+	const MouseInput& GetMouseInput() const {
+		return m_mouse;
+	}
+
 	// DirectXの初期化に必要なハンドル
 	HWND GetHwnd() const {
 		return m_hwnd;
@@ -39,4 +44,10 @@ private:
 	WNDCLASSEX m_wndClass = {}; // ウィンドウクラス情報
 	uint32_t m_width = 0;
 	uint32_t m_height = 0;
+
+	MouseInput m_mouse;
+	int m_lastMouseX = 0;
+	int m_lastMouseY = 0;
+
+	static Window* s_instance;
 };

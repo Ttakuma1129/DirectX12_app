@@ -6,15 +6,12 @@
 #include <string>
 
 #include "../Engine/Resources/SceneObject.h"
+#include "../Engine/Core/Camera.h"
 
 class Scene {
 public:
 	void Initialize();
 	void Update();
-
-	DirectX::XMMATRIX GetViewMatrix() const;
-
-	DirectX::XMMATRIX GetProjMatrix() const;
 
 	DirectX::XMMATRIX GetModelMatrix(uint32_t index) const;
 
@@ -31,6 +28,9 @@ public:
 	}
 
 	// Renderer—p
+	const Camera& GetCamera() const {
+		return m_camera;
+	}
 	const std::vector<SceneObject>& GetObjects() const {
 		return m_objects;
 	}
@@ -51,6 +51,9 @@ public:
 	}
 
 	// ImGui—p
+	Camera& GetCamera() {
+		return m_camera;
+	}
 	std::vector<SceneObject>& GetObjects() {
 		return m_objects;
 	}
@@ -71,6 +74,8 @@ public:
 	}
 
 private:
+	Camera m_camera;
+
 	std::vector<SceneObject> m_objects;
 
 	float m_elapsed = 0.0f;

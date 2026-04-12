@@ -132,6 +132,9 @@
     <ClCompile Include="Engine\Graphics\Skybox.cpp">
       <Filter>ソース ファイル\Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\Camera.cpp">
+      <Filter>ソース ファイル\Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -208,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Resources\SceneObject.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Camera.h">
+      <Filter>ソース ファイル\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

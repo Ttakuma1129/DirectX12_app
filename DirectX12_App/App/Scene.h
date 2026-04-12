@@ -10,7 +10,7 @@
 
 class Scene {
 public:
-	void Initialize();
+	void Initialize(float aspectRatio);
 	void Update();
 
 	DirectX::XMMATRIX GetModelMatrix(uint32_t index) const;
@@ -88,6 +88,6 @@ private:
 	float m_ambientColor[3] = { 0.15f, 0.15f, 0.15f };
 	float m_specIntensity = 0.5f; // スペキュラー強度
 	float m_specShininess = 32.0f; // ハイライトの鋭さ
-	
+
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 };

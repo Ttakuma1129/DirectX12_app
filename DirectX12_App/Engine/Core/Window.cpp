@@ -4,8 +4,11 @@
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+Window* Window::s_instance = nullptr;
+
 // コンストラクタ
 Window::Window(uint32_t width, uint32_t height, const wchar_t* title) : m_width(width), m_height(height) {
+	s_instance = this;
 
 	m_wndClass.cbSize = sizeof(WNDCLASSEX);
 	m_wndClass.style = CS_HREDRAW | CS_VREDRAW;

@@ -118,6 +118,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ImGui::SliderFloat3("Rotaion", objects[i].rotation, -180.0f, 180.0f);
 				ImGui::SliderFloat("Scale", &objects[i].scale, 0.01f, 5.0f);
 
+				// ÉÇÉfÉãêÿÇËë÷Ç¶
+				const auto& paths = renderer.getModelPaths();
+				int current = static_cast<int>(objects[i].meshIndex);
+				if (ImGui::BeginCombo("Model", paths[current].c_str())) {
+					for (int m = 0; m < paths.size(); ++m) {
+						if (ImGui::Selectable(paths[m].c_str(), m == current)) {
+							objects[i].meshIndex = m;
+						}
+					}
+					ImGui::EndCombo();
+				}
+
 				if (ImGui::Button("Delete") && objects.size() > 1) {
 					objects.erase(objects.begin() + i);
 					ImGui::TreePop();

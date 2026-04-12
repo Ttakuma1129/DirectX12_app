@@ -69,6 +69,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// メインループ
 	while (window.ProcessMessage()){
 		scene.Update();
+
+		const auto& mouse = window.GetMouseInput();
+
+		// ImGuiがマウスを使ってないときだけカメラ操作
+		if (!ImGui::GetIO().WantCaptureMouse) {
+			if (mouse.leftDown) {
+				scene.GetCamera().Rotate(
+					static_cast<float>(mouse.deltaX),
+					static_cast<float>(mouse.deltaY));
+			}
+			if (mouse.middleDown) {
+				scene.GetCamera().Pan(
+					static_cast<float>(mouse.deltaX),
+					static_cast<float>(mouse.deltaY));
+			}
+			if (mouse.wheelDelta != 0) {
+				scene.GetCamera().Zoom(
+					static_cast<float>(mouse.wheelDelta) / 120.0f);
+			}
+		}
+		window.ResetMouseDelta();
+
 		gfxDevice.BeginFrame();
 
 		renderer.Render(
@@ -90,13 +112,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::Separator();
 		ImGui::SliderFloat("Rotation Speed", &scene.GetRotationSpeed(), 0.0f, 3.0f);
-		ImGui::SliderFloat("FOV", &scene.GetFov(), 10.0f, 120.0f);
-
-		ImGui::Separator();
-		ImGui::Text("Camera Position");
-		ImGui::SliderFloat("X", &scene.GetCameraPos()[0], -10.0f, 10.0f);
-		ImGui::SliderFloat("Y", &scene.GetCameraPos()[1], -10.0f, 10.0f);
-		ImGui::SliderFloat("Z", &scene.GetCameraPos()[2], -10.0f, -0.5f);
+		ImGui::SliderFloat("FOV", &scene.GetCamera().GetFov(), 10.0f, 120.0f);
 
 		ImGui::Separator();
 		ImGui::Text("Lighting");

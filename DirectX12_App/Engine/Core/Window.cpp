@@ -61,6 +61,12 @@ bool Window::ProcessMessage() {
 	return true;
 }
 
+void Window::ResetMouseDelta() {
+	m_mouse.deltaX = 0;
+	m_mouse.deltaY = 0;
+	m_mouse.wheelDelta = 0;
+}
+
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	// Imguiのメッセージを転送

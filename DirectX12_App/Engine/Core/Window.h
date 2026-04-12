@@ -20,12 +20,12 @@ public:
 	// メッセージループの処理
 	bool ProcessMessage();
 
+	void ResetMouseDelta();
+
 	// マウス入力を返す
 	const MouseInput& GetMouseInput() const {
 		return m_mouse;
 	}
-
-	void ResetMouseDelta();
 
 	// DirectXの初期化に必要なハンドル
 	HWND GetHwnd() const {

@@ -216,12 +216,13 @@ void Renderer::Render(
 
 	// 定数バッファを書き込み
 	SceneConstant* mapped = frame.GetConstantMapped();
-	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(scene.GetViewMatrix()));
-	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(scene.GetProjMatrix()));
+	const Camera& camera = scene.GetCamera();
+	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(camera.GetViewMatrix()));
+	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(camera.GetProjMatrix()));
 
 	// カメラ位置を書き込み
-	const float* cam = scene.GetCameraPos();
-	mapped->cameraPos = { cam[0],cam[1],cam[2],1.0f };
+	XMFLOAT3 camPos = camera.GetPosition();
+	mapped->cameraPos = { camPos.x, camPos.y, camPos.z, 1.0f };
 
 	// ライト情報を書き込み
 	const float* dir = scene.GetLightDir();

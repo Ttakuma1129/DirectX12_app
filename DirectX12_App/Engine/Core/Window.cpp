@@ -74,10 +74,48 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		return true;
 	}
 
-	switch (msg)
-	{
+	switch (msg){
 	case WM_DESTROY: // ウィンドウが閉じられたとき
 		PostQuitMessage(0);
+		return 0;
+
+	case WM_LBUTTONDOWN:
+		s_instance->m_mouse.leftDown = true;
+		s_instance->m_lastMouseX = LOWORD(lparam);
+		s_instance->m_lastMouseY = HIWORD(lparam);
+		SetCapture(hwnd);
+		return 0;
+
+	case WM_LBUTTONUP:
+		s_instance->m_mouse.leftDown = false;
+		ReleaseCapture();
+		return 0;
+
+	case WM_MBUTTONDOWN:
+		s_instance->m_mouse.middleDown = true;
+		s_instance->m_lastMouseX = LOWORD(lparam);
+		s_instance->m_lastMouseY = HIWORD(lparam);
+		SetCapture(hwnd);
+		return 0;
+
+	case WM_MBUTTONUP:
+		s_instance->m_mouse.middleDown = false;
+		ReleaseCapture();
+		return 0;
+
+	case WM_MOUSEMOVE:
+	{
+		int x = LOWORD(lparam);
+		int y = HIWORD(lparam);
+		s_instance->m_mouse.deltaX += x - s_instance->m_lastMouseX;
+		s_instance->m_mouse.deltaY += y - s_instance->m_lastMouseY;
+		s_instance->m_lastMouseX = x;
+		s_instance->m_lastMouseY = y;
+		return 0;
+	}
+
+	case WM_MOUSEWHEEL:
+		s_instance->m_mouse.wheelDelta += GET_WHEEL_DELTA_WPARAM(wparam);
 		return 0;
 	}
 

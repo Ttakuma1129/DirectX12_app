@@ -19,7 +19,7 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	shadowSrvRange.OffsetInDescriptorsFromTableStart = 0;
 
 	// ルートパラメータの数
-	D3D12_ROOT_PARAMETER rootParam[3] = {};
+	D3D12_ROOT_PARAMETER rootParam[4] = {};
 
 	// シーン行列(VP行列)、ライト情報をルートパラメータとして追加
 	rootParam[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;

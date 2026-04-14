@@ -13,6 +13,8 @@ struct alignas(256) SceneConstant {
 	DirectX::XMFLOAT4 ambientColor; // 環境色
 	DirectX::XMFLOAT4 cameraPos; // カメラ位置
 	DirectX::XMFLOAT4 specularParams; // x:強度 y:鋭さ
+	DirectX::XMFLOAT4X4 lightViewProj; // ライトのVP行列
+	DirectX::XMFLOAT4 shadowParams; // x:偏り y:シャドウマップのサイズ
 };
 
 // オブジェクトごと(M行列)

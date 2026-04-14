@@ -67,7 +67,6 @@ private:
 	PipelineState m_pipelineState; // パイプラインステート
 	DescriptorHeap m_srvHeap; // srv
 	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
-	Texture m_texture;
 	Skybox m_skybox;
 
 	bool m_skyboxEnabled = false;

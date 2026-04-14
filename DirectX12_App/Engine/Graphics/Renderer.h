@@ -25,6 +25,8 @@ public:
 
 	bool InitializeSkybox(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string faceFiles[6]);
 
+	bool InitializeShadow(ID3D12Device* device);
+
 	// メッシュを読み込みインデックスを返す
 	int LoadMesh(ID3D12Device* device, const std::string& filepath);
 

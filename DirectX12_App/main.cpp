@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 全オブジェクトを登録
 	auto& objects = scene.GetObjects();
 	for (auto& obj : objects) {
-		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), obj);
+		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), obj);
 	}
 
 	// スカイボックス初期化
@@ -184,7 +184,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			newObj.texturePath = texturePathBuffer;
 			newObj.scale = 0.1f;
 
-			renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), newObj);
+			renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), newObj);
 			objects.push_back(newObj);
 		}
 

@@ -68,6 +68,9 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	shadowSmpDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	shadowSmpDesc.MaxLOD = D3D12_FLOAT32_MAX;
 
+	// サンプラーをまとめる
+	D3D12_STATIC_SAMPLER_DESC samplers[] = { smpDesc, shadowSmpDesc };
+
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
 	desc.NumParameters = 3;

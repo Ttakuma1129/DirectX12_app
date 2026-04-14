@@ -135,12 +135,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ImGui::SliderFloat("Scale", &objects[i].scale, 0.01f, 5.0f);
 
 				// モデル切り替え
-				const auto& paths = renderer.GetModelPaths();
-				int current = static_cast<int>(objects[i].meshIndex);
-				if (ImGui::BeginCombo("Model", paths[current].c_str())) {
-					for (int m = 0; m < paths.size(); ++m) {
-						if (ImGui::Selectable(paths[m].c_str(), m == current)) {
+				const auto& modelPaths = renderer.GetModelPaths();
+				int currentModel = static_cast<int>(objects[i].meshIndex);
+				if (ImGui::BeginCombo("Model", modelPaths[currentModel].c_str())) {
+					for (int m = 0; m < modelPaths.size(); ++m) {
+						if (ImGui::Selectable(modelPaths[m].c_str(), m == currentModel)) {
 							objects[i].meshIndex = m;
+						}
+					}
+					ImGui::EndCombo();
+				}
+
+				// テクスチャ切り替え
+				const auto& texPaths = renderer.GetTexturePaths();
+				int currentTex = static_cast<int>(objects[i].textureIndex);
+				if (ImGui::BeginCombo("Texture", texPaths[currentTex].c_str())) {
+					for (int t = 0; t < texPaths.size(); ++t) {
+						if (ImGui::Selectable(texPaths[t].c_str(), t == currentTex)) {
+							objects[i].textureIndex = t;
 						}
 					}
 					ImGui::EndCombo();

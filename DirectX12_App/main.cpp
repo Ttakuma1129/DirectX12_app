@@ -158,15 +158,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		// パス入力用のバッファ
+		// モデル
 		static char modelPathBuffer[256] = "App/Models/sword.obj";
-
 		ImGui::InputText("Model Path", modelPathBuffer, sizeof(modelPathBuffer));
+		// テクスチャ
+		static char texturePathBuffer[256] = "App/Textures/sample.png";
+		ImGui::InputText("Texture Path", texturePathBuffer, sizeof(texturePathBuffer));
 
 		if (objects.size() < 16 && ImGui::Button("+ Add Object")) {
 			SceneObject newObj;
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
 			newObj.modelPath = modelPathBuffer;
+			newObj.texturePath = texturePathBuffer;
 			newObj.scale = 0.1f;
+
 			renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), newObj);
 			objects.push_back(newObj);
 		}

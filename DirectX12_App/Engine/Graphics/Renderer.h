@@ -47,8 +47,11 @@ public:
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}
-	const std::vector<std::string>& getModelPaths() const {
+	const std::vector<std::string>& GetModelPaths() const {
 		return m_modelPaths;
+	}
+	const std::vector<std::string>& GetTexturePaths() const {
+		return m_texturePath;
 	}
 
 	bool IsSkyboxEnabled() const {

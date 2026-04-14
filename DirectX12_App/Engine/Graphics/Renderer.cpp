@@ -99,7 +99,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// SRV用ディスクリプタヒープの作成
-	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
+	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, MAX_TEXTURES, true)) {
 		return false;
 	}
 
@@ -107,43 +107,6 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	if (!m_imguiSrvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
 		return false;
 	}
-
-	// 画像読み込み
-	int texWidth, texHeight, channels;
-	unsigned char* pixels = stbi_load(
-		"App/Textures/sample.png",	// 画像ファイルのパス(実行ファイルからのパス)
-		&texWidth, &texHeight, &channels, 4);
-
-	if (!pixels) {
-		return false;
-	}
-	
-	CommandContext uploadContext;
-	uploadContext.Initialize(device, allocator);
-	uploadContext.Begin(allocator);
-
-	// テクスチャの作成
-	m_texture.Create(device, uploadContext.GetCommandList(), static_cast<uint32_t>(texWidth), static_cast<uint32_t>(texHeight), pixels, m_srvHeap.GetCPUHandle(0));
-
-	// コマンド実行・GPUの完了待ち
-	uploadContext.End();
-	uploadContext.Execute(commandQueue);
-
-	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
-	hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	if (FAILED(hr)) {
-		return false;
-	}
-
-	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	commandQueue->Signal(fence.Get(), 1);
-	fence->SetEventOnCompletion(1, event);
-	WaitForSingleObject(event, INFINITE);
-	CloseHandle(event);
-
-	// GPUの完了後に中間バッファを解放
-	stbi_image_free(pixels);
-	m_texture.ReleaseUploadBuffer();
 
 	return true;
 }

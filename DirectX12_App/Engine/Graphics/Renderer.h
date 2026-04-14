@@ -41,7 +41,8 @@ public:
 		uint32_t width,
 		uint32_t height);
 
-	int RegisterObject(ID3D12Device* device, SceneObject& obj);
+	// オブジェクト登録
+	int RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, SceneObject& obj);
 
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;

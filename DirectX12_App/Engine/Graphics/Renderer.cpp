@@ -175,10 +175,18 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		return -1;
 	}
 
+	// テクスチャ用のコマンドアロケータを作成
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
+	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));
+	if (FAILED(hr)) {
+		stbi_image_free(pixels);
+		return -1;
+	}
+
 	// アップロード用の中間バッファ
 	CommandContext uploadContext;
-	uploadContext.Initialize(device, allocator);
-	uploadContext.Begin(allocator);
+	uploadContext.Initialize(device, allocator.Get());
+	uploadContext.Begin(allocator.Get());
 
 	// テクスチャ作成
 	Texture texture;
@@ -351,7 +359,7 @@ int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQu
 	obj.meshIndex = meshIdx;
 
 	// テクスチャ登録
-	int texIdx = LoadTexture(device, commandQueue, allocator, obj.texturePath);
+	int texIdx = LoadTexture(device, commandQueue, obj.texturePath);
 	if (texIdx < 0) {
 		return -1;
 	}

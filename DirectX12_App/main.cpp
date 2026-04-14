@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 全オブジェクトを登録
 	auto& objects = scene.GetObjects();
 	for (auto& obj : objects) {
-		renderer.RegisterObject(gfxDevice.GetDevice(), obj);
+		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), obj);
 	}
 
 	// スカイボックス初期化
@@ -135,7 +135,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ImGui::SliderFloat("Scale", &objects[i].scale, 0.01f, 5.0f);
 
 				// モデル切り替え
-				const auto& paths = renderer.getModelPaths();
+				const auto& paths = renderer.GetModelPaths();
 				int current = static_cast<int>(objects[i].meshIndex);
 				if (ImGui::BeginCombo("Model", paths[current].c_str())) {
 					for (int m = 0; m < paths.size(); ++m) {
@@ -167,7 +167,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
 			newObj.modelPath = modelPathBuffer;
 			newObj.scale = 0.1f;
-			renderer.RegisterObject(gfxDevice.GetDevice(), newObj);
+			renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator(), newObj);
 			objects.push_back(newObj);
 		}
 

@@ -56,6 +56,18 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	smpDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	smpDesc.MaxLOD = D3D12_FLOAT32_MAX;
 
+	// シャドウサンプラーの設定
+	D3D12_STATIC_SAMPLER_DESC shadowSmpDesc = {};
+	shadowSmpDesc.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
+	shadowSmpDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	shadowSmpDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	shadowSmpDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+	shadowSmpDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE;
+	shadowSmpDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	shadowSmpDesc.ShaderRegister = 1;
+	shadowSmpDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	shadowSmpDesc.MaxLOD = D3D12_FLOAT32_MAX;
+
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
 	desc.NumParameters = 3;

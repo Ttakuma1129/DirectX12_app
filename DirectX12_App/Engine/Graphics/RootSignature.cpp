@@ -6,9 +6,17 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	D3D12_DESCRIPTOR_RANGE srvRange = {};
 	srvRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	srvRange.NumDescriptors = 1;
-	srvRange.BaseShaderRegister = 0;
+	srvRange.BaseShaderRegister = 0; //t0
 	srvRange.RegisterSpace = 0;
 	srvRange.OffsetInDescriptorsFromTableStart = 0;
+
+	// シャドウマップ用SRVレンジを設定
+	D3D12_DESCRIPTOR_RANGE shadowSrvRange = {};
+	shadowSrvRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	shadowSrvRange.NumDescriptors = 1;
+	shadowSrvRange.BaseShaderRegister = 1; // t1
+	shadowSrvRange.RegisterSpace = 0;
+	shadowSrvRange.OffsetInDescriptorsFromTableStart = 0;
 
 	// ルートパラメータの数
 	D3D12_ROOT_PARAMETER rootParam[3] = {};

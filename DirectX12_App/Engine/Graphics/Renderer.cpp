@@ -191,6 +191,74 @@ int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
 	return index;
 }
 
+int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string& filepath) {
+	// 読み込み済みならインデックスを返す
+	auto it = m_textureMap.find(filepath);
+	if (it != m_textureMap.end()) {
+		return it->second;
+	}
+
+	// スロット上限かチェック
+	if (m_nextSrvSlot >= MAX_TEXTURES) {
+		OutputDebugStringA("Texture slot limit reached\n");
+		return -1;
+	}
+
+	// 画像読み込み
+	int texWidth, texHeight, channels;
+	unsigned char* pixels = stbi_load(filepath.c_str(), &texWidth, &texHeight, &channels, 4);
+	if (!pixels) {
+		OutputDebugStringA(("Failed to laod texture:" + filepath + "\n").c_str());
+		return -1;
+	}
+
+	// アップロード用の中間バッファ
+	CommandContext uploadContext;
+	uploadContext.Initialize(device, allocator);
+	uploadContext.Begin(allocator);
+
+	// テクスチャ作成
+	Texture texture;
+	texture.Create(
+		device,
+		uploadContext.GetCommandList(),
+		static_cast<uint32_t>(texWidth),
+		static_cast<uint32_t>(texHeight),
+		pixels,
+		m_srvHeap.GetCPUHandle(m_nextSrvSlot));
+
+	uploadContext.End();
+	uploadContext.Execute(commandQueue);
+
+	// GPU完了待ち
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	HRESULT hr = device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	if (FAILED(hr)) {
+		stbi_image_free(pixels);
+		return -1;
+	}
+
+	// イベント作成
+	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	commandQueue->Signal(fence.Get(), 1);
+	fence->SetEventOnCompletion(1, event);
+	WaitForSingleObject(event, INFINITE);
+	CloseHandle(event);
+
+	// 中間バッファを解放
+	stbi_image_free(pixels);
+	texture.ReleaseUploadBuffer();
+
+	// テクスチャ登録
+	uint32_t index = m_nextSrvSlot;
+	m_textures.push_back(std::move(texture));
+	m_texturePath.push_back(filepath);
+	m_textureMap[filepath] = index;
+	m_nextSrvSlot++;
+
+	return static_cast<int>(index);
+}
+
 void Renderer::Render(
 	ID3D12GraphicsCommandList* cmdList,
 	const Scene& scene,

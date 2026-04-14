@@ -154,7 +154,7 @@ int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
 	return index;
 }
 
-int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string& filepath) {
+int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath) {
 	// 読み込み済みならインデックスを返す
 	auto it = m_textureMap.find(filepath);
 	if (it != m_textureMap.end()) {
@@ -342,7 +342,7 @@ void Renderer::Render(
 	}
 }
 
-int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, SceneObject& obj) {
+int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj) {
 	// メッシュ登録
 	int meshIdx = LoadMesh(device, obj.modelPath);
 	if (meshIdx<0) {

@@ -29,7 +29,7 @@ public:
 	int LoadMesh(ID3D12Device* device, const std::string& filepath);
 
 	// テクスチャを読み込みインデックスを返す
-	int LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, const std::string& filepath);
+	int LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath);
 
 	void Render(
 		ID3D12GraphicsCommandList* cmdList,
@@ -42,7 +42,7 @@ public:
 		uint32_t height);
 
 	// オブジェクト登録
-	int RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, SceneObject& obj);
+	int RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj);
 
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;

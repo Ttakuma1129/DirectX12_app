@@ -73,10 +73,10 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 
 	// ルートシグネチャの設定
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
-	desc.NumParameters = 3;
+	desc.NumParameters = 4;
 	desc.pParameters = rootParam;
-	desc.NumStaticSamplers = 1;
-	desc.pStaticSamplers = &smpDesc;
+	desc.NumStaticSamplers = 2;
+	desc.pStaticSamplers = samplers;
 	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	// シリアライズ

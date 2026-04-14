@@ -331,6 +331,11 @@ void Renderer::Render(
 		// オブジェクト定数をバインド
 		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
 
+		// オブジェクトごとにテクスチャを切り替え
+		if (obj.textureIndex < m_srvSlot) {
+			cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(obj.textureIndex));
+		}
+
 		// メッシュをバインドして描画
 		m_meshes[obj.meshIndex].Bind(cmdList);
 		m_meshes[obj.meshIndex].Draw(cmdList);
@@ -339,18 +344,18 @@ void Renderer::Render(
 
 int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, SceneObject& obj) {
 	// メッシュ登録
-	int meshIndex = LoadMesh(device, obj.modelPath);
-	if (meshIndex<0) {
+	int meshIdx = LoadMesh(device, obj.modelPath);
+	if (meshIdx<0) {
 		return -1;
 	}
-	obj.meshIndex = meshIndex;
+	obj.meshIndex = meshIdx;
 
 	// テクスチャ登録
-	int textureIndex = LoadTexture(device, commandQueue, allocator, obj.texturePath);
-	if (textureIndex < 0) {
+	int texIdx = LoadTexture(device, commandQueue, allocator, obj.texturePath);
+	if (texIdx < 0) {
 		return -1;
 	}
-	obj.texturePath = textureIndex;
+	obj.textureIndex=texIdx;
 
 	return 0;
 }

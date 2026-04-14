@@ -199,7 +199,7 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// スロット上限かチェック
-	if (m_nextSrvSlot >= MAX_TEXTURES) {
+	if (m_srvSlot >= MAX_TEXTURES) {
 		OutputDebugStringA("Texture slot limit reached\n");
 		return -1;
 	}
@@ -225,7 +225,7 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 		static_cast<uint32_t>(texWidth),
 		static_cast<uint32_t>(texHeight),
 		pixels,
-		m_srvHeap.GetCPUHandle(m_nextSrvSlot));
+		m_srvHeap.GetCPUHandle(m_srvSlot));
 
 	uploadContext.End();
 	uploadContext.Execute(commandQueue);
@@ -250,11 +250,11 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	texture.ReleaseUploadBuffer();
 
 	// テクスチャ登録
-	uint32_t index = m_nextSrvSlot;
+	uint32_t index = m_srvSlot;
 	m_textures.push_back(std::move(texture));
 	m_texturePath.push_back(filepath);
 	m_textureMap[filepath] = index;
-	m_nextSrvSlot++;
+	m_srvSlot++;
 
 	return static_cast<int>(index);
 }
@@ -374,10 +374,20 @@ void Renderer::Render(
 	}
 }
 
-int Renderer::RegisterObject(ID3D12Device* device, SceneObject& obj) {
-	int index = LoadMesh(device, obj.modelPath);
-	if (index>=0) {
-		obj.meshIndex = index;
+int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, ID3D12CommandAllocator* allocator, SceneObject& obj) {
+	// メッシュ登録
+	int meshIndex = LoadMesh(device, obj.modelPath);
+	if (meshIndex<0) {
+		return -1;
 	}
-	return index;
+	obj.meshIndex = meshIndex;
+
+	// テクスチャ登録
+	int textureIndex = LoadTexture(device, commandQueue, allocator, obj.texturePath);
+	if (textureIndex < 0) {
+		return -1;
+	}
+	obj.texturePath = textureIndex;
+
+	return 0;
 }

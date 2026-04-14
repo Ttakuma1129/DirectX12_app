@@ -81,7 +81,7 @@ private:
 	std::vector<Texture> m_textures;
 	std::vector<std::string> m_texturePath;
 	std::unordered_map<std::string, uint32_t> m_textureMap;
-	uint32_t m_nextSrvSlot = 0;
+	uint32_t m_srvSlot = 0;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ

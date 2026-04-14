@@ -62,6 +62,7 @@ private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	static constexpr uint32_t MAX_OBJECTS = 16;
 	static constexpr uint32_t MAX_TEXTURES = 32;
+	static constexpr uint32_t SHADOW_MAP_SIZE = 2048;
 
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
@@ -81,6 +82,11 @@ private:
 	std::vector<std::string> m_texturePath;
 	std::unordered_map<std::string, uint32_t> m_textureMap;
 	uint32_t m_srvSlot = 0;
+
+	// シャドウマップ管理
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_shadowMap; // 深度テクスチャ
+	DescriptorHeap m_shadowDsvHeap;
+	DescriptorHeap m_shadowSrvHeap;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ

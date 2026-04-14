@@ -39,6 +39,12 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 	rootParam[2].DescriptorTable.pDescriptorRanges = &srvRange;
 	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
+	// シャドウマップのSRVをルートパラメータとして追加
+	rootParam[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParam[2].DescriptorTable.NumDescriptorRanges = 1;
+	rootParam[2].DescriptorTable.pDescriptorRanges = &shadowSrvRange;
+	rootParam[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
 	// StaticSamplerの設定
 	D3D12_STATIC_SAMPLER_DESC smpDesc = {};
 	smpDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;

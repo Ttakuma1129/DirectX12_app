@@ -121,6 +121,41 @@ bool Renderer::InitializeSkybox(ID3D12Device* device, ID3D12CommandQueue* comman
 	return true;
 }
 
+bool Renderer::InitializeShadow(ID3D12Device* device) {
+	HRESULT hr;
+
+	// シャドウマップディスクリプタヒープの設定
+	D3D12_HEAP_PROPERTIES heapProps = {};
+	heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	D3D12_RESOURCE_DESC texDesc = {};
+	texDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	texDesc.Width = SHADOW_MAP_SIZE;
+	texDesc.Height = SHADOW_MAP_SIZE;
+	texDesc.DepthOrArraySize = 1;
+	texDesc.MipLevels = 1;
+	texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	// クリア値の設定
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	clearValue.DepthStencil.Depth = 1.0f;
+
+	// シャドウマップテクスチャ作成
+	hr = device->CreateCommittedResource(
+		&heapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&texDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&clearValue,
+		IID_PPV_ARGS(&m_shadowMap));
+	if (FAILED(hr)) {
+		return false;
+	}
+}
+
 int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
 	// 読み込み済みならインデックスを返す
 	auto it = m_meshMap.find(filepath);

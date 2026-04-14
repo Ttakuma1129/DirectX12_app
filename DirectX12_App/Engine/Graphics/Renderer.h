@@ -58,6 +58,7 @@ public:
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	static constexpr uint32_t MAX_OBJECTS = 16;
+	static constexpr uint32_t MAX_TEXTURES = 32;
 
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
@@ -72,6 +73,11 @@ private:
 	std::vector<Mesh> m_meshes;
 	std::vector<std::string> m_modelPaths;
 	std::unordered_map<std::string, uint32_t> m_meshMap;
+
+	// テクスチャ管理
+	std::vector<Texture> m_textures;
+	std::vector<std::string> m_texturePath;
+	std::unordered_map<std::string, uint32_t> m_textureMap;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ

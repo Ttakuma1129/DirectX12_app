@@ -165,15 +165,12 @@ bool Renderer::InitializeShadow(ID3D12Device* device) {
 	device->CreateDepthStencilView(m_shadowMap.Get(), &dsvDesc, m_shadowDsvHeap.GetCPUHandle(0));
 	
 	// シェーダーから読む用SRV
-	if (!m_shadowSrvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
-		return false;
-	}
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.Texture2D.MipLevels = 1;
-	device->CreateShaderResourceView(m_shadowMap.Get(), &srvDesc, m_shadowSrvHeap.GetCPUHandle(0));
+	device->CreateShaderResourceView(m_shadowMap.Get(), &srvDesc, m_srvHeap.GetCPUHandle(SHADOW_SRV_SLOT));
 	
 	// シャドウパス用PSO
 	Microsoft::WRL::ComPtr<ID3D10Blob> shadowVS, errorBlob;
@@ -489,6 +486,7 @@ void Renderer::Render(
 	cmdList->ResourceBarrier(1, &barrier);
 
 	// メイン描画の設定
+	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
 	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
 
 	// SRVヒープをセット
@@ -496,6 +494,9 @@ void Renderer::Render(
 	cmdList->SetDescriptorHeaps(1, heaps);
 
 	cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
+
+	// シャドウマップSRVを全オブジェクトにバインド
+	cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(SHADOW_SRV_SLOT));
 
 	// Viewportを設定
 	D3D12_VIEWPORT viewport = {
@@ -544,12 +545,6 @@ void Renderer::Render(
 		if (obj.meshIndex >= m_meshes.size()) {
 			continue;
 		}
-
-		// オブジェクトごとのModel行列を計算
-		XMMATRIX model = scene.GetModelMatrix(o);
-
-		// 定数バッファに書き込み
-		XMStoreFloat4x4(&m_objectMapped[frameIndex][o]->model, XMMatrixTranspose(model));
 
 		// オブジェクト定数をバインド
 		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());

@@ -65,6 +65,7 @@ private:
 	static constexpr uint32_t MAX_OBJECTS = 16;
 	static constexpr uint32_t MAX_TEXTURES = 32;
 	static constexpr uint32_t SHADOW_MAP_SIZE = 2048;
+	static constexpr uint32_t SHADOW_SRV_SLOT = MAX_TEXTURES - 1;
 
 	RootSignature m_rootSignature; // ルートシグネチャ
 	PipelineState m_pipelineState; // パイプラインステート
@@ -89,7 +90,6 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_shadowMap; // 深度テクスチャ
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_shadowPSO; // 深度のみ・PSなし
 	DescriptorHeap m_shadowDsvHeap;
-	DescriptorHeap m_shadowSrvHeap;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ

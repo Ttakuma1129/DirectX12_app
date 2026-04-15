@@ -379,6 +379,7 @@ void Renderer::Render(
 
 	using namespace DirectX;
 
+	// 描画オブジェクト数
 	const auto& objects = scene.GetObjects();
 	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 
@@ -535,9 +536,6 @@ void Renderer::Render(
 		cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
 	}
 
-	// 描画オブジェクト数
-	const auto& objects = scene.GetObjects();
-	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 	// 描画ループ
 	for (uint32_t o = 0; o < count; ++o) {
 		const auto& obj = objects[o];

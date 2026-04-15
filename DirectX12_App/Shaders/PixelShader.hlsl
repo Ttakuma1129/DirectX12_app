@@ -6,6 +6,8 @@ cbuffer SceneConstant : register(b0){
     float4 ambientColor;
     float4 cameraPos; 
     float4 specularParams; // x:‹­“x y:‰s‚³
+    float4x4 lightViewProj;
+    float4 shadowParams;
 };
 
 Texture2D tex : register(t0);

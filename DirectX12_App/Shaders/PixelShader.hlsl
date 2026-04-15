@@ -11,7 +11,9 @@ cbuffer SceneConstant : register(b0){
 };
 
 Texture2D tex : register(t0);
+Texture2D shadowMap : register(t1);
 SamplerState smp : register(s0);
+SamplerComparisonState shadowSampler : register(s1);
 
 struct PSInput{
     float4 pos : SV_POSITION;

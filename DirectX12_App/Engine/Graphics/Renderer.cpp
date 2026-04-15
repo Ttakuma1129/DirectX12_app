@@ -379,13 +379,23 @@ void Renderer::Render(
 
 	using namespace DirectX;
 
-	// パイプライン設定
-	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
-	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
+	const auto& objects = scene.GetObjects();
+	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 
-	// SRVヒープをセット
-	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
-	cmdList->SetDescriptorHeaps(1, heaps);
+	// ライトのVP行列を計算
+	const float* dir = scene.GetLightDir();
+	XMVECTOR lightDir = XMVector3Normalize(XMVectorSet(dir[0], dir[1], dir[2], 0.0f));
+	XMVECTOR lightPos = lightDir * 20.0f;
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+
+	// ライトが真上、真下を向いているときのup補正
+	if (fabsf(XMVectorGetY(lightDir)) > 0.99f) {
+		up = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	}
+
+	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, XMVectorZero(), up);
+	XMMATRIX lightProj = XMMatrixOrthographicLH(20.0f, 20.0f, 0.1f, 50.0f);
+	XMMATRIX lightVP = lightView * lightProj;	
 
 	// ルートパラメータ2にSRVテーブルをバインド
 	cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
@@ -401,7 +411,6 @@ void Renderer::Render(
 	mapped->cameraPos = { camPos.x, camPos.y, camPos.z, 1.0f };
 
 	// ライト情報を書き込み
-	const float* dir = scene.GetLightDir();
 	mapped->lightDir = { dir[0], dir[1], dir[2], 0.0f };
 
 	const float* color = scene.GetLightColor();
@@ -411,9 +420,81 @@ void Renderer::Render(
 	mapped->ambientColor = { ambient[0], ambient[1], ambient[2], 1.0f };
 
 	mapped->specularParams = { scene.GetSapcIntensity(),scene.GetSpecShiciness(),0.0f,0.0f };
+	XMStoreFloat4x4(&mapped->lightViewProj, XMMatrixTranspose(lightVP));
+	mapped->shadowParams = { scene.GetShadowBias(),static_cast<float>(SHADOW_MAP_SIZE),0.0f,0.0f };
+	
+	// オブジェクトごとのModel行列を書き込む
+	for (uint32_t o = 0; o < count; ++o) {
+		if (objects[o].meshIndex >= m_meshes.size()) {
+			continue;
+		}
+		XMMATRIX model = scene.GetModelMatrix(o);
+		XMStoreFloat4x4(&m_objectMapped[frameIndex][o]->model, XMMatrixTranspose(model));
+	}
+
+	// 影の描画の設定
+	cmdList->SetGraphicsRootSignature(m_rootSignature.GetRootSignature());
+	cmdList->SetPipelineState(m_shadowPSO.Get());
 
 	// 定数バッファをバインド
 	cmdList->SetGraphicsRootConstantBufferView(0 ,frame.GetConstantBuffer()->GetGPUVirtualAddress());
+
+	// Viewportを設定
+	D3D12_VIEWPORT shadowViewport = {
+		0.0f,
+		0.0f,
+		(float)SHADOW_MAP_SIZE,
+		(float)SHADOW_MAP_SIZE,
+		0.0f,
+		1.0f,
+	};
+	cmdList->RSSetViewports(1, &shadowViewport);
+	// ScissorRectを設定
+	D3D12_RECT ShadowScissorRect = {
+		0,
+		0,
+		(LONG)SHADOW_MAP_SIZE,
+		(LONG)SHADOW_MAP_SIZE
+	};
+	cmdList->RSSetScissorRects(1, &ShadowScissorRect);
+	
+	D3D12_CPU_DESCRIPTOR_HANDLE shadowDsv = m_shadowDsvHeap.GetCPUHandle(0);
+	cmdList->ClearDepthStencilView(shadowDsv, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	cmdList->OMSetRenderTargets(0, nullptr, FALSE, &shadowDsv);
+	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	// 影の描画
+	for (uint32_t o = 0; o < count; ++o) {
+		const auto& obj = objects[o];
+		if (obj.meshIndex >= m_meshes.size()) {
+			continue;
+		}
+
+		// オブジェクト定数をバインド
+		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
+
+		// メッシュをバインドして描画
+		m_meshes[obj.meshIndex].Bind(cmdList);
+		m_meshes[obj.meshIndex].Draw(cmdList);
+	}
+
+	// バリア
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource = m_shadowMap.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	cmdList->ResourceBarrier(1, &barrier);
+
+	// メイン描画の設定
+	cmdList->SetPipelineState(m_pipelineState.GetPipelineState());
+
+	// SRVヒープをセット
+	ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
+	cmdList->SetDescriptorHeaps(1, heaps);
+
+	cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
 
 	// Viewportを設定
 	D3D12_VIEWPORT viewport = {
@@ -452,7 +533,6 @@ void Renderer::Render(
 		ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
 		cmdList->SetDescriptorHeaps(1, heaps);
 		cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
-		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
 	}
 
 	// 描画オブジェクト数
@@ -485,6 +565,11 @@ void Renderer::Render(
 		m_meshes[obj.meshIndex].Bind(cmdList);
 		m_meshes[obj.meshIndex].Draw(cmdList);
 	}
+
+	// バリア
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	cmdList->ResourceBarrier(1, &barrier);
 }
 
 int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj) {

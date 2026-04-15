@@ -124,6 +124,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Shininess", &scene.GetSpecShiciness(), 1.0f, 256.0f);
 		ImGui::ColorEdit3("Light Color", scene.GetLightColor());
 		ImGui::ColorEdit3("Ambient", scene.GetAmbientColor());
+		ImGui::SliderFloat("Shadow Bias", &scene.GetShadowBias(), 0.0f, 0.01f, "%.5");
+
 
 		ImGui::Separator();
 		ImGui::Text("Objects (%d)", scene.GetObjectCount());

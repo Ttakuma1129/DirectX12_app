@@ -87,6 +87,7 @@ private:
 
 	// シャドウマップ管理
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_shadowMap; // 深度テクスチャ
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> m_shadowPSO; // 深度のみ・PSなし
 	DescriptorHeap m_shadowDsvHeap;
 	DescriptorHeap m_shadowSrvHeap;
 

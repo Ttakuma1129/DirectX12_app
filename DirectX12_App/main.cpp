@@ -30,6 +30,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	if (!renderer.Initialize(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), gfxDevice.GetCurrentFrame().GetAllocator())) {
 		return -1;
 	}
+	if (!renderer.InitializeShadow(gfxDevice.GetDevice())) {
+		return -1;
+	}
 
 	// 全オブジェクトを登録
 	auto& objects = scene.GetObjects();

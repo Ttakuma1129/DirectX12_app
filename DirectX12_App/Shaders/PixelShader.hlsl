@@ -38,13 +38,29 @@ float4 main(PSInput input) : SV_TARGET{
     float NdotH = max(0.0, dot(N, H));
     float specular = pow(NdotH, specularParams.y) * specularParams.x;
     
+    // シャドウテスト
+    float4 posInLight = mul(float4(input.worldPos, 1.0), lightViewProj);
+    float3 projCoords = posInLight.xyz / posInLight.w;
+    
+    // [-1,1] → [0,1] に変換
+    float2 shadowUV = float2(projCoords.x * 0.5 + 0.5, -projCoords.y * 0.5 + 0.5);
+    
+    // 比較サンプリング
+    float bias = shadowParams.x;
+    float shadow = shadowMap.SampleCmpLevelZero(shadowSampler, shadowUV, projCoords.z - bias);
+    
+    // シャドウマップ範囲外は影なし
+    if (projCoords.z > 1.0 || projCoords.z < 0.0){
+        shadow = 1.0;
+    }
+    
     // テクスチャ色を取得
     float4 texColor = tex.Sample(smp, input.uv);
     
     // 出力される最終色
     float3 diffuse = lightColor.rgb * NdotL;
     float3 ambient = ambientColor.rgb;
-    float3 finalColor = texColor.rgb * (ambient + diffuse) + lightColor.rgb * specular;
+    float3 finalColor = texColor.rgb * (ambient + diffuse * shadow) + lightColor.rgb * specular * shadow;
     
     return float4(finalColor, texColor.a);
 }

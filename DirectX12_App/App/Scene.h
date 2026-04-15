@@ -49,6 +49,9 @@ public:
 	float GetSpecShiciness() const {
 		return m_specShininess;
 	}
+	float GetShadowBias() const {
+		return m_shadowBias;
+	}
 
 	// ImGui用
 	Camera& GetCamera() {
@@ -72,6 +75,9 @@ public:
 	float& GetSpecShiciness() {
 		return m_specShininess;
 	}
+	float& GetShadowBias() {
+		return m_shadowBias;
+	}
 
 private:
 	Camera m_camera;
@@ -88,6 +94,9 @@ private:
 	float m_ambientColor[3] = { 0.15f, 0.15f, 0.15f };
 	float m_specIntensity = 0.5f; // スペキュラー強度
 	float m_specShininess = 32.0f; // ハイライトの鋭さ
+
+	float m_shadowBias = 0.005f;
+
 
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 };

@@ -395,9 +395,6 @@ void Renderer::Render(
 	XMMATRIX lightProj = XMMatrixOrthographicLH(20.0f, 20.0f, 0.1f, 50.0f);
 	XMMATRIX lightVP = lightView * lightProj;	
 
-	// ルートパラメータ2にSRVテーブルをバインド
-	cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
-
 	// 定数バッファを書き込み
 	SceneConstant* mapped = frame.GetConstantMapped();
 	const Camera& camera = scene.GetCamera();

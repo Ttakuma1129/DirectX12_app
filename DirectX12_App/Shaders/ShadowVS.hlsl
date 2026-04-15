@@ -21,7 +21,7 @@ struct VSInput{
 };
 
 struct VSOutput{
-    float pos : SV_POSITION;
+    float4 pos : SV_POSITION;
 };
 
 VSOutput main(VSInput input){

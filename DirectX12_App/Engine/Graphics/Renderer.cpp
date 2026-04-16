@@ -383,7 +383,7 @@ void Renderer::Render(
 	// ライトのVP行列を計算
 	const float* dir = scene.GetLightDir();
 	XMVECTOR lightDir = XMVector3Normalize(XMVectorSet(dir[0], dir[1], dir[2], 0.0f));
-	XMVECTOR lightPos = lightDir * 20.0f;
+	XMVECTOR lightPos = -lightDir * 20.0f;
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	// ライトが真上、真下を向いているときのup補正
@@ -531,7 +531,8 @@ void Renderer::Render(
 
 		ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
 		cmdList->SetDescriptorHeaps(1, heaps);
-		cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(0));
+		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(0));
 	}
 
 	// 描画ループ

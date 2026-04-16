@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\Scene.h" />
+    <ClInclude Include="App\World\BlockType.h" />
     <ClInclude Include="App\World\Chunk.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\Window.h" />

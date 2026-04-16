@@ -532,7 +532,7 @@ void Renderer::Render(
 		ID3D12DescriptorHeap* heaps[] = { m_srvHeap.GetHeap() };
 		cmdList->SetDescriptorHeaps(1, heaps);
 		cmdList->SetGraphicsRootConstantBufferView(0, frame.GetConstantBuffer()->GetGPUVirtualAddress());
-		cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(0));
+		cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(SHADOW_SRV_SLOT));
 	}
 
 	// •`‰æƒ‹[ƒv

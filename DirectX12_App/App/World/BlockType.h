@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class BloackType : uint8_t {
+enum class BlockType : uint8_t {
 	Air,
 	Dirt,
 	Grass,

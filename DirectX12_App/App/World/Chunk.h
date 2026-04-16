@@ -1,10 +1,9 @@
 #pragma once
 #include <vector>
+#include <cstdint>
 
 #include "BlockType.h"
 #include "../../Engine/Resources/ModelLoader.h"
-
-class BlockType;
 
 class Chunk {
 public:
@@ -21,7 +20,7 @@ private:
 	static constexpr int SIZE = 16;
 	static constexpr int HEIGHT = 16;
 
-	BloackType m_blocks[SIZE][HEIGHT][SIZE] = {};
+	BlockType m_blocks[SIZE][HEIGHT][SIZE] = {};
 	
 	bool IsSolid(int x, int y, int z) const;
 	void AddFace(int faceDir, int x, int y, int z, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;

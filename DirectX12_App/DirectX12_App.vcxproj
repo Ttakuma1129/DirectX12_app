@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App\Scene.cpp" />
+    <ClCompile Include="App\World\Chunk.cpp" />
     <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\Window.cpp" />
     <ClCompile Include="Engine\Graphics\CommandContext.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App\Scene.h" />
+    <ClInclude Include="App\World\Chunk.h" />
     <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Graphics\CommandContext.h" />

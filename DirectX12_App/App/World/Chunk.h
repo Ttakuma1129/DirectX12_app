@@ -9,7 +9,7 @@ class Chunk {
 public:
 	void GenerateFlat();
 
-	void SetBlock(int x, int y, int z) const;
+	void SetBlock(int x, int y, int z, BlockType type);
 
 	void BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 
@@ -17,7 +17,7 @@ public:
 	BlockType GetBlock(int x, int y, int z) const;
 
 private:
-	static constexpr int SIZE = 16;
+	static constexpr int SIZE = 16; // 1ƒ`ƒƒƒ“ƒN‚Ì‘å‚«‚³
 	static constexpr int HEIGHT = 16;
 
 	BlockType m_blocks[SIZE][HEIGHT][SIZE] = {};

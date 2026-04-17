@@ -27,6 +27,21 @@ void Chunk::SetBlock(int x, int y, int z, BlockType type) {
 	m_blocks[x][y][z] = type;
 }
 
+void Chunk::BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
+	vertices.clear();
+	indices.clear();
+	for (int x = 0; x < CHUNK_SIZE; ++x) {
+		for (int z = 0; z < CHUNK_SIZE; ++z) {
+			for (int y = 0; y < CHUNK_SIZE; ++y) {
+				if (!IsSolid(x, y, z)) {
+					continue;
+				}
+			}
+		}
+	}
+
+}
+
 BlockType Chunk::GetBlock(int x, int y, int z) const {
 	if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= HEIGHT || z < 0 || z >= CHUNK_SIZE) {
 		return BlockType::Air;

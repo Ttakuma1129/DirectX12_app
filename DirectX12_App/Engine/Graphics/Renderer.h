@@ -46,6 +46,8 @@ public:
 	// オブジェクト登録
 	int RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj);
 
+	int RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const std::string& texturePath, SceneObject& obj);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}

@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "../../App/Scene.h"
+#include "../../App/World/Chunk.h"
 #include "CommandContext.h"
 
 #include "../ThirdParty/stb_image.h"
@@ -579,4 +580,8 @@ int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQu
 	obj.textureIndex=texIdx;
 
 	return 0;
+}
+
+int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const std::string& texturePath, SceneObject& obj) {
+
 }

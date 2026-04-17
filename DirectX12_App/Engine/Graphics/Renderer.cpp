@@ -583,5 +583,41 @@ int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQu
 }
 
 int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const std::string& texturePath, SceneObject& obj) {
+	// チャンクからメッシュデータを生成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(vertices, indices);
 
+	if (vertices.empty()) {
+		return -1;
+	}
+
+	// Meshを作成して登録
+	Mesh mesh;
+	if (!mesh.Create(
+		device,
+		vertices.data(),
+		static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)),
+		sizeof(ModelVertex),
+		indices.data(),
+		static_cast<uint32_t>(indices.size()))) {
+		return -1;
+	}
+
+	// チャンク専用メッシュ
+	uint32_t meshIndex = static_cast<uint32_t>(m_meshes.size());
+	m_meshes.push_back(std::move(mesh));
+	m_modelPaths.push_back("__chunk_" + std::to_string(meshIndex));
+	m_meshMap["__chunk_" + std::to_string(meshIndex)] = meshIndex;
+
+	obj.meshIndex = meshIndex;
+
+	// テクスチャ登録
+	int texIndex = LoadTexture(device, commandQueue, texturePath);
+	if (texIndex < 0) {
+		return -1;
+	}
+	obj.textureIndex = texIndex;
+
+	return 0;
 }

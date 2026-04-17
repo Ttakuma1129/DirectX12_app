@@ -13,3 +13,7 @@ BlockType Chunk::GetBlock(int x, int y, int z) const {
 	}
 	return m_blocks[x][y][z];
 }
+
+bool Chunk::IsSolid(int x, int y, int z) const {
+	return GetBlock(x, y, z) != BlockType::Air;
+}

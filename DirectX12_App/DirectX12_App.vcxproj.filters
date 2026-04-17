@@ -61,6 +61,12 @@
     <Filter Include="ヘッダー ファイル\ThirdParty\ImGUI\backends">
       <UniqueIdentifier>{b758be67-2a04-4f56-acc7-51362f2ec075}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\App\World">
+      <UniqueIdentifier>{e3e9292e-3593-40d9-be55-defb59b96c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\World">
+      <UniqueIdentifier>{e34f5500-f828-431b-b35d-9581b1d1dc7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -134,6 +140,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\Camera.cpp">
       <Filter>ソース ファイル\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="App\World\Chunk.cpp">
+      <Filter>ソース ファイル\App\World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\Camera.h">
       <Filter>ヘッダー ファイル\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\BlockType.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\Chunk.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

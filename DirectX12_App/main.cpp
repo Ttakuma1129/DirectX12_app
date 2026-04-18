@@ -35,6 +35,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	// チャンクを生成
+	Chunk chunk;
+	chunk.GenerateFlat();
+
+	SceneObject chunkObj;
+	strcpy_s(chunkObj.name, "Chunk 0");
+	chunkObj.texturePath = "App/Textures/dirt.png";
+	chunkObj.position[0] = -8.0f;
+	chunkObj.position[1] = -8.0f;
+	chunkObj.position[2] = -8.0f;
+	chunkObj.scale = 1.0f;
+
+	renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, chunkObj.texturePath, chunkObj);
+	scene.GetObjects().push_back(chunkObj);
+
 	// 全オブジェクトを登録
 	auto& objects = scene.GetObjects();
 	for (auto& obj : objects) {

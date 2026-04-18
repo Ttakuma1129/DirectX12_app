@@ -2,8 +2,9 @@
 
 #include "Engine/Core/Window.h"
 #include "Engine/Graphics/GfxDevice.h"
-#include "App/Scene.h"
 #include "Engine/Graphics/Renderer.h"
+#include "App/Scene.h"
+#include "App/World/Chunk.h"
 
 // ImGui
 #include "Engine/ThirdParty/imgui/imgui.h"

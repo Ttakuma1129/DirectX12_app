@@ -17,7 +17,8 @@
 #include "../Resources/ModelLoader.h"
 #include "../Resources/SceneObject.h"
 
-class  Scene;
+class Scene;
+class Chunk;
 
 class Renderer{
 public:

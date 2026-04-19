@@ -35,6 +35,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		return -1;
 	}
 
+	// 全オブジェクトを登録
+	auto& objects = scene.GetObjects();
+	for (auto& obj : objects) {
+		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), obj);
+	}
+
 	// チャンクを生成
 	Chunk chunk;
 	chunk.GenerateFlat();
@@ -50,11 +56,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, chunkObj.texturePath, chunkObj);
 	scene.GetObjects().push_back(chunkObj);
 
-	// 全オブジェクトを登録
-	auto& objects = scene.GetObjects();
-	for (auto& obj : objects) {
-		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), obj);
-	}
 
 	// スカイボックス初期化
 	std::string skyFaces[6] = {

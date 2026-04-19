@@ -112,9 +112,9 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, std::vector<ModelVertex>& 
 	}
 
 	indices.push_back(baseIndex + 0);
+	indices.push_back(baseIndex + 2);
 	indices.push_back(baseIndex + 1);
-	indices.push_back(baseIndex + 2);
 	indices.push_back(baseIndex + 0);
-	indices.push_back(baseIndex + 2);
 	indices.push_back(baseIndex + 3);
+	indices.push_back(baseIndex + 2);
 }

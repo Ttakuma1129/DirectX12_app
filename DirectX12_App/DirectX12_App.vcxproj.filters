@@ -230,6 +230,9 @@
     <ClInclude Include="App\World\Chunk.h">
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
+    <ClInclude Include="App\World\BlockTexture.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

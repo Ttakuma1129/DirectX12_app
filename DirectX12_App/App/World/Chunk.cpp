@@ -35,6 +35,26 @@ void Chunk::BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>&
 			for (int y = 0; y < CHUNK_SIZE; ++y) {
 				if (!IsSolid(x, y, z)) {
 					continue;
+
+					// 6方向チェック
+					if (!IsSolid(x + 1, y, z)) {
+						AddFace(0, x, y, z, vertices, indices);
+					}
+					if (!IsSolid(x - 1, y, z)) {
+						AddFace(1, x, y, z, vertices, indices);
+					}
+					if (!IsSolid(x, y + 1, z)) {
+						AddFace(2, x, y, z, vertices, indices);
+					}
+					if (!IsSolid(x, y - 1, z)) {
+						AddFace(3, x, y, z, vertices, indices);
+					}
+					if (!IsSolid(x, y, z + 1)) {
+						AddFace(4, x, y, z, vertices, indices);
+					}
+					if (!IsSolid(x, y, z - 1)) {
+						AddFace(5, x, y, z, vertices, indices);
+					}
 				}
 			}
 		}

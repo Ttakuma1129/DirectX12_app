@@ -56,7 +56,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, chunkObj.texturePath, chunkObj);
 	scene.GetObjects().push_back(chunkObj);
 
-
 	// スカイボックス初期化
 	std::string skyFaces[6] = {
 		"App/Textures/skybox/sh_right.png",

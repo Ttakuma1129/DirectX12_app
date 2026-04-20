@@ -35,3 +35,18 @@ static uint8_t GetTexIndex(BlockType type, int faceDir) {
 		break;
 	}
 }
+
+// アトラス全体の定数
+static constexpr int ATLAS_COLS = 4; // 横方向のセルの数
+static constexpr int ATLAS_ROWS = 4; // 縦方向のセルの数
+
+// セル番号からUV範囲を計算
+static void GetAtlasUV(uint8_t cellIndex, float& uMin, float& vMin, float& uMax, float& vMax) {
+	int col = cellIndex % ATLAS_COLS;
+	int row = cellIndex / ATLAS_ROWS;
+
+	uMin = static_cast<float>(col) / ATLAS_COLS;
+	vMin = static_cast<float>(row) / ATLAS_ROWS;
+	uMax = static_cast<float>(col + 1) / ATLAS_COLS;
+	vMax = static_cast<float>(row + 1) / ATLAS_ROWS;
+}

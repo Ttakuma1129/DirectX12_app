@@ -77,7 +77,7 @@ bool Chunk::IsSolid(int x, int y, int z) const {
 }
 
 void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
-	// このブロック・面が使うアトラスのセル番号
+	// このブロック・面が使うアトラスのセル番号取得
 	uint8_t cell = GetTexIndex(type, faceDir);
 
 	// セル番号からUV範囲を計算
@@ -103,7 +103,10 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vecto
 
 	// UV座標
 	static const float faceUVs[4][2] = {
-		{0,1},{1,1},{1,0},{0,0},
+		{uMin, vMax},	// 頂点0
+		{uMax, vMax},	// 頂点1
+		{uMax, vMin},	// 頂点2
+		{uMin, vMin},	// 頂点3
 	};
 
 	// 頂点インデックス

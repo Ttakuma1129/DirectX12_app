@@ -144,6 +144,9 @@
     <ClCompile Include="App\World\Chunk.cpp">
       <Filter>ソース ファイル\App\World</Filter>
     </ClCompile>
+    <ClCompile Include="App\World\World.cpp">
+      <Filter>ソース ファイル\App\World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -231,6 +234,9 @@
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
     <ClInclude Include="App\World\BlockTexture.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\World.h">
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
   </ItemGroup>

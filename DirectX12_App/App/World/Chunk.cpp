@@ -1,4 +1,5 @@
 #include "Chunk.h"
+#include "BlockTexture.h"
 
 void Chunk::GenerateFlat() {
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
@@ -76,6 +77,13 @@ bool Chunk::IsSolid(int x, int y, int z) const {
 }
 
 void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
+	// このブロック・面が使うアトラスのセル番号
+	uint8_t cell = GetTexIndex(type, faceDir);
+
+	// セル番号からUV範囲を計算
+	float uMin, vMin, uMax, vMax;
+	GetAtlasUV(cell, uMin, vMin, uMax, vMax);
+	
 	// 方向事の頂点位置オフセット(ブロックの原点基準)
 	static const float faceVertices[6][4][3] = {
 		{{1,0,0},{1,0,1},{1,1,1},{1,1,0}}, // 右

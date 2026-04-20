@@ -85,7 +85,7 @@ private:
 	std::vector<SceneObject> m_objects;
 
 	float m_elapsed = 0.0f;
-	float m_rotationSpeed = 0.5f;
+	float m_rotationSpeed = 0.0f;
 	float m_scale = 2.0f;
 
 	// ライトパラメータ

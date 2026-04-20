@@ -7,6 +7,28 @@
 #include "Chunk.h"
 #include "BlockType.h"
 
+namespace WorldCoord {
+	// 切り下げ除算 : 何番目のチャンクに存在しているかを計算
+	inline int FloorDiv(int a, int b) {
+		int q = a / b;
+
+		// 割り切れない & 符号が異なる → 1つ下に寄せる
+		if ((a % b != 0) && ((a < 0) != (b < 0))) {
+			q--;
+		}
+		return q;
+	}
+
+	// 剰余 : チャンク内での位置を計算
+	inline int Mod(int a, int b) {
+		int r = a % b;
+		if (r < 0) {
+			r += b;
+		}
+		return r;
+	}
+}
+
 // チャンクごとの位置を表す座標
 struct ChunkCoord{
 	int x, z;

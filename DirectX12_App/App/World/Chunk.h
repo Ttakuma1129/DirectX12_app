@@ -23,5 +23,5 @@ private:
 	BlockType m_blocks[CHUNK_SIZE][HEIGHT][CHUNK_SIZE] = {};
 	
 	bool IsSolid(int x, int y, int z) const;
-	void AddFace(int faceDir, int x, int y, int z, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
+	void AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 };

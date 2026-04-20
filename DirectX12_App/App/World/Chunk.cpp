@@ -102,7 +102,7 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vecto
 	};
 
 	// UV座標
-	static const float faceUVs[4][2] = {
+	const float faceUVs[4][2] = {
 		{uMin, vMax},	// 頂点0
 		{uMax, vMax},	// 頂点1
 		{uMax, vMin},	// 頂点2

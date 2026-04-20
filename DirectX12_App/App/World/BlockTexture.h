@@ -19,14 +19,14 @@ static constexpr BlockTexCoord kBlockTex[] = {
 };
 
 // ブロックタイプと面方向からテクスチャアトラスのセル番号を返す
-static uint8_t GetTexIndex(BlockType type, int faceDir) {
+inline uint8_t GetTexIndex(BlockType type, int faceDir) {
 	const BlockTexCoord& t = kBlockTex[static_cast<size_t>(type)];
 	switch (faceDir)
 	{
 	case 2:
 		return t.top; // 上
 
-	case3:
+	case 3:
 		return t.bottom; // 下
 
 	default:
@@ -41,9 +41,9 @@ static constexpr int ATLAS_COLS = 4; // 横方向のセルの数
 static constexpr int ATLAS_ROWS = 4; // 縦方向のセルの数
 
 // セル番号からUV範囲を計算
-static void GetAtlasUV(uint8_t cellIndex, float& uMin, float& vMin, float& uMax, float& vMax) {
+inline void GetAtlasUV(uint8_t cellIndex, float& uMin, float& vMin, float& uMax, float& vMax) {
 	int col = cellIndex % ATLAS_COLS;
-	int row = cellIndex / ATLAS_ROWS;
+	int row = cellIndex / ATLAS_COLS;
 
 	uMin = static_cast<float>(col) / ATLAS_COLS;
 	vMin = static_cast<float>(row) / ATLAS_ROWS;

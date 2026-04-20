@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	SceneObject chunkObj;
 	strcpy_s(chunkObj.name, "Chunk 0");
-	chunkObj.texturePath = "App/Textures/dirt.png";
+	chunkObj.texturePath = "App/Textures/texture_atlas.png";
 	chunkObj.position[0] = -8.0f;
 	chunkObj.position[1] = -8.0f;
 	chunkObj.position[2] = -8.0f;

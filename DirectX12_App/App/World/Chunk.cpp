@@ -12,9 +12,14 @@ void Chunk::GenerateFlat() {
 				else if (y >= 5) {
 					type = BlockType::Dirt;
 				}
-				else {
+				else if (y <= 4){
 					type = BlockType::Stone;
 				}
+				
+				if (y >= 8) {
+					type = BlockType::Air;
+				}
+
 				SetBlock(x, y, z, type);
 			}
 		}

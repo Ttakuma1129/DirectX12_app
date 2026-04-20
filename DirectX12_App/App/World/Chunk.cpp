@@ -36,24 +36,28 @@ void Chunk::BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>&
 				if (!IsSolid(x, y, z)) {
 					continue;
 				}
+
+				// ブロックタイプを取得
+				BlockType type = GetBlock(x, y, z);
+
 				// 6方向チェック
 				if (!IsSolid(x + 1, y, z)) {
-					AddFace(0, x, y, z, vertices, indices);
+					AddFace(0, x, y, z, type, vertices, indices);
 				}
 				if (!IsSolid(x - 1, y, z)) {
-					AddFace(1, x, y, z, vertices, indices);
+					AddFace(1, x, y, z, type, vertices, indices);
 				}
 				if (!IsSolid(x, y + 1, z)) {
-					AddFace(2, x, y, z, vertices, indices);
+					AddFace(2, x, y, z, type, vertices, indices);
 				}
 				if (!IsSolid(x, y - 1, z)) {
-					AddFace(3, x, y, z, vertices, indices);
+					AddFace(3, x, y, z, type, vertices, indices);
 				}
 				if (!IsSolid(x, y, z + 1)) {
-					AddFace(4, x, y, z, vertices, indices);
+					AddFace(4, x, y, z, type, vertices, indices);
 				}
 				if (!IsSolid(x, y, z - 1)) {
-					AddFace(5, x, y, z, vertices, indices);
+					AddFace(5, x, y, z, type, vertices, indices);
 				}
 			}
 		}
@@ -71,7 +75,7 @@ bool Chunk::IsSolid(int x, int y, int z) const {
 	return GetBlock(x, y, z) != BlockType::Air;
 }
 
-void Chunk::AddFace(int faceDir, int x, int y, int z, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
+void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
 	// 方向事の頂点位置オフセット(ブロックの原点基準)
 	static const float faceVertices[6][4][3] = {
 		{{1,0,0},{1,0,1},{1,1,1},{1,1,0}}, // 右

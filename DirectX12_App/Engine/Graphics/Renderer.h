@@ -19,6 +19,7 @@
 
 class Scene;
 class Chunk;
+class World;
 
 class Renderer{
 public:

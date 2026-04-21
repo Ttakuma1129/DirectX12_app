@@ -25,7 +25,7 @@ void Camera::Pan(float dx, float dy) {
 	float rightZ = -sinf(m_yaw);
 	float upX = -sinf(m_pitch) * sinf(m_yaw);
 	float upY = cosPitch;
-	float upZ = -sin(m_pitch) * cosf(m_yaw);
+	float upZ = -sinf(m_pitch) * cosf(m_yaw);
 
 	float scale = m_distance * m_pansensitivity;
 	m_target[0] -= (rightX * dx + upX * dy) * scale;
@@ -47,7 +47,7 @@ DirectX::XMMATRIX Camera::GetViewMatrix() const {
 	XMFLOAT3 pos = GetPosition();
 	XMVECTOR eye = XMLoadFloat3(&pos);
 	XMVECTOR target = XMVectorSet(m_target[0], m_target[1], m_target[2], 0.0f);
-	XMVECTOR up = XMVectorSet(0.0f, 0.1f, 0.0f, 0.0f);
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	return XMMatrixLookAtLH(eye, target, up);
 }
 

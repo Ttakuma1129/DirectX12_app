@@ -1,3 +1,5 @@
+#include <windowsx.h>
+
 #include "Window.h"
 #include "../ThirdParty/imgui/imgui.h"
 #include "../ThirdParty/imgui/backends/imgui_impl_win32.h"
@@ -81,8 +83,8 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 	case WM_LBUTTONDOWN:
 		s_instance->m_mouse.leftDown = true;
-		s_instance->m_lastMouseX = LOWORD(lparam);
-		s_instance->m_lastMouseY = HIWORD(lparam);
+		s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
+		s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
 		SetCapture(hwnd);
 		return 0;
 
@@ -93,8 +95,8 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 	case WM_MBUTTONDOWN:
 		s_instance->m_mouse.middleDown = true;
-		s_instance->m_lastMouseX = LOWORD(lparam);
-		s_instance->m_lastMouseY = HIWORD(lparam);
+		s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
+		s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
 		SetCapture(hwnd);
 		return 0;
 
@@ -105,8 +107,8 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 
 	case WM_MOUSEMOVE:
 	{
-		int x = LOWORD(lparam);
-		int y = HIWORD(lparam);
+		int x = GET_X_LPARAM(lparam);
+		int y = GET_Y_LPARAM(lparam);
 		s_instance->m_mouse.deltaX += x - s_instance->m_lastMouseX;
 		s_instance->m_mouse.deltaY += y - s_instance->m_lastMouseY;
 		s_instance->m_lastMouseX = x;

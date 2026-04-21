@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		SceneObject chunkObj;
 		sprintf_s(chunkObj.name, "Chunk %d_%d", coord.x, coord.z);
-		chunkObj.texturePath = "App/Texture/texture_atlas.png";
+		chunkObj.texturePath = "App/Textures/texture_atlas.png";
 		chunkObj.position[0] = static_cast<float>(coord.x * Chunk::CHUNK_SIZE);
 		chunkObj.position[1] = 0.0f;
 		chunkObj.position[2] = static_cast<float>(coord.z * Chunk::CHUNK_SIZE);

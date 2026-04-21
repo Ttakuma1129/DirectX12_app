@@ -5,6 +5,8 @@
 #include "BlockType.h"
 #include "../../Engine/Resources/ModelLoader.h"
 
+class World;
+
 class Chunk {
 public:
 	static constexpr int CHUNK_SIZE = 16; // 1チャンクの大きさ
@@ -14,7 +16,7 @@ public:
 
 	void SetBlock(int x, int y, int z, BlockType type);
 
-	void BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
+	void BuildMesh(const World& world, int chunkX, int chunkZ, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 
 	// ブロック取得・設定
 	BlockType GetBlock(int x, int y, int z) const;

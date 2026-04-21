@@ -1,5 +1,6 @@
 #include "Chunk.h"
 #include "BlockTexture.h"
+#include "World.h"
 
 void Chunk::GenerateFlat() {
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
@@ -33,12 +34,17 @@ void Chunk::SetBlock(int x, int y, int z, BlockType type) {
 	m_blocks[x][y][z] = type;
 }
 
-void Chunk::BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
+void Chunk::BuildMesh(const World& world, int chunkX, int chunkZ, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
 	vertices.clear();
 	indices.clear();
+
+	// ベースとなるワールド座標
+	int baseWorldX = chunkX * CHUNK_SIZE;
+	int baseWorldZ = chunkZ * CHUNK_SIZE;
+
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
 		for (int z = 0; z < CHUNK_SIZE; ++z) {
-			for (int y = 0; y < CHUNK_SIZE; ++y) {
+			for (int y = 0; y < HEIGHT; ++y) {
 				if (!IsSolid(x, y, z)) {
 					continue;
 				}
@@ -46,23 +52,27 @@ void Chunk::BuildMesh(std::vector<ModelVertex>& vertices, std::vector<uint16_t>&
 				// ブロックタイプを取得
 				BlockType type = GetBlock(x, y, z);
 
-				// 6方向チェック
-				if (!IsSolid(x + 1, y, z)) {
+				// ワールド座標を計算
+				int wx = baseWorldX + x;
+				int wz = baseWorldZ + z;
+
+				// ワールド座標で6方向チェック、ローカル座標で頂点生成
+				if (!world.IsSolid(wx + 1, y, wz)) {
 					AddFace(0, x, y, z, type, vertices, indices);
 				}
-				if (!IsSolid(x - 1, y, z)) {
+				if (!world.IsSolid(wx - 1, y, wz)) {
 					AddFace(1, x, y, z, type, vertices, indices);
 				}
-				if (!IsSolid(x, y + 1, z)) {
+				if (!world.IsSolid(wx, y + 1, wz)) {
 					AddFace(2, x, y, z, type, vertices, indices);
 				}
-				if (!IsSolid(x, y - 1, z)) {
+				if (!world.IsSolid(wx, y - 1, wz)) {
 					AddFace(3, x, y, z, type, vertices, indices);
 				}
-				if (!IsSolid(x, y, z + 1)) {
+				if (!world.IsSolid(wx, y, wz + 1)) {
 					AddFace(4, x, y, z, type, vertices, indices);
 				}
-				if (!IsSolid(x, y, z - 1)) {
+				if (!world.IsSolid(wx, y, wz - 1)) {
 					AddFace(5, x, y, z, type, vertices, indices);
 				}
 			}

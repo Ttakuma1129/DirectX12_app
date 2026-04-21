@@ -52,6 +52,9 @@ public:
 	// 面を表示するかどうか
 	bool IsSolid(int worldX, int worldY, int worldZ) const;
 
+	// Worldからチャンクを生成・登録するための関数
+	Chunk* GenerateChunk(int chunkX, int chunkZ);
+
 private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunks;
 };

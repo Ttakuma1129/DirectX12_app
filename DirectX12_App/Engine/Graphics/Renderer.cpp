@@ -582,11 +582,11 @@ int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQu
 	return 0;
 }
 
-int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const std::string& texturePath, SceneObject& obj) {
+int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world,int chunkX, int chunkZ, const std::string& texturePath, SceneObject& obj) {
 	// チャンクからメッシュデータを生成
 	std::vector<ModelVertex> vertices;
 	std::vector<uint16_t> indices;
-	chunk.BuildMesh(vertices, indices);
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
 
 	if (vertices.empty()) {
 		return -1;

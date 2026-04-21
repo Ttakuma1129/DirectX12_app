@@ -5,6 +5,7 @@
 #include "Engine/Graphics/Renderer.h"
 #include "App/Scene.h"
 #include "App/World/Chunk.h"
+#include "App/World/World.h"
 
 // ImGui
 #include "Engine/ThirdParty/imgui/imgui.h"
@@ -42,30 +43,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// チャンクを生成
-	Chunk chunk;
-	chunk.GenerateFlat();
-
-	SceneObject chunkObj;
-	strcpy_s(chunkObj.name, "Chunk 0");
-	chunkObj.texturePath = "App/Textures/texture_atlas.png";
-	chunkObj.position[0] = -8.0f;
-	chunkObj.position[1] = -8.0f;
-	chunkObj.position[2] = -8.0f;
-	chunkObj.scale = 1.0f;
-
-	int result = renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, chunkObj.texturePath, chunkObj);
-	
-	char buf[256];
-	sprintf_s(buf, "RegisterChunk:: result = %d, meshIndex = %u, textureIndex = %u\n", result, chunkObj.meshIndex, chunkObj.textureIndex);
-	OutputDebugStringA(buf);
-
-	if (result < 0) {
-		OutputDebugStringA("!! RegisterChunk FAILED - skip push_back\n");
+	World world;
+	for (int cx = 0; cx < 2; ++cx) {
+		for (int cz = 0; cz < 2; ++cz) {
+			world.GenerateChunk(cx, cz);
+		}
 	}
-	else {
-		scene.GetObjects().push_back(chunkObj);
-	}
-
 
 	// スカイボックス初期化
 	std::string skyFaces[6] = {

@@ -7,6 +7,9 @@
 
 class Chunk {
 public:
+	static constexpr int CHUNK_SIZE = 16; // 1チャンクの大きさ
+	static constexpr int HEIGHT = 16;
+
 	void GenerateFlat();
 
 	void SetBlock(int x, int y, int z, BlockType type);
@@ -17,8 +20,6 @@ public:
 	BlockType GetBlock(int x, int y, int z) const;
 
 private:
-	static constexpr int CHUNK_SIZE = 16; // 1チャンクの大きさ
-	static constexpr int HEIGHT = 16;
 
 	BlockType m_blocks[CHUNK_SIZE][HEIGHT][CHUNK_SIZE] = {};
 	

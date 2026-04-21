@@ -56,7 +56,7 @@ public:
 	Chunk* GenerateChunk(int chunkX, int chunkZ);
 
 	// ‘Sƒ`ƒƒƒ“ƒN‚Ìæ“¾
-	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunk() const {
+	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunks() const {
 		return m_chunks;
 	}
 

@@ -50,6 +50,24 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 	}
 
+	// 各チャンクをRendererに登録
+	for (const auto& pair : world.GetChunks()) {
+		const ChunkCoord& coord = pair.first;
+		const Chunk& chunk = *pair.second;
+
+		SceneObject chunkObj;
+		sprintf_s(chunkObj.name, "Chunk %d_%d", coord.x, coord.z);
+		chunkObj.texturePath = "App/Texture/texture_atlas.png";
+		chunkObj.position[0] = static_cast<float>(coord.x * Chunk::CHUNK_SIZE);
+		chunkObj.position[1] = 0.0f;
+		chunkObj.position[2] = static_cast<float>(coord.z * Chunk::CHUNK_SIZE);
+		chunkObj.scale = 1.0f;
+
+		renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, world, coord.x, coord.z, chunkObj.texturePath, chunkObj);
+
+		scene.GetObjects().push_back(chunkObj);
+	}
+
 	// スカイボックス初期化
 	std::string skyFaces[6] = {
 		"App/Textures/skybox/sh_right.png",

@@ -55,6 +55,11 @@ public:
 	// Worldからチャンクを生成・登録するための関数
 	Chunk* GenerateChunk(int chunkX, int chunkZ);
 
+	// 全チャンクの取得
+	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunk() const {
+		return m_chunks;
+	}
+
 private:
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunks;
 };

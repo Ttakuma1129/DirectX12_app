@@ -189,6 +189,7 @@
     <ClInclude Include="Engine\ThirdParty\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\ThirdParty\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine\ThirdParty\stb_image.h" />
+    <ClInclude Include="Engine\ThirdParty\stb_perlin.h" />
     <ClInclude Include="Engine\ThirdParty\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>

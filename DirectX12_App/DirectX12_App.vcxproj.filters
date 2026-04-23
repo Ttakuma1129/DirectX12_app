@@ -239,6 +239,9 @@
     <ClInclude Include="App\World\World.h">
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\stb_perlin.h">
+      <Filter>ヘッダー ファイル\ThirdParty</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

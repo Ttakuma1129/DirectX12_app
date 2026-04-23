@@ -28,6 +28,38 @@ void Chunk::GenerateFlat() {
 	}
 }
 
+void Chunk::GenerateNoise(int chunkX, int chunkZ) {
+	// ベースとなるワールド座標
+	int baseWorldX = chunkX * CHUNK_SIZE;
+	int baseWorldZ = chunkZ * CHUNK_SIZE;
+
+	for (int x = 0; x < CHUNK_SIZE; ++x) {
+		for (int z = 0; z < CHUNK_SIZE; ++z) {
+			int worldX = baseWorldX + x;
+			int worldZ = baseWorldZ + z;
+
+			int surfaceY = GetHeightAt(worldX, worldZ);
+
+			for (int y = 0;y < HEIGHT; ++y) {
+				BlockType type;
+				if (y > surfaceY) {
+					type = BlockType::Air;
+				}
+				else if (y == surfaceY) {
+					type = BlockType::Grass;
+				}
+				else if (y >= surfaceY - 3) {
+					type = BlockType::Dirt;
+				}
+				else {
+					type = BlockType::Stone;
+				}
+				SetBlock(x, y, z, type);
+			}
+		}
+	}
+}
+
 void Chunk::SetBlock(int x, int y, int z, BlockType type) {
 	if (x < 0 || x >= CHUNK_SIZE || y < 0 || y >= HEIGHT || z < 0 || z >= CHUNK_SIZE) {
 		return;

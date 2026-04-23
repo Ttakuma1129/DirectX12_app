@@ -12,7 +12,11 @@ public:
 	static constexpr int CHUNK_SIZE = 16; // 1チャンクの大きさ
 	static constexpr int HEIGHT = 16;
 
+	// 平らな地形を生成
 	void GenerateFlat();
+	
+	// パーリンノイズで地形を生成
+	void GenerateNoise(int chunkX, int chunkZ);
 
 	void SetBlock(int x, int y, int z, BlockType type);
 
@@ -27,6 +31,6 @@ private:
 	bool IsSolid(int x, int y, int z) const;
 	void AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 	
-	// パーリンノイズを使用してブロックごとの高さ(Y)を返す
+	// パーリンノイズを使用して座標ごとの高さ(Y)を返す
 	int GetHeightAt(int worldX, int worldZ);
 };

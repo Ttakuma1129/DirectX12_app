@@ -44,8 +44,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ƒ`ƒƒƒ“ƒN‚ğ¶¬
 	World world;
-	for (int cx = 0; cx < 2; ++cx) {
-		for (int cz = 0; cz < 2; ++cz) {
+	for (int cx = 0; cx < 4; ++cx) {
+		for (int cz = 0; cz < 4; ++cz) {
 			world.GenerateChunk(cx, cz);
 		}
 	}

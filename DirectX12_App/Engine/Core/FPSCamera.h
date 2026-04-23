@@ -18,6 +18,12 @@ public:
 		return m_position;
 	}
 
+	// yaw, pitchを前方ベクトルへ変換
+	DirectX::XMFLOAT3 GetForward() const;
+
+	// 前方ベクトルと上方向ベクトルの外積から右方向ベクトルを取得
+	DirectX::XMFLOAT3 GetRight() const;
+
 	float& GetFov() {
 		return m_fov;
 	}

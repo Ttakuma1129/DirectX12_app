@@ -150,6 +150,9 @@
     <ClCompile Include="Engine\ThirdParty\stb_perlin_impl.cpp">
       <Filter>ソース ファイル\ThirdParty</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\FPSCamera.cpp">
+      <Filter>ソース ファイル\Engine\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ThirdParty\stb_perlin.h">
       <Filter>ヘッダー ファイル\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\FPSCamera.h">
+      <Filter>ヘッダー ファイル\Engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

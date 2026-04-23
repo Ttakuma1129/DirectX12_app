@@ -66,7 +66,7 @@ public:
 
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
-	static constexpr uint32_t MAX_OBJECTS = 16;
+	static constexpr uint32_t MAX_OBJECTS = 64;
 	static constexpr uint32_t MAX_TEXTURES = 32;
 	static constexpr uint32_t SHADOW_MAP_SIZE = 2048;
 	static constexpr uint32_t SHADOW_SRV_SLOT = MAX_TEXTURES - 1;

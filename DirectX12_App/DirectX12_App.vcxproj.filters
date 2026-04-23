@@ -147,6 +147,9 @@
     <ClCompile Include="App\World\World.cpp">
       <Filter>ソース ファイル\App\World</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\stb_perlin_impl.cpp">
+      <Filter>ソース ファイル\ThirdParty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\CommandContext.h">

@@ -1,6 +1,7 @@
 #include "Chunk.h"
 #include "BlockTexture.h"
 #include "World.h"
+#include "../../Engine/ThirdParty/stb_perlin.h"
 
 void Chunk::GenerateFlat() {
 	for (int x = 0; x < CHUNK_SIZE; ++x) {
@@ -147,4 +148,18 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vecto
 	indices.push_back(baseIndex + 0);
 	indices.push_back(baseIndex + 3);
 	indices.push_back(baseIndex + 2);
+}
+
+int Chunk::GetHeightAt(int worldX, int worldZ) {
+	const float scale = 0.05f;	// ’nŒ`‚Ì•Ï‰»‚Ì“x‡(‘å‚«‚¢‚Ù‚Ç‹}Œƒ‚É•Ï‰»)
+	const int minHeight = 4;
+	const int maxHeight = 12;
+
+	float nx = worldX * scale;
+	float nz = worldZ * scale;
+	float noise = stb_perlin_noise3(nx, 0.0f, nz, 0, 0, 0);
+	float normalizedNoise = (noise + 1.0f) * 0.5f;	// 0`1‚ÌŠÔ‚ÉƒmƒCƒY‚ð³‹K‰»
+	int height = minHeight + static_cast<int>(normalizedNoise * (maxHeight - minHeight));
+
+	return height;
 }

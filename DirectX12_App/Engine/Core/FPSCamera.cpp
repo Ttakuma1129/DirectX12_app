@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "FPSCamera.h"
 
 void FPSCamera::Initialize(float aspect) {
@@ -38,6 +39,14 @@ void FPSCamera::Update(float deltaTime, bool forward, bool backward, bool left, 
 	if (down) {
 		m_position.y -= m_moveSpeed * deltaTime;
 	}
+}
+
+void FPSCamera::Rotate(float dx, float dy) {
+	m_yaw += dx * m_mouseSensitivity;
+	m_pitch -= dy * m_mouseSensitivity;
+
+	const float limit = DirectX::XM_PIDIV2 - 0.01f;
+	m_pitch = std::clamp(m_pitch, -limit, limit);
 }
 
  DirectX::XMFLOAT3 FPSCamera::GetForward() const {

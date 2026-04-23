@@ -29,7 +29,7 @@ bool World::IsSolid(int worldX, int worldY, int worldZ)const {
 
 Chunk* World::GenerateChunk(int chunkX, int chunkZ) {
 	auto chunk = std::make_unique<Chunk>();
-	chunk->GenerateFlat();
+	chunk->GenerateNoise(chunkX, chunkZ);
 	Chunk* ptr = chunk.get();
 	m_chunks[{chunkX, chunkZ}] = std::move(chunk);
 	return ptr;

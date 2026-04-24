@@ -76,49 +76,94 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 		return true;
 	}
 
-	switch (msg){
-	case WM_DESTROY: // ウィンドウが閉じられたとき
-		PostQuitMessage(0);
-		return 0;
+	switch (msg) {
+		case WM_DESTROY: // ウィンドウが閉じられたとき
+			PostQuitMessage(0);
+			return 0;
+	
+		case WM_LBUTTONDOWN:
+			s_instance->m_mouse.leftDown = true;
+			s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
+			s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
+			SetCapture(hwnd);
+			return 0;
+	
+		case WM_LBUTTONUP:
+			s_instance->m_mouse.leftDown = false;
+			ReleaseCapture();
+			return 0;
+	
+		case WM_MBUTTONDOWN:
+			s_instance->m_mouse.middleDown = true;
+			s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
+			s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
+			SetCapture(hwnd);
+			return 0;
+	
+		case WM_MBUTTONUP:
+			s_instance->m_mouse.middleDown = false;
+			ReleaseCapture();
+			return 0;
+	
+		case WM_MOUSEMOVE: {
+			int x = GET_X_LPARAM(lparam);
+			int y = GET_Y_LPARAM(lparam);
+			s_instance->m_mouse.deltaX += x - s_instance->m_lastMouseX;
+			s_instance->m_mouse.deltaY += y - s_instance->m_lastMouseY;
+			s_instance->m_lastMouseX = x;
+			s_instance->m_lastMouseY = y;
+			return 0;
+		}
+	
+		case WM_MOUSEWHEEL:
+			s_instance->m_mouse.wheelDelta += GET_WHEEL_DELTA_WPARAM(wparam);
+			return 0;
+	
+		case WM_KEYDOWN: {
+			switch (wparam) {
+			case 'W':
+				s_instance->m_keyboard.w = true;
+				break;
+			case 'A':
+				s_instance->m_keyboard.a = true;
+				break;
+			case 'S':
+				s_instance->m_keyboard.s = true;
+				break;
+			case 'D':
+				s_instance->m_keyboard.d = true;
+				break;
+			case VK_SPACE: 
+				s_instance->m_keyboard.space = true;
+				break;
+			case VK_SHIFT:
+				s_instance->m_keyboard.shift = true;
+			}
+			return 0;
+		}
+		case WM_KEYUP: {
+			switch (wparam){
+			case 'W':
+				s_instance->m_keyboard.w = false;
+				break;
+			case 'A':
+				s_instance->m_keyboard.a = false;
+				break;
+			case 'S':
+				s_instance->m_keyboard.s = false;
+				break;
+			case 'D':
+				s_instance->m_keyboard.d = false;
+				break;
+			case VK_SPACE:
+				s_instance->m_keyboard.space = false;
+				break;
+			case VK_SHIFT:
+				s_instance->m_keyboard.shift = false;
+			}
+			return 0;
+		}
 
-	case WM_LBUTTONDOWN:
-		s_instance->m_mouse.leftDown = true;
-		s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
-		s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
-		SetCapture(hwnd);
-		return 0;
-
-	case WM_LBUTTONUP:
-		s_instance->m_mouse.leftDown = false;
-		ReleaseCapture();
-		return 0;
-
-	case WM_MBUTTONDOWN:
-		s_instance->m_mouse.middleDown = true;
-		s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
-		s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
-		SetCapture(hwnd);
-		return 0;
-
-	case WM_MBUTTONUP:
-		s_instance->m_mouse.middleDown = false;
-		ReleaseCapture();
-		return 0;
-
-	case WM_MOUSEMOVE:
-	{
-		int x = GET_X_LPARAM(lparam);
-		int y = GET_Y_LPARAM(lparam);
-		s_instance->m_mouse.deltaX += x - s_instance->m_lastMouseX;
-		s_instance->m_mouse.deltaY += y - s_instance->m_lastMouseY;
-		s_instance->m_lastMouseX = x;
-		s_instance->m_lastMouseY = y;
-		return 0;
-	}
-
-	case WM_MOUSEWHEEL:
-		s_instance->m_mouse.wheelDelta += GET_WHEEL_DELTA_WPARAM(wparam);
-		return 0;
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);

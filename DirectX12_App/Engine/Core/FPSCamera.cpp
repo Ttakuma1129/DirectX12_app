@@ -49,6 +49,18 @@ void FPSCamera::Rotate(float dx, float dy) {
 	m_pitch = std::clamp(m_pitch, -limit, limit);
 }
 
+DirectX::XMMATRIX FPSCamera::GetViewMatrix() const {
+	using namespace DirectX;
+	XMFLOAT3 pos = GetPosition();
+	XMFLOAT3 forward3 = GetForward();
+	return XMMatrixLookAtLH(eye, target, up);
+}
+
+DirectX::XMMATRIX FPSCamera::GetProjMatrix() const {
+	float fov = DirectX::XMConvertToRadians(m_fov);
+	return DirectX::XMMatrixPerspectiveFovLH(fov, m_aspect, 0.1f, 100.0f);
+}
+
  DirectX::XMFLOAT3 FPSCamera::GetForward() const {
 	 DirectX::XMFLOAT3 forward;
 	 forward.x = cosf(m_pitch) * sinf(m_yaw);

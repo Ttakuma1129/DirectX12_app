@@ -10,6 +10,11 @@ struct MouseInput {
 	bool middleDown = false;
 };
 
+struct KeyboardInput{
+	bool w = false, a = false, s = false, d = false;
+	bool space = false, shift = false;
+};
+
 class Window {
 public:
 	// コンストラクタ
@@ -25,6 +30,11 @@ public:
 	// マウス入力を返す
 	const MouseInput& GetMouseInput() const {
 		return m_mouse;
+	}
+
+	// キー入力を返す
+	const KeyboardInput& GetKeyboardInput() const {
+		return m_keyboard;
 	}
 
 	// DirectXの初期化に必要なハンドル
@@ -50,6 +60,8 @@ private:
 	MouseInput m_mouse;
 	int m_lastMouseX = 0;
 	int m_lastMouseY = 0;
+
+	KeyboardInput m_keyboard;
 
 	static Window* s_instance;
 };

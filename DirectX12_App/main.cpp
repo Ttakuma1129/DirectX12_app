@@ -97,12 +97,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ImGui_ImplDX12_Init(&initInfo);
 
+	auto lastTime = std::chrono::high_resolution_clock::now();
+
 	// メインループ
 	while (window.ProcessMessage()){
 		scene.Update();
 
-		const auto& mouse = window.GetMouseInput();
+		auto now = std::chrono::high_resolution_clock::now();
+		float deltaTime = std::chrono::duration<float>(now - lastTime).count();
+		lastTime = now;
 
+		const auto& mouse = window.GetMouseInput();
 		// ImGuiがマウスを使ってないときだけカメラ操作
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			if (mouse.leftDown) {

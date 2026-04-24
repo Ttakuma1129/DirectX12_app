@@ -51,9 +51,11 @@ void FPSCamera::Rotate(float dx, float dy) {
 
 DirectX::XMMATRIX FPSCamera::GetViewMatrix() const {
 	using namespace DirectX;
-	XMFLOAT3 pos = GetPosition();
+	XMVECTOR pos = XMLoadFloat3(&m_position);
 	XMFLOAT3 forward3 = GetForward();
-	return XMMatrixLookAtLH(eye, target, up);
+	XMVECTOR forward = XMLoadFloat3(&forward3);
+	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	return XMMatrixLookToLH(pos, forward, up);
 }
 
 DirectX::XMMATRIX FPSCamera::GetProjMatrix() const {

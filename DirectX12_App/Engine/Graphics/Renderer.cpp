@@ -398,7 +398,7 @@ void Renderer::Render(
 
 	// 定数バッファを書き込み
 	SceneConstant* mapped = frame.GetConstantMapped();
-	const Camera& camera = scene.GetCamera();
+	const FPSCamera& camera = scene.GetFPSCamera();
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(camera.GetViewMatrix()));
 	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(camera.GetProjMatrix()));
 

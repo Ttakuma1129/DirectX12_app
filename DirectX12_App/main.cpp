@@ -128,7 +128,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}*/
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			scene.GetFPSCamera().Update(deltaTime, keyboard.w, keyboard.s, keyboard.a, keyboard.d, keyboard.space, keyboard.shift);
+			
+			if (mouse.leftDown) {
+				scene.GetCamera().Rotate(
+					static_cast<float>(mouse.deltaX),
+					static_cast<float>(mouse.deltaY));
+			}
 		}
+
 		window.ResetMouseDelta();
 
 		gfxDevice.BeginFrame();

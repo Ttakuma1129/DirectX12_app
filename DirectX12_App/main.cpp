@@ -130,7 +130,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			scene.GetFPSCamera().Update(deltaTime, keyboard.w, keyboard.s, keyboard.a, keyboard.d, keyboard.space, keyboard.shift);
 			
 			if (mouse.leftDown) {
-				scene.GetCamera().Rotate(
+				scene.GetFPSCamera().Rotate(
 					static_cast<float>(mouse.deltaX),
 					static_cast<float>(mouse.deltaY));
 			}

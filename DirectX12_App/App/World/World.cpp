@@ -76,7 +76,7 @@ RaycastResult World::Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMF
 			result.blockY = y;
 			result.blockZ = z;
 			result.face = hitFace;
-			result;
+			return result;
 		}
 
 		// 最小のtNextBoundaryを選びその方向に1マス進む

@@ -73,5 +73,5 @@ DirectX::XMMATRIX FPSCamera::GetProjMatrix() const {
 
  DirectX::XMFLOAT3 FPSCamera::GetRight() const {
 	 DirectX::XMFLOAT3 forward = GetForward();
-	 return{ -forward.z, 0.0f, forward.x };
+	 return{ forward.z, 0.0f, -forward.x };
  }

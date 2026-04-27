@@ -44,6 +44,15 @@ struct ChunkCoordHash {
 	}
 };
 
+// レイキャストの計算結果
+struct RaycastResult {
+	bool hit;	// 当たったかどうか
+	int blockX; // 当たったブロックのワールド座標
+	int blockY;
+	int blockZ;
+	int face;	// どの面に当たったか
+};
+
 class World {
 public:
 	// ワールド座標でのブロック取得

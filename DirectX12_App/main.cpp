@@ -107,6 +107,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		float deltaTime = std::chrono::duration<float>(now - lastTime).count();
 		lastTime = now;
 
+		DirectX::XMFLOAT3 camPos = scene.GetFPSCamera().GetPosition();
+		DirectX::XMFLOAT3 camDir = scene.GetFPSCamera().GetForward();
+
+		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
+
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
 		// ImGuiがマウスを使ってないときだけカメラ操作
@@ -160,6 +165,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Separator();
 		ImGui::SliderFloat("Rotation Speed", &scene.GetRotationSpeed(), 0.0f, 3.0f);
 		ImGui::SliderFloat("FOV", &scene.GetCamera().GetFov(), 10.0f, 120.0f);
+
+		ImGui::Separator();
+		ImGui::Text("Raycast");
+		if (ray.hit) {
+			ImGui::Text("Hit: (%d, %d, %d)", ray.blockX, ray.blockY, ray.blockZ);
+			ImGui::Text("Face: %d", ray.face);
+		}
+		else {
+			ImGui::Text("No hit");
+		}
 
 		ImGui::Separator();
 		ImGui::Text("Lighting");

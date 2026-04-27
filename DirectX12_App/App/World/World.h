@@ -3,6 +3,7 @@
 #include <functional>
 #include <cstdint>
 #include <memory>
+#include <DirectXMath.h>
 
 #include "Chunk.h"
 #include "BlockType.h"
@@ -63,6 +64,8 @@ public:
 
 	// Worldからチャンクを生成・登録するための関数
 	Chunk* GenerateChunk(int chunkX, int chunkZ);
+
+	RaycastResult Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMFLOAT3& dir, float maxDist) const;
 
 	// 全チャンクの取得
 	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunks() const {

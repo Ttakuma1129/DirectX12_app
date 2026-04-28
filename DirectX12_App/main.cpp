@@ -112,6 +112,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
 
+		// 破壊：レイが当たったブロック
+		int placeX = ray.blockX;
+		int placeY = ray.blockY;
+		int placeZ = ray.blockZ;
+
+		// 設置：レイが当たったブロックからfaceの方向に1ずれた位置
+		switch (ray.face) {
+		case 0:
+			placeX += 1;
+			break;
+		case 1:
+			placeX -= 1;
+			break;
+		case 2:
+			placeY += 1;
+			break;
+		case 3:
+			placeY -= 1;
+			break;
+		case 4:
+			placeZ += 1;
+			break;
+		case 5:
+			placeZ -= 1;
+			break;
+		}
+
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
 		// ImGuiがマウスを使ってないときだけカメラ操作

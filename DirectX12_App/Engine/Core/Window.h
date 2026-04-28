@@ -8,6 +8,9 @@ struct MouseInput {
 	int wheelDelta = 0;
 	bool leftDown = false;
 	bool middleDown = false;
+	bool rightdown = false;
+	bool leftClicked = false;
+	bool rightClicked = false;
 };
 
 struct KeyboardInput{

@@ -621,3 +621,25 @@ int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQue
 
 	return 0;
 }
+
+bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex) {
+	// チャンクからメッシュデータを生成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 頂点が空の場合
+	if (vertices.empty()) {
+		return false;
+	}
+
+	if (meshIndex >= m_meshes.size()) {
+		return false;
+	}
+
+	if (!m_meshes[meshIndex].Create(device, vertices.data(), static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex), indices.data(), static_cast<uint32_t>(indices.size()))) {
+		return false;
+	}
+
+	return true;
+}

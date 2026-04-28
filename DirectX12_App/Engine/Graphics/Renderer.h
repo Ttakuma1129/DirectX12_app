@@ -50,6 +50,8 @@ public:
 
 	int RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, const std::string& texturePath, SceneObject& obj);
 
+	bool UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}

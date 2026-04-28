@@ -83,14 +83,24 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 	
 		case WM_LBUTTONDOWN:
 			s_instance->m_mouse.leftDown = true;
+			s_instance->m_mouse.leftClicked = true;
 			s_instance->m_lastMouseX = GET_X_LPARAM(lparam);
 			s_instance->m_lastMouseY = GET_Y_LPARAM(lparam);
 			SetCapture(hwnd);
 			return 0;
-	
+
 		case WM_LBUTTONUP:
 			s_instance->m_mouse.leftDown = false;
 			ReleaseCapture();
+			return 0;
+
+		case WM_RBUTTONDOWN:
+			s_instance->m_mouse.rightDown = true;
+			s_instance->m_mouse.rightClicked = true;
+			return 0;
+
+		case WM_RBUTTONUP:
+			s_instance->m_mouse.rightDown = false;
 			return 0;
 	
 		case WM_MBUTTONDOWN:

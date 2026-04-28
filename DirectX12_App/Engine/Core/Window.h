@@ -8,7 +8,7 @@ struct MouseInput {
 	int wheelDelta = 0;
 	bool leftDown = false;
 	bool middleDown = false;
-	bool rightdown = false;
+	bool rightDown = false;
 	bool leftClicked = false;
 	bool rightClicked = false;
 };

@@ -59,6 +59,9 @@ public:
 	// ワールド座標でのブロック取得
 	BlockType GetBlock(int worldX, int worldY, int worldZ) const;
 
+	// ワールド座標でブロック設置
+	void SetBlockAt(int worldX, int worldY, int worldZ, BlockType type);
+
 	// 面を表示するかどうか
 	bool IsSolid(int worldX, int worldY, int worldZ) const;
 

@@ -12,6 +12,47 @@
 #include "Engine/ThirdParty/imgui/backends/imgui_impl_dx12.h"
 #include "Engine/ThirdParty/imgui/backends/imgui_impl_win32.h"
 
+namespace {
+	// 更新したチャンクの隣接するチャンクを更新
+	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, uint32_t, ChunkCoordHash>& chunkMeshMap) {
+		// 書き換えたブロックが属するチャンク座標とローカル座標を計算
+		int chunkX = WorldCoord::FloorDiv(worldX, Chunk::CHUNK_SIZE);
+		int chunkZ = WorldCoord::FloorDiv(worldZ, Chunk::CHUNK_SIZE);
+		int localX = WorldCoord::Mod(worldX, Chunk::CHUNK_SIZE);
+		int localZ = WorldCoord::Mod(worldZ, Chunk::CHUNK_SIZE);
+
+		// 更新が必要なチャンクのリストを作成
+		std::vector<ChunkCoord> toUpdate;
+		toUpdate.push_back({ chunkX,chunkZ });
+
+		// チャンクの境界に隣接しているブロックの場合、隣のチャンクをリストに追加
+		if (localX == 0) {
+			toUpdate.push_back({ chunkX - 1, chunkZ });
+		}
+		if (localZ == 0) {
+			toUpdate.push_back({ chunkX, chunkZ - 1 });
+		}
+		if (localX == Chunk::CHUNK_SIZE - 1) {
+			toUpdate.push_back({ chunkX + 1, chunkZ });
+		}
+		if (localZ == Chunk::CHUNK_SIZE -1) {
+			toUpdate.push_back({ chunkX, chunkZ + 1 });
+		}
+
+		// GPU処理待ち
+		gfxDevice.WaitForGPU();
+
+		//各チャンクを更新
+		for (const auto& coord : toUpdate) {
+			auto chunkIt = world.GetChunks().find(coord);
+			auto meshIt = chunkMeshMap.find(coord);
+
+			// チャンクが存在しない or meshIndex未登録の場合描画をスキップ
+			renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, coord.x, coord.z, meshIt->second);
+		}
+	}
+}
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// ウィンドウ作成
 	Window window(1280, 720, L"DirectX12 APP");
@@ -177,18 +218,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (ray.hit) {
 					world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Air);
 
-					gfxDevice.WaitForGPU();
-
-					// 該当チャンクを計算
-					int targetChunkX = WorldCoord::FloorDiv(ray.blockX, Chunk::CHUNK_SIZE);
-					int targetChunkZ = WorldCoord::FloorDiv(ray.blockZ, Chunk::CHUNK_SIZE);
-					ChunkCoord targetCoord = { targetChunkX, targetChunkZ };
-
-					// チャンクとmeshIndexを取得
-					auto chunkIt = world.GetChunks().find(targetCoord);
-					auto meshIt = chunkMeshMap.find(targetCoord);
-
-					renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, targetChunkX, targetChunkZ, meshIt->second);
+					// チャンクメッシュ更新
+					UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 				}
 			}
 		}

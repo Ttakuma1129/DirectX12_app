@@ -630,7 +630,8 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 
 	// ’¸“_‚ª‹ó‚Ìê‡
 	if (vertices.empty()) {
-		return false;
+		m_meshes[meshIndex] = Mesh();
+		return true;
 	}
 
 	if (meshIndex >= m_meshes.size()) {

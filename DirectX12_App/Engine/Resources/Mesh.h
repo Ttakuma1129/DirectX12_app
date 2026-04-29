@@ -12,6 +12,10 @@ public:
 
 	void Draw(ID3D12GraphicsCommandList* cmdList);
 
+	bool IsEmpty() const {
+		return m_indexCount == 0;
+	}
+
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ

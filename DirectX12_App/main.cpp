@@ -50,6 +50,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 	}
 
+	std::unordered_map<ChunkCoord, uint32_t, ChunkCoordHash> chunkMeshMap;
+
 	// Šeƒ`ƒƒƒ“ƒN‚ðRenderer‚É“o˜^
 	for (const auto& pair : world.GetChunks()) {
 		const ChunkCoord& coord = pair.first;
@@ -64,6 +66,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		chunkObj.scale = 1.0f;
 
 		renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, world, coord.x, coord.z, chunkObj.texturePath, chunkObj);
+
+		// meshIndex‚ð•Û‘¶
+		chunkMeshMap[coord] = chunkObj.meshIndex;
 
 		scene.GetObjects().push_back(chunkObj);
 	}
@@ -165,6 +170,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				scene.GetFPSCamera().Rotate(
 					static_cast<float>(mouse.deltaX),
 					static_cast<float>(mouse.deltaY));
+			}
+			if (mouse.leftClicked) {
+				auto cam = scene.GetFPSCamera();
+
+				if (ray.hit) {
+					world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Air);
+
+					gfxDevice.WaitForGPU();
+
+					// ŠY“–ƒ`ƒƒƒ“ƒN‚ðŒvŽZ
+					int targetChunkX = WorldCoord::FloorDiv(ray.blockX, Chunk::CHUNK_SIZE);
+					int targetChunkZ = WorldCoord::FloorDiv(ray.blockZ, Chunk::CHUNK_SIZE);
+					ChunkCoord targetCoord = { targetChunkX, targetChunkZ };
+
+					// ƒ`ƒƒƒ“ƒN‚ÆmeshIndex‚ðŽæ“¾
+					auto chunkIt = world.GetChunks().find(targetCoord);
+					auto meshIt = chunkMeshMap.find(targetCoord);
+
+					renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, targetChunkX, targetChunkZ, meshIt->second);
+				}
 			}
 		}
 

@@ -553,6 +553,11 @@ void Renderer::Render(
 			cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(obj.textureIndex));
 		}
 
+		// メッシュが空なら描画をスキップ
+		if (m_meshes[obj.meshIndex].IsEmpty()) {
+			continue;
+		}
+
 		// メッシュをバインドして描画
 		m_meshes[obj.meshIndex].Bind(cmdList);
 		m_meshes[obj.meshIndex].Draw(cmdList);

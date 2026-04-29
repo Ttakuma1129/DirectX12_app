@@ -218,6 +218,14 @@ void GfxDevice::BeginFrame() {
 	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
+void GfxDevice::WaitForGPU() {
+	m_commandQueue->Signal(m_fence.Get(), ++m_fenceValue);
+	if (m_fence->GetCompletedValue() < m_fenceValue) {
+		m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
+		WaitForSingleObject(m_fenceEvent, INFINITE);
+	}
+}
+
 void GfxDevice::EndFrame() {
 	// RENDER_TARGETÇ©ÇÁPRESENTÇ÷ÉoÉäÉAÇïœçX
 	m_commandContext.TransitionBarrier(m_backBuffers[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);

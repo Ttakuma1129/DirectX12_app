@@ -25,6 +25,8 @@ public:
 
 	void BeginFrame();
 
+	void WaitForGPU();
+
 	void EndFrame();
 
 	// 外部から取得するためのゲッター

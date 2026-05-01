@@ -48,6 +48,13 @@ namespace {
 			auto meshIt = chunkMeshMap.find(coord);
 
 			// ƒ`ƒƒƒ“ƒN‚ª‘¶Ý‚µ‚È‚¢ or meshIndex–¢“o˜^‚Ìê‡•`‰æ‚ðƒXƒLƒbƒv
+			if (chunkIt == world.GetChunks().end()) {
+				continue;
+			}
+			if (meshIt == chunkMeshMap.end()) {
+				continue;
+			}
+
 			renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, coord.x, coord.z, meshIt->second);
 		}
 	}

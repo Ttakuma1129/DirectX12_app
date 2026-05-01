@@ -158,33 +158,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
 
-		// 破壊：レイが当たったブロック
-		int placeX = ray.blockX;
-		int placeY = ray.blockY;
-		int placeZ = ray.blockZ;
-
-		// 設置：レイが当たったブロックからfaceの方向に1ずれた位置
-		switch (ray.face) {
-		case 0:
-			placeX += 1;
-			break;
-		case 1:
-			placeX -= 1;
-			break;
-		case 2:
-			placeY += 1;
-			break;
-		case 3:
-			placeY -= 1;
-			break;
-		case 4:
-			placeZ += 1;
-			break;
-		case 5:
-			placeZ -= 1;
-			break;
-		}
-
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
 		// ImGuiがマウスを使ってないときだけカメラ操作
@@ -221,6 +194,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					// チャンクメッシュ更新
 					UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 				}
+			}
+			if (mouse.rightClicked) {
+				// 設置：レイが当たったブロックからfaceの方向に1ずれた位置
+				switch (ray.face) {
+				case 0:
+					ray.blockX += 1;
+					break;
+				case 1:
+					ray.blockX -= 1;
+					break;
+				case 2:
+					ray.blockY += 1;
+					break;
+				case 3:
+					ray.blockY -= 1;
+					break;
+				case 4:
+					ray.blockZ += 1;
+					break;
+				case 5:
+					ray.blockZ -= 1;
+					break;
+				}
+
+				world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
+
+				UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 			}
 		}
 

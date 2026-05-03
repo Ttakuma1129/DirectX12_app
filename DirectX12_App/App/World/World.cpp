@@ -73,13 +73,14 @@ RaycastResult World::Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMF
 	int stepZ = (dir.z > 0) ? 1 : -1;
 
 	// 1マス進むのに必要なtの増加量
-	float tDeltaX = abs(1.0f / dir.x);
+	const float EPS = 1e-8f;
+	float tDeltaX = (fabsf(dir.x) < EPS) ? FLT_MAX : fabsf(1.0f / dir.x);
 	float tDeltaY = abs(1.0f / dir.y);
 	float tDeltaZ = abs(1.0f / dir.z);
 
 	// 一番近いマスの境界までにどれだけtを増やせばいいか
 	float nextX = (stepX > 0) ? (x + 1) : x;
-	float tNextBoundaryX = (nextX - origin.x) / dir.x;
+	float tNextBoundaryX = (fabsf(dir.x) < EPS) ? FLT_MAX : (nextX - origin.x) / dir.x;
 	float nextY = (stepY > 0) ? (y + 1) : y;
 	float tNextBoundaryY = (nextY - origin.y) / dir.y;
 	float nextZ = (stepZ > 0) ? (z + 1) : z;

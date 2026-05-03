@@ -5,7 +5,7 @@ cbuffer SceneConstant : register(b0){
     float4 lightColor;
     float4 ambientColor;
     float4 cameraPos;
-    float4 specularPrams;
+    float4 specularParams;
     float4x4 lightViewProj;
     float4 shadowParams;
 };

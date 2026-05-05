@@ -6,7 +6,9 @@
 
 class  Mesh{
 public:
-	bool Create(ID3D12Device* device, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount);
+	bool Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount);
+
+	void ReleaseUploadBuffer();
 
 	void Bind(ID3D12GraphicsCommandList* cmdList);
 

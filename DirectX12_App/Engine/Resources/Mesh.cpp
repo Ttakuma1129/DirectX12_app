@@ -90,6 +90,11 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 	return true;
 }
 
+void Mesh::ReleaseUploadBuffer() {
+	m_vbUploadBuffer.Reset();
+	m_ibUploadBuffer.Reset();
+}
+
 void Mesh::Bind(ID3D12GraphicsCommandList* cmdList) {
 	cmdList->IASetVertexBuffers(0, 1, &m_vertexBufferView);
 	cmdList->IASetIndexBuffer(&m_indexBufferView);

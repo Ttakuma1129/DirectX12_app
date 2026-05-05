@@ -19,6 +19,8 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_vertexBuffer; // 頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_indexBuffer; // インデックスバッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_vbUploadBuffer; // 中間バッファ
+	Microsoft::WRL::ComPtr<ID3D12Resource> m_ibUploadBuffer;
 
 	// バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView = {};

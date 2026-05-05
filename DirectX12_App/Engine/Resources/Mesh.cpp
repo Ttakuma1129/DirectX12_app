@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-bool Mesh::Create(ID3D12Device* device, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount) {
+bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount) {
 
 	HRESULT hr;
 	// 頂点バッファの作成

@@ -30,7 +30,7 @@ public:
 	bool InitializeShadow(ID3D12Device* device);
 
 	// メッシュを読み込みインデックスを返す
-	int LoadMesh(ID3D12Device* device, const std::string& filepath);
+	int LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath);
 
 	// テクスチャを読み込みインデックスを返す
 	int LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath);

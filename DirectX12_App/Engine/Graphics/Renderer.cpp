@@ -256,7 +256,7 @@ bool Renderer::InitializeShadow(ID3D12Device* device) {
 	return true;
 }
 
-int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
+int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath) {
 	// 読み込み済みならインデックスを返す
 	auto it = m_meshMap.find(filepath);
 	if (it != m_meshMap.end()) {

@@ -296,6 +296,18 @@ int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, c
 	uploadCtx.End();
 	uploadCtx.Execute(commandQueue);
 
+	// GPU完了待ち
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	commandQueue->Signal(fence.Get(), 1);
+	fence->SetEventOnCompletion(1, event);
+	WaitForSingleObject(event, INFINITE);
+	CloseHandle(event);
+
+	// 中間バッファ解放
+	mesh.ReleaseUploadBuffer();
+
 	uint32_t index = static_cast<uint32_t>(m_meshes.size());
 	m_meshes.push_back(std::move(mesh));
 	m_modelPaths.push_back(filepath);

@@ -597,7 +597,7 @@ void Renderer::Render(
 
 int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj) {
 	// ƒƒbƒVƒ…“o˜^
-	int meshIdx = LoadMesh(device, obj.modelPath);
+	int meshIdx = LoadMesh(device, commandQueue, obj.modelPath);
 	if (meshIdx<0) {
 		return -1;
 	}

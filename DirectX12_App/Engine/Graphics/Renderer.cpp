@@ -269,18 +269,32 @@ int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, c
 		return -1;
 	}
 
+	// メッシュ用コマンドアロケータ
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
+	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));
+	if (FAILED(hr)) {
+		return -1;
+	}
+
+	CommandContext uploadCtx;
+	uploadCtx.Initialize(device, allocator.Get());
+	uploadCtx.Begin(allocator.Get());
+
 	// メッシュ作成
 	Mesh mesh;
 	if (!mesh.Create(
 		device,
+		uploadCtx.GetCommandList(),
 		modelData.vertices.data(),
 		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
 		sizeof(ModelVertex),
 		modelData.indices.data(),
 		static_cast<uint32_t>(modelData.indices.size()))) {
 		return -1;
-
 	}
+
+	uploadCtx.End();
+	uploadCtx.Execute(commandQueue);
 
 	uint32_t index = static_cast<uint32_t>(m_meshes.size());
 	m_meshes.push_back(std::move(mesh));

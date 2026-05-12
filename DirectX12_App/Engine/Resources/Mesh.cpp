@@ -47,13 +47,13 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 
 	// 頂点バッファをGPUに転送(マッピング)
 	void* mapped = nullptr;
-	hr = m_vertexBuffer->Map(0, nullptr, &mapped);
+	hr = m_vbUploadBuffer->Map(0, nullptr, &mapped);
 	if (FAILED(hr)) {
 		return false;
 	}
 
 	memcpy(mapped, vertices, vertexSize);
-	m_vertexBuffer->Unmap(0, nullptr);
+	m_vbUploadBuffer->Unmap(0, nullptr);
 
 	// アップロードからデフォルトヒープへのコピーを記録
 	cmdList->CopyBufferRegion(m_vertexBuffer.Get(), 0, m_vbUploadBuffer.Get(), 0, vertexSize);
@@ -111,13 +111,13 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 
 	// インデックスバッファをGPUに転送(マッピング)
 	void* ibMapped = nullptr;
-	hr = m_indexBuffer->Map(0, nullptr, &ibMapped);
+	hr = m_ibUploadBuffer->Map(0, nullptr, &ibMapped);
 	if (FAILED(hr)) {
 		return false;
 	}
 
 	memcpy(ibMapped, indices, indexBufferSize);
-	m_indexBuffer->Unmap(0, nullptr);
+	m_ibUploadBuffer->Unmap(0, nullptr);
 
 	// アップロードからデフォルトヒープへのコピーを記録
 	cmdList->CopyBufferRegion(m_indexBuffer.Get(), 0, m_ibUploadBuffer.Get(), 0, indexBufferSize);

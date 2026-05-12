@@ -1,14 +1,4 @@
-cbuffer SceneConstant : register(b0){
-    float4x4 view;
-    float4x4 proj;
-    float4 lightDir;
-    float4 lightColor;
-    float4 ambientColor;
-    float4 cameraPos; 
-    float4 specularParams; // x:‹­“x y:‰s‚³
-    float4x4 lightViewProj;
-    float4 shadowParams;
-};
+#include "Common.hlsli"
 
 Texture2D tex : register(t0);
 Texture2D shadowMap : register(t1);

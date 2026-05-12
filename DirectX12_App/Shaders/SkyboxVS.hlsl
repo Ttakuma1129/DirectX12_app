@@ -1,7 +1,4 @@
-cbuffer SceneConstant : register(b0){
-    float4x4 view;
-    float4x4 proj;
-};
+#include "Common.hlsli"
 
 struct VSInput{
     float3 position : POSITION;

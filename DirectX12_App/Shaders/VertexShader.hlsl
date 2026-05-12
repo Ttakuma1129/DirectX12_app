@@ -1,17 +1,4 @@
-// 定数バッファ
-cbuffer SceneConstant : register(b0){
-    float4x4 view;
-    float4x4 proj;
-    float4 lightDir;
-    float4 lightColor;
-    float4 ambientColor;
-    float4 cameraPos;
-    float4 specularParams; // x:強度 y:鋭さ
-};
-
-cbuffer ObjectConstant : register(b1){
-    float4x4 model;
-};
+#include "Common.hlsli"
 
 struct VSInput{
     float3 pos : POSITION;

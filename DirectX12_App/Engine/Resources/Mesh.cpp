@@ -124,7 +124,7 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 
 	// COPY_DEST ¨ STATE_INDEX_BUFFER‚ÖƒoƒŠƒA‘JˆÚ
 	D3D12_RESOURCE_BARRIER ibBarrier = vbBarrier;
-	ibBarrier.Transition.pResource = m_vertexBuffer.Get();
+	ibBarrier.Transition.pResource = m_indexBuffer.Get();
 	ibBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_INDEX_BUFFER;
 	cmdList->ResourceBarrier(1, &ibBarrier);
 

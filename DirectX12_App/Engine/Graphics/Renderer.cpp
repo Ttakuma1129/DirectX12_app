@@ -665,6 +665,7 @@ bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* co
 	uploadCtx.Begin(allocator.Get());
 
 	if (!outMesh.Create(device, uploadCtx.GetCommandList(), vertices, vertexSize, stride, indices, indexCount)) {
+		uploadCtx.End();
 		return false;
 	}
 

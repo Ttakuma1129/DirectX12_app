@@ -181,6 +181,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 
 	// キューブメッシュ作成
 	if (!m_cubeMesh.Create(device, uploadContext.GetCommandList(), skyVertices, sizeof(skyVertices), sizeof(float) * 3, skyIndices, 36)) {
+		uploadContext.End();
 		return false;
 	}
 

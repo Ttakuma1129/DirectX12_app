@@ -19,7 +19,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	hr = D3DCompileFromFile(
 		L"Shaders/VertexShader.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -39,7 +39,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	hr = D3DCompileFromFile(
 		L"Shaders/PixelShader.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -178,7 +178,7 @@ bool Renderer::InitializeShadow(ID3D12Device* device) {
 	hr = D3DCompileFromFile(
 		L"Shaders/ShadowVS.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,

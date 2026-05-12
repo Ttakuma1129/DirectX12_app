@@ -600,7 +600,7 @@ int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQue
 
 	// Mesh‚ğì¬‚µ‚Ä“o˜^
 	Mesh mesh;
-	if (CreateMeshWithUpload(
+	if (!CreateMeshWithUpload(
 		device,
 		commandQueue,
 		vertices.data(),

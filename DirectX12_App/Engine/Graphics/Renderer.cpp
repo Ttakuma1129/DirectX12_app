@@ -276,10 +276,6 @@ int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, c
 		return -1;
 	}
 
-	CommandContext uploadCtx;
-	uploadCtx.Initialize(device, allocator.Get());
-	uploadCtx.Begin(allocator.Get());
-
 	// メッシュ作成
 	Mesh mesh;
 	if (!mesh.Create(
@@ -292,21 +288,6 @@ int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, c
 		static_cast<uint32_t>(modelData.indices.size()))) {
 		return -1;
 	}
-
-	uploadCtx.End();
-	uploadCtx.Execute(commandQueue);
-
-	// GPU完了待ち
-	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
-	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-	commandQueue->Signal(fence.Get(), 1);
-	fence->SetEventOnCompletion(1, event);
-	WaitForSingleObject(event, INFINITE);
-	CloseHandle(event);
-
-	// 中間バッファ解放
-	mesh.ReleaseUploadBuffer();
 
 	uint32_t index = static_cast<uint32_t>(m_meshes.size());
 	m_meshes.push_back(std::move(mesh));
@@ -673,5 +654,38 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 		return false;
 	}
 
+	return true;
+}
+
+bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh) {
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
+	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator);
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	CommandContext uploadCtx;
+	uploadCtx.Initialize(device, allocator.Get());
+	uploadCtx.Begin(allocator.Get());
+
+	if (!outMesh.Create(device, uploadCtx.GetCommandList(), vertices, vertexSize, stride, indices, indexCount)) {
+		return false;
+	}
+
+	uploadCtx.End();
+	uploadCtx.Execute(commandQueue);
+
+
+	// GPU完了待ち
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	commandQueue->Signal(fence.Get(), 1);
+	fence->SetEventOnCompletion(1, event);
+	WaitForSingleObject(event, INFINITE);
+	CloseHandle(event);
+
+	// 中間バッファ解放
+	outMesh.ReleaseUploadBuffer();
 	return true;
 }

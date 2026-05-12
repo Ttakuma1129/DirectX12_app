@@ -99,4 +99,6 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ
+
+	bool CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh);
 };

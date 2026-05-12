@@ -269,23 +269,17 @@ int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, c
 		return -1;
 	}
 
-	// メッシュ用コマンドアロケータ
-	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
-	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));
-	if (FAILED(hr)) {
-		return -1;
-	}
-
 	// メッシュ作成
 	Mesh mesh;
-	if (!mesh.Create(
+	if (!CreateMeshWithUpload(
 		device,
-		uploadCtx.GetCommandList(),
+		commandQueue,
 		modelData.vertices.data(),
 		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
 		sizeof(ModelVertex),
 		modelData.indices.data(),
-		static_cast<uint32_t>(modelData.indices.size()))) {
+		static_cast<uint32_t>(modelData.indices.size()),
+		mesh)) {
 		return -1;
 	}
 
@@ -606,13 +600,15 @@ int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQue
 
 	// Meshを作成して登録
 	Mesh mesh;
-	if (!mesh.Create(
+	if (CreateMeshWithUpload(
 		device,
+		commandQueue,
 		vertices.data(),
 		static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)),
 		sizeof(ModelVertex),
 		indices.data(),
-		static_cast<uint32_t>(indices.size()))) {
+		static_cast<uint32_t>(indices.size()),
+		mesh)) {
 		return -1;
 	}
 
@@ -650,7 +646,7 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 		return false;
 	}
 
-	if (!m_meshes[meshIndex].Create(device, vertices.data(), static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex), indices.data(), static_cast<uint32_t>(indices.size()))) {
+	if (!CreateMeshWithUpload(device, commandQueue, vertices.data(), static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex), indices.data(), static_cast<uint32_t>(indices.size()), m_meshes[meshIndex])) {
 		return false;
 	}
 
@@ -659,7 +655,7 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 
 bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh) {
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
-	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator);
+	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));
 	if (FAILED(hr)) {
 		return false;
 	}

@@ -197,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shaders\Common.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Shaders\PixelShader.hlsl">

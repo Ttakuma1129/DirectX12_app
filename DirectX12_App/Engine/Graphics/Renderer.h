@@ -16,6 +16,7 @@
 #include "../Resources/Texture.h"
 #include "../Resources/ModelLoader.h"
 #include "../Resources/SceneObject.h"
+#include "../Math/Frustum.h"
 
 class Scene;
 class Chunk;
@@ -66,6 +67,17 @@ public:
 		return m_skyboxEnabled;
 	}
 
+	// ImGui用ゲッター
+	uint32_t GetVisibleChunkCount() const {
+		return m_visibleChunkCount;
+	}
+	uint32_t GetTotalChunkCount() const {
+		return m_totalChunkCount;
+	}
+	bool& GetCullingEnabled() {
+		return m_cullingEnabled;
+	}
+
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
 	static constexpr uint32_t MAX_OBJECTS = 64;
@@ -78,6 +90,11 @@ private:
 	DescriptorHeap m_srvHeap; // srv
 	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	Skybox m_skybox;
+	Frustum m_frustum;
+
+	bool m_cullingEnabled = true;
+	uint32_t m_visibleChunkCount = 0;
+	uint32_t m_totalChunkCount = 0;
 
 	bool m_skyboxEnabled = false;
 	

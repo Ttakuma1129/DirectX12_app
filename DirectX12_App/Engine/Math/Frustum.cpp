@@ -49,5 +49,22 @@ void Frustum::ExtractFormMatrix(const DirectX::XMMATRIX& viewProj) {
 }
 
 bool Frustum::IntersectsAABB(const DirectX::XMFLOAT3& mn, const DirectX::XMFLOAT3& mx) const {
+	// 6平面それぞれに対して positive-vertex 判定
+	for (int i = 0;i < 6;++i) {
+		const DirectX::XMFLOAT4& p = m_planes[i];
 
+		// 平面の法線方向に最も遠い頂点を選択
+		// 法線成分が 正→max 負→minを選択
+		float px = (p.x >= 0.0f) ? mx.x : mn.x;
+		float py = (p.y >= 0.0f) ? mx.y : mn.y;
+		float pz = (p.z >= 0.0f) ? mx.z : mn.z;
+
+		float distance = p.x * px + p.y * py + p.z * pz + p.w;
+
+		// 0未満(平面の外側)ならカリング
+		if (distance < 0.0f) {
+			return false;
+		}
+	}
+	return true;
 }

@@ -145,6 +145,7 @@
     <ClCompile Include="Engine\Graphics\Renderer.cpp" />
     <ClCompile Include="Engine\Graphics\RootSignature.cpp" />
     <ClCompile Include="Engine\Graphics\Skybox.cpp" />
+    <ClCompile Include="Engine\Math\Frustum.cpp" />
     <ClCompile Include="Engine\Resources\CubeMapTexture.cpp" />
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
     <ClCompile Include="Engine\Resources\Mesh.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Engine\Graphics\Renderer.h" />
     <ClInclude Include="Engine\Graphics\RootSignature.h" />
     <ClInclude Include="Engine\Graphics\Skybox.h" />
+    <ClInclude Include="Engine\Math\Frustum.h" />
     <ClInclude Include="Engine\Resources\CubeMapTexture.h" />
     <ClInclude Include="Engine\Resources\FrameResources.h" />
     <ClInclude Include="Engine\Resources\Mesh.h" />

@@ -537,9 +537,44 @@ void Renderer::Render(
 		cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(SHADOW_SRV_SLOT));
 	}
 
+	// フラムカリング
+	// VP行列を計算
+	XMMATRIX view = scene.GetFPSCamera().GetViewMatrix();
+	XMMATRIX proj = scene.GetFPSCamera().GetProjMatrix();
+	XMMATRIX viewProj = view * proj;
+
+	// 6平面を抽出
+	m_frustum.ExtractFormMatrix(viewProj);
+
+	// カウンタをリセット
+	m_visibleChunkCount = 0;
+	m_totalChunkCount = 0;
+
 	// 描画ループ
-	for (uint32_t o = 0; o < count; ++o) {
-		const auto& obj = objects[o];
+	for (uint32_t i = 0;i < objects.size();++i) {
+		const auto& obj = objects[i];
+
+		// チャンク判定
+		bool isChunk = (strncmp(obj.name, "Chunk", 5) == 0);
+
+		if (isChunk) {
+			++m_totalChunkCount;
+
+			if (m_cullingEnabled) {
+				// チャンクのAABBを計算
+				XMFLOAT3 mn = { obj.position[0], obj.position[1], obj.position[2] };
+				XMFLOAT3 mx = {
+					obj.position[0] + (float)Chunk::CHUNK_SIZE,
+					obj.position[1] + (float)Chunk::HEIGHT,
+					obj.position[2] + (float)Chunk::CHUNK_SIZE,
+				};
+				// フラスタム外ならスキップ
+				if (!m_frustum.IntersectsAABB(mn, mx)) {
+					continue;
+				}
+			}
+			++m_visibleChunkCount;
+		}
 
 		// メッシュが存在するかを確認
 		if (obj.meshIndex >= m_meshes.size()) {
@@ -547,7 +582,7 @@ void Renderer::Render(
 		}
 
 		// オブジェクト定数をバインド
-		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][i]->GetGPUVirtualAddress());
 
 		// オブジェクトごとにテクスチャを切り替え
 		if (obj.textureIndex < m_srvSlot) {

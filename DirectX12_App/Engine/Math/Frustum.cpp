@@ -26,15 +26,15 @@ void Frustum::ExtractFormMatrix(const DirectX::XMMATRIX& viewProj) {
 	m_planes[TOP].z = m._34 - m._32;
 	m_planes[TOP].w = m._44 - m._42;
 
-	m_planes[NEAR].x = m._13;
-	m_planes[NEAR].y = m._23;
-	m_planes[NEAR].z = m._33;
-	m_planes[NEAR].w = m._43;
+	m_planes[NEAR_].x = m._13;
+	m_planes[NEAR_].y = m._23;
+	m_planes[NEAR_].z = m._33;
+	m_planes[NEAR_].w = m._43;
 
-	m_planes[FAR].x = m._14 - m._13;
-	m_planes[FAR].y = m._24 - m._23;
-	m_planes[FAR].z = m._34 - m._33;
-	m_planes[FAR].w = m._44 - m._43;
+	m_planes[FAR_].x = m._14 - m._13;
+	m_planes[FAR_].y = m._24 - m._23;
+	m_planes[FAR_].z = m._34 - m._33;
+	m_planes[FAR_].w = m._44 - m._43;
 	
 	// äeïΩñ Çê≥ãKâª
 	for (int i = 0; i < 6;++i) {

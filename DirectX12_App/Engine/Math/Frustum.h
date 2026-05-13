@@ -17,7 +17,7 @@ private:
 		RIGHT,
 		BOTTOM,
 		TOP,
-		NEAR,
-		FAR
+		NEAR_,
+		FAR_
 	};
 };

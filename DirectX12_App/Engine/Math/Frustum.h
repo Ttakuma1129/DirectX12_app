@@ -11,4 +11,13 @@ public:
 
 private:
 	DirectX::XMFLOAT4 m_planes[6];
+
+	enum Plane {
+		LEFT = 0,
+		RIGHT,
+		BOTTOM,
+		TOP,
+		NEAR,
+		FAR
+	};
 };

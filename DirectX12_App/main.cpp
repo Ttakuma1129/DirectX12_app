@@ -168,22 +168,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
 		// ImGuiがマウスを使ってないときだけカメラ操作
-		/*if (!ImGui::GetIO().WantCaptureMouse) {
-			if (mouse.leftDown) {
-				scene.GetCamera().Rotate(
-					static_cast<float>(mouse.deltaX),
-					static_cast<float>(mouse.deltaY));
-			}
-			if (mouse.middleDown) {
-				scene.GetCamera().Pan(
-					static_cast<float>(mouse.deltaX),
-					static_cast<float>(mouse.deltaY));
-			}
-			if (mouse.wheelDelta != 0) {
-				scene.GetCamera().Zoom(
-					static_cast<float>(mouse.wheelDelta) / 120.0f);
-			}
-		}*/
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			scene.GetFPSCamera().Update(deltaTime, keyboard.w, keyboard.s, keyboard.a, keyboard.d, keyboard.space, keyboard.shift);
 			

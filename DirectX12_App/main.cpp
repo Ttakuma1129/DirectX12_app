@@ -275,6 +275,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::ColorEdit3("Ambient", scene.GetAmbientColor());
 		ImGui::SliderFloat("Shadow Bias", &scene.GetShadowBias(), 0.0f, 0.01f, "%.5f");
 
+		ImGui::Separator();
+		ImGui::Text("Culling");
+		ImGui::Checkbox("Frustum Culling", &renderer.GetCullingEnabled());
+		ImGui::Text("Visible Chunks; %u / %u", renderer.GetVisibleChunkCount(), renderer.GetTotalChunkCount());
 
 		ImGui::Separator();
 		ImGui::Text("Objects (%d)", scene.GetObjectCount());

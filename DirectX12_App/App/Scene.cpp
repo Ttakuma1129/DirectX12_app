@@ -13,6 +13,7 @@ void Scene::Initialize(float aspectRatio) {
 	obj1.meshIndex = 0;
 	obj1.position[0] = -1.5f;
 	obj1.scale = 0.1f;
+	obj1.autoRotate = true;
 	m_objects.push_back(obj1);
 
 	SceneObject obj2;
@@ -21,6 +22,7 @@ void Scene::Initialize(float aspectRatio) {
 	obj2.meshIndex = 0;
 	obj2.position[0] = 1.5f;
 	obj2.scale = 0.1f;
+	obj2.autoRotate = true;
 	m_objects.push_back(obj2);
 }
 
@@ -39,10 +41,12 @@ DirectX::XMMATRIX Scene::GetModelMatrix(uint32_t index) const {
 
 	const auto& obj = m_objects[index];
 
+	float yawExtra = obj.autoRotate ? (m_elapsed * XM_2PI * m_rotationSpeed) : 0.0f;
+
 	XMMATRIX S = XMMatrixScaling(obj.scale, obj.scale, obj.scale);
 	XMMATRIX R = XMMatrixRotationRollPitchYaw(
 		XMConvertToRadians(obj.rotation[0]),
-		XMConvertToRadians(obj.rotation[1]) + m_elapsed * XM_2PI * m_rotationSpeed,
+		XMConvertToRadians(obj.rotation[1]) + yawExtra,
 		XMConvertToRadians(obj.rotation[2])
 	);
 	XMMATRIX T = XMMatrixTranslation(obj.position[0], obj.position[1], obj.position[2]);

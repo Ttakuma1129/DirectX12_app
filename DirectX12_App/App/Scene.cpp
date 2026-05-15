@@ -4,24 +4,26 @@ void Scene::Initialize(float aspectRatio) {
 	// 開始時間を記録
 	m_startTime = std::chrono::high_resolution_clock::now();
 
-	// 起動時にオブジェクトを2つ設置
-	SceneObject obj1;
-	strcpy_s(obj1.name, "Sword");
-	obj1.modelPath = "App/Models/sword.obj";
-	obj1.meshIndex = 0;
-	obj1.position[0] = -1.5f;
-	obj1.scale = 0.1f;
-	obj1.autoRotate = true;
-	m_objects.push_back(obj1);
+	m_player.Initialize({ 32.0f, 30.0f, 32.0f });
 
-	SceneObject obj2;
-	strcpy_s(obj2.name, "Sphere");
-	obj2.modelPath = "App/Models/sphere.obj";
-	obj2.meshIndex = 0;
-	obj2.position[0] = 1.5f;
-	obj2.scale = 0.1f;
-	obj2.autoRotate = true;
-	m_objects.push_back(obj2);
+	// 起動時にオブジェクトを2つ設置
+	//SceneObject obj1;
+	//strcpy_s(obj1.name, "Sword");
+	//obj1.modelPath = "App/Models/sword.obj";
+	//obj1.meshIndex = 0;
+	//obj1.position[0] = -1.5f;
+	//obj1.scale = 0.1f;
+	//obj1.autoRotate = true;
+	//m_objects.push_back(obj1);
+
+	//SceneObject obj2;
+	//strcpy_s(obj2.name, "Sphere");
+	//obj2.modelPath = "App/Models/sphere.obj";
+	//obj2.meshIndex = 0;
+	//obj2.position[0] = 1.5f;
+	//obj2.scale = 0.1f;
+	//obj2.autoRotate = true;
+	//m_objects.push_back(obj2);
 }
 
 void Scene::Update() {

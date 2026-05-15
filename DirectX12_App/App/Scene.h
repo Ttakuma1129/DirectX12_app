@@ -7,6 +7,7 @@
 
 #include "../Engine/Resources/SceneObject.h"
 #include "../Engine/Core/FPSCamera.h"
+#include "Player/Player.h"
 
 class Scene {
 public:
@@ -30,6 +31,9 @@ public:
 	// Renderer—p
 	const FPSCamera& GetFPSCamera() const {
 		return m_fpsCamera;
+	}
+	const Player& GetPlayer() const {
+		return m_player;
 	}
 	const std::vector<SceneObject>& GetObjects() const {
 		return m_objects;
@@ -57,6 +61,9 @@ public:
 	FPSCamera& GetFPSCamera() {
 		return m_fpsCamera;
 	}
+	Player& GetPlayer() {
+		return m_player;
+	}
 	std::vector<SceneObject>& GetObjects() {
 		return m_objects;
 	}
@@ -81,6 +88,7 @@ public:
 
 private:
 	FPSCamera m_fpsCamera;
+	Player m_player;
 
 	std::vector<SceneObject> m_objects;
 

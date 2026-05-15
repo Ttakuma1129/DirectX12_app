@@ -40,5 +40,35 @@ bool Player::CollidesWithWorld(const World& world, const DirectX::XMFLOAT3& mn, 
 }
 
 void Player::MoveAxis(int axis, float delta, const World& world) {
+	if (delta == 0.0f) {
+		return;
+	}
 
+	// 仮で動かす
+	float& comp = (axis == 0) ? m_position.x : (axis == 1) ? m_position.y : m_position.z;
+	float original = comp;
+	comp += delta;
+
+	// AABBで衝突判定
+	DirectX::XMFLOAT3 mn, mx;
+	GetAABB(mn, mx);
+	if (CollidesWithWorld(world, mn, mx)) {
+		// 衝突 → 仮に動かした分を戻しブロック境界までつめる
+		comp = original;
+
+		// Y軸で下方向に衝突 → 地面と接している
+		if (axis == 1 && delta < 0.0f) {
+			m_onGround = true;
+		}
+		// 衝突した軸の速度を無くす
+		if (axis == 0) {
+			m_velocity.x = 0.0f;
+		}
+		if (axis == 1) {
+			m_velocity.y = 0.0f;
+		}
+		if (axis == 2) {
+			m_velocity.z = 0.0f;
+		}
+	}
 }

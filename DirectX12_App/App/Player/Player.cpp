@@ -2,7 +2,9 @@
 #include "../World/World.h"
 
 void Player::Initialize(const DirectX::XMFLOAT3& spawnPos) {
-
+	m_position = spawnPos;
+	m_velocity = { 0, 0, 0 };
+	m_onGround = false;
 }
 
 void Player::Update(float deltaTime, const World& world, bool forward, bool backward, bool left, bool right, bool jump, float yaw) {

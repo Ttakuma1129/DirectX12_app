@@ -8,6 +8,10 @@ public:
 	// 入力によって位置と向きを変える
 	void Update(float deltaTime, bool forward, bool backward, bool left, bool right, bool up, bool down);
 	
+	void SetPosition(const DirectX::XMFLOAT3& pos) {
+		m_position = pos;
+	}
+
 	// マウス入力 : 視点の向きを回転
 	void Rotate(float dx, float dy);
 
@@ -29,6 +33,9 @@ public:
 	}
 	float GetAspect() const {
 		return m_aspect;
+	}
+	float GetYaw() const {
+		return m_yaw;
 	}
 
 private:

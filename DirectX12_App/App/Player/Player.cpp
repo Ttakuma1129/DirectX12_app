@@ -19,7 +19,24 @@ void Player::GetAABB(DirectX::XMFLOAT3& mn, DirectX::XMFLOAT3& mx) const {
 }
 
 bool Player::CollidesWithWorld(const World& world, const DirectX::XMFLOAT3& mn, const DirectX::XMFLOAT3& mx) const {
+	// AABBが触れている全てのブロック座標を走査
+	int x0 = (int)floorf(mn.x);
+	int x1 = (int)floorf(mx.x - 1e-4f);
+	int y0 = (int)floorf(mn.y);
+	int y1 = (int)floorf(mn.y - 1e-4f);
+	int z0 = (int)floorf(mn.z);
+	int z1 = (int)floorf(mx.z - 1e-4f);
 
+	for (int x = x0; x <= x1; ++x) {
+		for (int y = y0; y <= y1; ++y) {
+			for (int z = z0;z <= z1;++z) {
+				if (world.IsSolid(x, y, z)) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void Player::MoveAxis(int axis, float delta, const World& world) {

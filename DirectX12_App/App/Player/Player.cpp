@@ -8,6 +8,59 @@ void Player::Initialize(const DirectX::XMFLOAT3& spawnPos) {
 }
 
 void Player::Update(float deltaTime, const World& world, bool forward, bool backward, bool left, bool right, bool jump, float yaw) {
+	// FPSCameraのyawと同じ向きに前/右ベクトルを作る
+	float forwardX = sinf(yaw);
+	float forwardZ = cosf(yaw);
+	float rightX = cosf(yaw);
+	float rightZ = -sinf(yaw);
+
+	float moveX = 0, moveZ = 0;
+	if (forward) {
+		moveX += forwardX;
+		moveZ += forwardZ;
+	}
+	if (backward) {
+		moveX -= forwardX;
+		moveZ -= forwardZ;
+	}
+	if (right) {
+		moveX += rightX;
+		moveZ += rightZ;
+	}
+	if (left) {
+		moveX -= rightX;
+		moveZ -= rightZ;
+	}
+
+	// 斜め移動でも速度が一定になるように正規化する
+	float length = sqrtf(moveX * moveX + moveZ * moveZ);
+	if (length > 0.0f) {
+		moveX /= length;
+		moveZ /= length;
+	}
+
+	m_velocity.x = moveX * MOVE_SPEED;
+	m_velocity.z = moveZ * MOVE_SPEED;
+
+	// ジャンプ
+	if (jump && m_onGround) {
+		m_velocity.y = JUMP_SPEED;
+		m_onGround = false;
+	}
+
+	// 重力
+	m_velocity.y -= GRAVITY * deltaTime;
+	// 落下速度の上限
+	if (m_velocity.y < -50.0f) {
+		m_velocity.y = -50.0f;
+	}
+
+	m_onGround = false;
+
+	// 軸ごとに移動
+	MoveAxis(0, m_velocity.x * deltaTime, world);
+	MoveAxis(1, m_velocity.y * deltaTime, world);
+	MoveAxis(2, m_velocity.z * deltaTime, world);
 
 }
 

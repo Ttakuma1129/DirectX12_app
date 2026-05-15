@@ -138,9 +138,6 @@
     <ClCompile Include="Engine\Graphics\Skybox.cpp">
       <Filter>ソース ファイル\Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Camera.cpp">
-      <Filter>ソース ファイル\Engine\Core</Filter>
-    </ClCompile>
     <ClCompile Include="App\World\Chunk.cpp">
       <Filter>ソース ファイル\App\World</Filter>
     </ClCompile>
@@ -152,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\FPSCamera.cpp">
       <Filter>ソース ファイル\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Frustum.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,9 +230,6 @@
     <ClInclude Include="Engine\Resources\SceneObject.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Camera.h">
-      <Filter>ヘッダー ファイル\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="App\World\BlockType.h">
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
@@ -250,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\FPSCamera.h">
       <Filter>ヘッダー ファイル\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Frustum.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

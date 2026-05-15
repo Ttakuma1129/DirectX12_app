@@ -238,7 +238,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::Separator();
 		ImGui::SliderFloat("Rotation Speed", &scene.GetRotationSpeed(), 0.0f, 3.0f);
-		ImGui::SliderFloat("FOV", &scene.GetCamera().GetFov(), 10.0f, 120.0f);
+		ImGui::SliderFloat("FOV", &scene.GetFPSCamera().GetFov(), 10.0f, 120.0f);
 
 		ImGui::Separator();
 		ImGui::Text("Raycast");

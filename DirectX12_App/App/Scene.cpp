@@ -1,8 +1,6 @@
 #include "Scene.h"
 
 void Scene::Initialize(float aspectRatio) {
-	m_camera.Initialize(aspectRatio);
-
 	// ŠJŽnŽžŠÔ‚ð‹L˜^
 	m_startTime = std::chrono::high_resolution_clock::now();
 

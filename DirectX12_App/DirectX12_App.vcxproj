@@ -135,7 +135,6 @@
     <ClCompile Include="App\Scene.cpp" />
     <ClCompile Include="App\World\Chunk.cpp" />
     <ClCompile Include="App\World\World.cpp" />
-    <ClCompile Include="Engine\Core\Camera.cpp" />
     <ClCompile Include="Engine\Core\FPSCamera.cpp" />
     <ClCompile Include="Engine\Core\Window.cpp" />
     <ClCompile Include="Engine\Graphics\CommandContext.cpp" />
@@ -168,7 +167,6 @@
     <ClInclude Include="App\World\BlockType.h" />
     <ClInclude Include="App\World\Chunk.h" />
     <ClInclude Include="App\World\World.h" />
-    <ClInclude Include="Engine\Core\Camera.h" />
     <ClInclude Include="Engine\Core\FPSCamera.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Graphics\CommandContext.h" />

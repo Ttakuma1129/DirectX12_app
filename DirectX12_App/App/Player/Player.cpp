@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../World/World.h"
 
 void Player::Initialize(const DirectX::XMFLOAT3& spawnPos) {
 

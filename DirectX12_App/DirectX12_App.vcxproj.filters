@@ -70,6 +70,9 @@
     <Filter Include="ソース ファイル\App\Player">
       <UniqueIdentifier>{ec7d4b88-41f3-4a3c-a99a-b27afdafb04e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\App\Player">
+      <UniqueIdentifier>{4bf1a560-9381-4e4d-b1e5-1d442e42ff52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -258,7 +261,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="App\Player\Player.h">
-      <Filter>ソース ファイル\App\Player</Filter>
+      <Filter>ヘッダー ファイル\App\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

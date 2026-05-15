@@ -67,6 +67,9 @@
     <Filter Include="ソース ファイル\App\World">
       <UniqueIdentifier>{e34f5500-f828-431b-b35d-9581b1d1dc7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\App\Player">
+      <UniqueIdentifier>{ec7d4b88-41f3-4a3c-a99a-b27afdafb04e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Math\Frustum.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="App\Player\Player.cpp">
+      <Filter>ソース ファイル\App\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Math\Frustum.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="App\Player\Player.h">
+      <Filter>ソース ファイル\App\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

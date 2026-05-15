@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\Player\Player.cpp" />
     <ClCompile Include="App\Scene.cpp" />
     <ClCompile Include="App\World\Chunk.cpp" />
     <ClCompile Include="App\World\World.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\Player\Player.h" />
     <ClInclude Include="App\Scene.h" />
     <ClInclude Include="App\World\BlockTexture.h" />
     <ClInclude Include="App\World\BlockType.h" />

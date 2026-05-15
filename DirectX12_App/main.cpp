@@ -160,11 +160,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		float deltaTime = std::chrono::duration<float>(now - lastTime).count();
 		lastTime = now;
 
-		DirectX::XMFLOAT3 camPos = scene.GetFPSCamera().GetPosition();
-		DirectX::XMFLOAT3 camDir = scene.GetFPSCamera().GetForward();
-
-		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
-
 		// 入力
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
@@ -172,6 +167,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		auto& player = scene.GetPlayer();
 
 		// プレイヤー更新
+		float yaw = fpsCam.GetYaw();
+		player.Update(deltaTime, world,
+					  keyboard.w, keyboard.s, keyboard.a, keyboard.d,
+					  keyboard.space, yaw);
+
+		// カメラ位置をプレイヤーの目の位置に同期
+		fpsCam.SetPosition(player.GetEyePosition());
+
+		DirectX::XMFLOAT3 camPos = scene.GetFPSCamera().GetPosition();
+		DirectX::XMFLOAT3 camDir = scene.GetFPSCamera().GetForward();
+
+		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
+
 
 		// ImGuiがマウスを使ってないときだけカメラ操作
 		if (!ImGui::GetIO().WantCaptureMouse) {

@@ -165,23 +165,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
 
+		// 入力
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
+		auto& fpsCam = scene.GetFPSCamera();
+		auto& player = scene.GetPlayer();
+
+		// プレイヤー更新
+
 		// ImGuiがマウスを使ってないときだけカメラ操作
 		if (!ImGui::GetIO().WantCaptureMouse) {
-			scene.GetFPSCamera().Update(deltaTime, keyboard.w, keyboard.s, keyboard.a, keyboard.d, keyboard.space, keyboard.shift);
-			
-			if (mouse.leftDown) {
-				scene.GetFPSCamera().Rotate(
-					static_cast<float>(mouse.deltaX),
-					static_cast<float>(mouse.deltaY));
-			}
-			if (mouse.leftClicked) {
-				auto cam = scene.GetFPSCamera();
+			fpsCam.Rotate(static_cast<float>(mouse.deltaX), static_cast<float>(mouse.deltaY));
 
+			if (mouse.leftClicked) {
 				if (ray.hit) {
 					world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Air);
-
 					// チャンクメッシュ更新
 					UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 				}
@@ -208,9 +206,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					ray.blockZ -= 1;
 					break;
 				}
-
 				world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
-
+				// チャンクメッシュ更新
 				UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 			}
 		}

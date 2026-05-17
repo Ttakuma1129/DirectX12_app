@@ -150,6 +150,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	ImGui_ImplDX12_Init(&initInfo);
 
+	// マウスを中央に固定
+	window.SetMouseCaptured(true);
+
 	auto lastTime = std::chrono::high_resolution_clock::now();
 
 	// メインループ

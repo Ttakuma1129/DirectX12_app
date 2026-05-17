@@ -71,6 +71,32 @@ void Window::ResetMouseDelta() {
 	m_mouse.rightClicked = false;
 }
 
+void Window::SetMouseCaptured(bool capture) {
+	if (m_mouseCaptured == capture) {
+		return;
+	}
+	m_mouseCaptured = capture;
+
+	if (capture) {
+		ShowCursor(FALSE);
+
+		// ウィンドウ中央にカーソルを移動
+		RECT rect;
+		GetClientRect(m_hwnd, &rect);
+		int cx = (rect.right - rect.left) / 2;
+		int cy = (rect.bottom - rect.top) / 2;
+		m_lastMouseX = cx;
+		m_lastMouseY = cy;
+
+		POINT center = { cx,cy };
+		ClientToScreen(m_hwnd, &center);
+		SetCursorPos(center.x, center.y);
+	}
+	else {
+		ShowCursor(TRUE);
+	}
+}
+
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	// Imguiのメッセージを転送

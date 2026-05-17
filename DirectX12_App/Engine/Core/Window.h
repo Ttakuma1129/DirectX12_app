@@ -30,6 +30,12 @@ public:
 
 	void ResetMouseDelta();
 
+	void SetMouseCaptured(bool capture);
+
+	bool IsMouseCaptured() const {
+		bool capture;
+	}
+
 	// ƒ}ƒEƒX“ü—Í‚ğ•Ô‚·
 	const MouseInput& GetMouseInput() const {
 		return m_mouse;
@@ -63,6 +69,7 @@ private:
 	MouseInput m_mouse;
 	int m_lastMouseX = 0;
 	int m_lastMouseY = 0;
+	bool m_mouseCaptured = false;
 
 	KeyboardInput m_keyboard;
 

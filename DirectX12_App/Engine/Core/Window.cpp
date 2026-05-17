@@ -69,6 +69,22 @@ void Window::ResetMouseDelta() {
 	m_mouse.wheelDelta = 0;
 	m_mouse.leftClicked = false;
 	m_mouse.rightClicked = false;
+
+	// キャプチャー中はカーソルを中央に戻す
+	if (m_mouseCaptured) {
+		RECT rect;
+		GetClientRect(m_hwnd, &rect);
+
+		int cx = (rect.right - rect.left) / 2;
+		int cy = (rect.bottom - rect.top) / 2;
+		m_lastMouseX = cx;
+		m_lastMouseY = cy;
+
+		POINT center = { cx, cy };
+		ClientToScreen(m_hwnd, &center);
+		SetCursorPos(center.x, center.y);
+	}
+
 }
 
 void Window::SetMouseCaptured(bool capture) {
@@ -88,7 +104,7 @@ void Window::SetMouseCaptured(bool capture) {
 		m_lastMouseX = cx;
 		m_lastMouseY = cy;
 
-		POINT center = { cx,cy };
+		POINT center = { cx, cy };
 		ClientToScreen(m_hwnd, &center);
 		SetCursorPos(center.x, center.y);
 	}

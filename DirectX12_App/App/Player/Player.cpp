@@ -76,7 +76,7 @@ bool Player::CollidesWithWorld(const World& world, const DirectX::XMFLOAT3& mn, 
 	int x0 = (int)floorf(mn.x);
 	int x1 = (int)floorf(mx.x - 1e-4f);
 	int y0 = (int)floorf(mn.y);
-	int y1 = (int)floorf(mn.y - 1e-4f);
+	int y1 = (int)floorf(mx.y - 1e-4f);
 	int z0 = (int)floorf(mn.z);
 	int z1 = (int)floorf(mx.z - 1e-4f);
 

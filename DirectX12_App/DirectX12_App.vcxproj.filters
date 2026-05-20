@@ -73,6 +73,12 @@
     <Filter Include="ヘッダー ファイル\App\Player">
       <UniqueIdentifier>{4bf1a560-9381-4e4d-b1e5-1d442e42ff52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Engine\Math">
+      <UniqueIdentifier>{c4baed07-fd2e-49ab-b64b-c59079f1f156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math">
+      <UniqueIdentifier>{cfdbcc6f-7215-40f8-81b9-f5797df9485d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -156,11 +162,11 @@
     <ClCompile Include="Engine\Core\FPSCamera.cpp">
       <Filter>ソース ファイル\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Math\Frustum.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="App\Player\Player.cpp">
       <Filter>ソース ファイル\App\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Frustum.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,11 +263,11 @@
     <ClInclude Include="Engine\Core\FPSCamera.h">
       <Filter>ヘッダー ファイル\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Math\Frustum.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="App\Player\Player.h">
       <Filter>ヘッダー ファイル\App\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Frustum.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

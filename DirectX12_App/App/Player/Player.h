@@ -29,7 +29,7 @@ private:
 	// プレイヤーのサイズ・物理定数
 	static constexpr float WIDTH = 0.6f;
 	static constexpr float HEIGHT = 1.8f;
-	static constexpr float EYE_HEIGHT = 1.8f;
+	static constexpr float EYE_HEIGHT = 1.6f;
 	static constexpr float MOVE_SPEED = 5.0f;
 	static constexpr float JUMP_SPEED = 9.0f;
 	static constexpr float GRAVITY = 28.0f;

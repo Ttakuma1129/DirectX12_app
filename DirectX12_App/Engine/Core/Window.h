@@ -16,6 +16,8 @@ struct MouseInput {
 struct KeyboardInput{
 	bool w = false, a = false, s = false, d = false;
 	bool space = false, shift = false;
+	bool escape = false;
+	bool escapePressed = false;
 };
 
 class Window {

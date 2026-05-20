@@ -69,6 +69,7 @@ void Window::ResetMouseDelta() {
 	m_mouse.wheelDelta = 0;
 	m_mouse.leftClicked = false;
 	m_mouse.rightClicked = false;
+	m_keyboard.escapePressed = false;
 
 	// キャプチャー中はカーソルを中央に戻す
 	if (m_mouseCaptured) {

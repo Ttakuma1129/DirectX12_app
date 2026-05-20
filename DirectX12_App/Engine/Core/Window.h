@@ -35,7 +35,7 @@ public:
 	void SetMouseCaptured(bool capture);
 
 	bool IsMouseCaptured() const {
-		bool capture;
+		return m_mouseCaptured;
 	}
 
 	// ƒ}ƒEƒX“ü—Í‚ğ•Ô‚·

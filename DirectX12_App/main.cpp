@@ -183,9 +183,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		RaycastResult ray = world.Raycast(camPos, camDir, 10.0f);
 
+		// エスケープを押したときカーソル固定を解除
+		if (keyboard.escapePressed) {
+			window.SetMouseCaptured(!window.IsMouseCaptured());
+		}
 
-		// ImGuiがマウスを使ってないときだけカメラ操作
-		if (!ImGui::GetIO().WantCaptureMouse) {
+		// キャプチャ中のときのみ視点操作
+		if (window.IsMouseCaptured()) {
 			fpsCam.Rotate(static_cast<float>(mouse.deltaX), static_cast<float>(mouse.deltaY));
 
 			if (mouse.leftClicked) {

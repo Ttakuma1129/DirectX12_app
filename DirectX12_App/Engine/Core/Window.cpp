@@ -224,7 +224,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 				s_instance->m_keyboard.shift = false;
 				break;
 			case VK_ESCAPE:
-				s_instance->m_keyboard.escapePressed = false;
+				s_instance->m_keyboard.escape = false;
 				break;
 			}
 			return 0;

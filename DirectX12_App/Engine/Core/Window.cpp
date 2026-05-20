@@ -192,6 +192,13 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 				break;
 			case VK_SHIFT:
 				s_instance->m_keyboard.shift = true;
+				break;
+			case VK_ESCAPE:
+				if (!s_instance->m_keyboard.escape) {
+					s_instance->m_keyboard.escapePressed = true;
+				}
+				s_instance->m_keyboard.escape = true;
+				break;
 			}
 			return 0;
 		}
@@ -214,11 +221,13 @@ LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM l
 				break;
 			case VK_SHIFT:
 				s_instance->m_keyboard.shift = false;
+				break;
+			case VK_ESCAPE:
+				s_instance->m_keyboard.escapePressed = false;
+				break;
 			}
 			return 0;
 		}
-
 	}
-
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }

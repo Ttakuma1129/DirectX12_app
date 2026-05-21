@@ -387,10 +387,11 @@ void Renderer::Render(
 	XMVECTOR lightDir = XMVector3Normalize(XMVectorSet(dir[0], dir[1], dir[2], 0.0f));
 	
 	// 影を落とす位置の中心
-	XMVECTOR sceneCenter = XMVectorSet(32.0f, 8.0f, 32.0f, 0.0f);
+	DirectX::XMFLOAT3 playerPos = scene.GetPlayer().GetPosition();
+	XMVECTOR sceneCenter = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0.0f);
 
 	// 中心から見て光源側へ離れた位置にライトカメラを置く
-	XMVECTOR lightPos = sceneCenter - lightDir * 60.0f;
+	XMVECTOR lightPos = sceneCenter - lightDir * 40.0f;
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	// ライトが真上、真下を向いているときのup補正
@@ -398,8 +399,9 @@ void Renderer::Render(
 		up = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
+	const float SHADOW_AREA = 40.f;
 	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, sceneCenter, up);
-	XMMATRIX lightProj = XMMatrixOrthographicLH(90.0, 90.0f, 0.1f, 150.0f);
+	XMMATRIX lightProj = XMMatrixOrthographicLH(SHADOW_AREA, SHADOW_AREA, 0.1f, 100.0f);
 	XMMATRIX lightVP = lightView * lightProj;	
 
 	// 定数バッファを書き込み

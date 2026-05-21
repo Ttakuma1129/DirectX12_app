@@ -6,6 +6,8 @@ void Scene::Initialize(float aspectRatio) {
 
 	m_player.Initialize({ 32.0f, 30.0f, 32.0f });
 
+	m_fpsCamera.Initialize(aspectRatio);
+
 	// 起動時にオブジェクトを2つ設置
 	//SceneObject obj1;
 	//strcpy_s(obj1.name, "Sword");

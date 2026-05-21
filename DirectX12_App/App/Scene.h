@@ -99,7 +99,7 @@ private:
 	// ライトパラメータ
 	float m_lightDir[3] = { -0.5f, -1.0, 0.5f };
 	float m_lightColor[3] = { 1.0f, 1.0f, 1.0f };
-	float m_ambientColor[3] = { 0.15f, 0.15f, 0.15f };
+	float m_ambientColor[3] = { 0.25f, 0.25f, 0.25f };
 	float m_specIntensity = 0.5f; // スペキュラー強度
 	float m_specShininess = 32.0f; // ハイライトの鋭さ
 

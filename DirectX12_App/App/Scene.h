@@ -103,7 +103,7 @@ private:
 	float m_specIntensity = 0.5f; // スペキュラー強度
 	float m_specShininess = 32.0f; // ハイライトの鋭さ
 
-	float m_shadowBias = 0.005f;
+	float m_shadowBias = 0.00001f;
 
 
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存

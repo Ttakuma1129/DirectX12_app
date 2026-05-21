@@ -411,7 +411,7 @@ void Renderer::Render(
 	}
 
 	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, sceneCenter, up);
-	XMMATRIX lightProj = XMMatrixOrthographicLH(SHADOW_AREA, SHADOW_AREA, 0.1f, 100.0f);
+	XMMATRIX lightProj = XMMatrixOrthographicLH(SHADOW_AREA, SHADOW_AREA, 0.1f, 150.0f);
 	XMMATRIX lightVP = lightView * lightProj;	
 
 	// 定数バッファを書き込み

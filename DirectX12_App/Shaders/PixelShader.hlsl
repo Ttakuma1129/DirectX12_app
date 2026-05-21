@@ -37,12 +37,24 @@ float4 main(PSInput input) : SV_TARGET{
     
     // 比較サンプリング
     float bias = shadowParams.x;
-    float shadow = shadowMap.SampleCmpLevelZero(shadowSampler, shadowUV, projCoords.z - bias);
+    float shadowMapSize = shadowParams.y;
+    float texelSize = 1.0 / shadowMapSize;
+    
+    // 3x3PCF 周囲9点をサンプリングして平均 
+    float shadow = 0.0;
+    for (int x = -1; x <= 1; ++x){
+        for (int y = -1; y <= 1; ++y) {
+            float2 offset = float2(x, y) * texelSize;
+            shadow += shadowMap.SampleCmpLevelZero(shadowSampler, shadowUV + offset, projCoords.z - bias);
+        }
+
+    }
+    shadow /= 9.0;
     
     // シャドウマップ範囲外は影なし
-    if (projCoords.z > 1.0 || projCoords.z < 0.0){
-        shadow = 1.0;
-    }
+        if (projCoords.z > 1.0 || projCoords.z < 0.0){
+            shadow = 1.0;
+        }
     
     // テクスチャ色を取得
     float4 texColor = tex.Sample(smp, input.uv);

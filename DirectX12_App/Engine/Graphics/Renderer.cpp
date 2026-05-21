@@ -382,14 +382,25 @@ void Renderer::Render(
 	const auto& objects = scene.GetObjects();
 	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 
+	// プレイヤーの位置
+	DirectX::XMFLOAT3 playerPos = scene.GetPlayer().GetPosition();
+
+	const float SHADOW_AREA = 40.f;
+	
+	// 1テクセルが何ワールド単位かを計算
+	float worldUnitsPerTexel = SHADOW_AREA / static_cast<float>(SHADOW_MAP_SIZE);
+
+	// プレイヤー位置をテクセル境界にスナップ
+	float snappedX = floorf(playerPos.x / worldUnitsPerTexel) * worldUnitsPerTexel;
+	float snappedZ = floorf(playerPos.z / worldUnitsPerTexel) * worldUnitsPerTexel;
+
+	// 影を落とす位置の中心
+	XMVECTOR sceneCenter = XMVectorSet(snappedX, playerPos.y, snappedZ, 0.0f);
+
 	// ライトのVP行列を計算
 	const float* dir = scene.GetLightDir();
 	XMVECTOR lightDir = XMVector3Normalize(XMVectorSet(dir[0], dir[1], dir[2], 0.0f));
 	
-	// 影を落とす位置の中心
-	DirectX::XMFLOAT3 playerPos = scene.GetPlayer().GetPosition();
-	XMVECTOR sceneCenter = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0.0f);
-
 	// 中心から見て光源側へ離れた位置にライトカメラを置く
 	XMVECTOR lightPos = sceneCenter - lightDir * 40.0f;
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -399,7 +410,6 @@ void Renderer::Render(
 		up = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
-	const float SHADOW_AREA = 40.f;
 	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, sceneCenter, up);
 	XMMATRIX lightProj = XMMatrixOrthographicLH(SHADOW_AREA, SHADOW_AREA, 0.1f, 100.0f);
 	XMMATRIX lightVP = lightView * lightProj;	

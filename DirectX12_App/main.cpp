@@ -331,7 +331,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		static char texturePathBuffer[256] = "App/Textures/sample.png";
 		ImGui::InputText("Texture Path", texturePathBuffer, sizeof(texturePathBuffer));
 
-		if (objects.size() < 16 && ImGui::Button("+ Add Object")) {
+		if (objects.size() < 64 && ImGui::Button("+ Add Object")) {
 			SceneObject newObj;
 			sprintf_s(newObj.name, "Object %d", (int)objects.size());
 			newObj.modelPath = modelPathBuffer;

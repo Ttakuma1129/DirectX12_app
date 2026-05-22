@@ -298,7 +298,7 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// スロット上限かチェック
-	if (m_srvSlot >= MAX_TEXTURES) {
+	if (m_srvSlot >= SHADOW_SRV_SLOT) {
 		OutputDebugStringA("Texture slot limit reached\n");
 		return -1;
 	}

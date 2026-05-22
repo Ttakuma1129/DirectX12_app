@@ -26,7 +26,7 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 		&defaultHeapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&vbDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
 		IID_PPV_ARGS(&m_vertexBuffer));
 	if (FAILED(hr)) {
@@ -90,7 +90,7 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 		&defaultHeapProps,
 		D3D12_HEAP_FLAG_NONE,
 		&ibResDesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
 		IID_PPV_ARGS(&m_indexBuffer));
 	if (FAILED(hr)) {

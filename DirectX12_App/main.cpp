@@ -154,6 +154,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	window.SetMouseCaptured(true);
 
 	auto lastTime = std::chrono::high_resolution_clock::now();
+	float accumulator = 0.0f;
+	const float FIXED_DELTATIME = 1.0f / 120.0f;
 
 	// メインループ
 	while (window.ProcessMessage()){
@@ -163,17 +165,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		float deltaTime = std::chrono::duration<float>(now - lastTime).count();
 		lastTime = now;
 
+		deltaTime = (std::min)(deltaTime, 0.25f);
+		accumulator += deltaTime;
+
 		// 入力
 		const auto& mouse = window.GetMouseInput();
 		const auto& keyboard = window.GetKeyboardInput();
 		auto& fpsCam = scene.GetFPSCamera();
 		auto& player = scene.GetPlayer();
+		float yaw = fpsCam.GetYaw();
 
 		// プレイヤー更新
-		float yaw = fpsCam.GetYaw();
-		player.Update(deltaTime, world,
-					  keyboard.w, keyboard.s, keyboard.a, keyboard.d,
-					  keyboard.space, yaw);
+		while (accumulator >= FIXED_DELTATIME) {
+			player.Update(FIXED_DELTATIME, world,
+				keyboard.w, keyboard.s, keyboard.a, keyboard.d,
+				keyboard.space, yaw);
+			accumulator -= FIXED_DELTATIME;
+		}
 
 		// カメラ位置をプレイヤーの目の位置に同期
 		fpsCam.SetPosition(player.GetEyePosition());

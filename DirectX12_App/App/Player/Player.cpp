@@ -64,6 +64,14 @@ void Player::Update(float deltaTime, const World& world, bool forward, bool back
 
 }
 
+bool Player::IntersectsBlock(int bx, int by, int bz)const {
+	DirectX::XMFLOAT3 mn, mx;
+	GetAABB(mn, mx);
+	return (mn.x< bx + 1.0f && mx.x > bx) &&
+		   (mn.y< by + 1.0f && mx.y > by) &&
+		   (mn.x< bz + 1.0f && mx.z > bz);
+}
+
 void Player::GetAABB(DirectX::XMFLOAT3& mn, DirectX::XMFLOAT3& mx) const {
 	mn = { m_position.x, m_position.y, m_position.z };
 	mx = { m_position.x + WIDTH,

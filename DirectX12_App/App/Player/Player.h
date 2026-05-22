@@ -10,6 +10,9 @@ public:
 	// 入力によって位置と速度を更新
 	void Update(float deltaTime, const World& world, bool forward, bool backward, bool left, bool right, bool jump, float yaw);
 
+	// 指定したブロックセルがプレイヤーの当たり判定と重なるか
+	bool IntersectsBlock(int bx, int by, int bz)const;
+
 	DirectX::XMFLOAT3 GetPosition() const {
 		return m_position;
 	}

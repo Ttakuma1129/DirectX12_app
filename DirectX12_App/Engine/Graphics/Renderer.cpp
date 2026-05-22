@@ -568,7 +568,7 @@ void Renderer::Render(
 	m_totalChunkCount = 0;
 
 	// 描画ループ
-	for (uint32_t i = 0;i < objects.size();++i) {
+	for (uint32_t i = 0;i < count;++i) {
 		const auto& obj = objects[i];
 
 		// チャンク判定

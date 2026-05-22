@@ -208,30 +208,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				}
 			}
 			if (mouse.rightClicked) {
-				// 設置：レイが当たったブロックからfaceの方向に1ずれた位置
-				switch (ray.face) {
-				case 0:
-					ray.blockX += 1;
-					break;
-				case 1:
-					ray.blockX -= 1;
-					break;
-				case 2:
-					ray.blockY += 1;
-					break;
-				case 3:
-					ray.blockY -= 1;
-					break;
-				case 4:
-					ray.blockZ += 1;
-					break;
-				case 5:
-					ray.blockZ -= 1;
-					break;
+				if (ray.hit) {
+					// 設置：レイが当たったブロックからfaceの方向に1ずれた位置
+					switch (ray.face) {
+					case 0:
+						ray.blockX += 1;
+						break;
+					case 1:
+						ray.blockX -= 1;
+						break;
+					case 2:
+						ray.blockY += 1;
+						break;
+					case 3:
+						ray.blockY -= 1;
+						break;
+					case 4:
+						ray.blockZ += 1;
+						break;
+					case 5:
+						ray.blockZ -= 1;
+						break;
+					}
+
+					// プレイヤーと重なる位置には設置しない
+					if (!player.IntersectsBlock(ray.blockX, ray.blockY, ray.blockZ)) {
+						world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
+						// チャンクメッシュ更新
+						UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
+					}
 				}
-				world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
-				// チャンクメッシュ更新
-				UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
 			}
 		}
 

@@ -28,5 +28,6 @@ VSOutput main(VSInput input){
     output.normal = mul(input.normal, (float3x3) model);
     
     output.uv = input.uv;
+    output.ambientOcclusion = input.ambientOcclusion;
     return output;
 }

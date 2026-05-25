@@ -91,22 +91,22 @@ void Chunk::BuildMesh(const World& world, int chunkX, int chunkZ, std::vector<Mo
 
 				// ワールド座標で6方向チェック、ローカル座標で頂点生成
 				if (!world.IsSolid(wx + 1, y, wz)) {
-					AddFace(0, x, y, z, type, vertices, indices);
+					AddFace(0, x, y, z, wx ,wz, type, world, vertices, indices);
 				}
 				if (!world.IsSolid(wx - 1, y, wz)) {
-					AddFace(1, x, y, z, type, vertices, indices);
+					AddFace(1, x, y, z, wx, wz, type, world, vertices, indices);
 				}
 				if (!world.IsSolid(wx, y + 1, wz)) {
-					AddFace(2, x, y, z, type, vertices, indices);
+					AddFace(2, x, y, z, wx, wz, type, world, vertices, indices);
 				}
 				if (!world.IsSolid(wx, y - 1, wz)) {
-					AddFace(3, x, y, z, type, vertices, indices);
+					AddFace(3, x, y, z, wx, wz, type, world, vertices, indices);
 				}
 				if (!world.IsSolid(wx, y, wz + 1)) {
-					AddFace(4, x, y, z, type, vertices, indices);
+					AddFace(4, x, y, z, wx, wz, type, world, vertices, indices);
 				}
 				if (!world.IsSolid(wx, y, wz - 1)) {
-					AddFace(5, x, y, z, type, vertices, indices);
+					AddFace(5, x, y, z, wx, wz, type, world, vertices, indices);
 				}
 			}
 		}

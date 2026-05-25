@@ -29,7 +29,7 @@ private:
 	BlockType m_blocks[CHUNK_SIZE][HEIGHT][CHUNK_SIZE] = {};
 	
 	bool IsSolid(int x, int y, int z) const;
-	void AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
+	void AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType type, const World& world, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 	
 	// パーリンノイズを使用して座標ごとの高さ(Y)を返す
 	int GetHeightAt(int worldX, int worldZ);

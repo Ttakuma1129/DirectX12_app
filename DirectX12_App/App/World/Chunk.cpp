@@ -197,6 +197,8 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType 
 		int side2 = world.IsSolid(bx + s2[0], by + s2[1], bz + s2[2]) ? 1 : 0;
 		int corner = world.IsSolid(bx + s1[0] + s2[0], by + s1[1] + s2[1], bz + s1[1] + s2[2]) ? 1 : 0;
 
+		ao[i] = (side1 && side2) ? 0 : (3 - (side1 + side2 + corner));
+
 		ModelVertex v = {};
 		v.position[0] = faceVertices[faceDir][i][0] + x;
 		v.position[1] = faceVertices[faceDir][i][1] + y;

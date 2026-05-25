@@ -60,10 +60,14 @@ float4 main(PSInput input) : SV_TARGET{
     // テクスチャ色を取得
     float4 texColor = tex.Sample(smp, input.uv);
     
+    // アンビエントオクルージョン
+    float ao01 = saturate(input.ambientOcclusion / 3.0);
+    float aoFactor = lerp(0.0, 1.0, ao01);
+    
     // 出力される最終色
     float3 diffuse = lightColor.rgb * NdotL;
     float3 ambient = ambientColor.rgb;
-    float3 finalColor = texColor.rgb * (ambient + diffuse * shadow) + lightColor.rgb * specular * shadow;
+    float3 finalColor = texColor.rgb * (ambient + diffuse * shadow) * aoFactor + lightColor.rgb * specular * shadow;
     
     return float4(finalColor, texColor.a);
 }

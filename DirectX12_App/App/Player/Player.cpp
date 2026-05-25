@@ -69,7 +69,7 @@ bool Player::IntersectsBlock(int bx, int by, int bz)const {
 	GetAABB(mn, mx);
 	return (mn.x< bx + 1.0f && mx.x > bx) &&
 		   (mn.y< by + 1.0f && mx.y > by) &&
-		   (mn.x< bz + 1.0f && mx.z > bz);
+		   (mn.z< bz + 1.0f && mx.z > bz);
 }
 
 void Player::GetAABB(DirectX::XMFLOAT3& mn, DirectX::XMFLOAT3& mx) const {

@@ -124,7 +124,7 @@ bool Chunk::IsSolid(int x, int y, int z) const {
 	return GetBlock(x, y, z) != BlockType::Air;
 }
 
-void Chunk::AddFace(int faceDir, int x, int y, int z, BlockType type, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
+void Chunk::AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType type, const World& world, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const {
 	// このブロック・面が使うアトラスのセル番号取得
 	uint8_t cell = GetTexIndex(type, faceDir);
 

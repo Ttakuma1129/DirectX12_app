@@ -160,26 +160,73 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType 
 	// 頂点インデックス
 	uint16_t baseIndex = static_cast<uint16_t>(vertices.size());
 
+	int ao[4];
+
 	// 4頂点追加
 	for (int i = 0;i < 4; ++i) {
+		int cx = (int)faceVertices[faceDir][i][0];
+		int cy = (int)faceVertices[faceDir][i][1];
+		int cz = (int)faceVertices[faceDir][i][2];
+
+		int nx = (int)faceNormals[faceDir][0];
+		int ny = (int)faceNormals[faceDir][1];
+		int nz = (int)faceNormals[faceDir][2];
+
+		// 面の外側の層のワールド座標
+		int bx = wx + nx;
+		int by = y + ny;
+		int bz = wz + nz;
+
+		// 接線2軸のオフセット
+		int s1[3] = { 0, 0, 0 };
+		int s2[3] = { 0, 0, 0 };
+		if (nx != 0) { // X固定 → 接線YZ
+			s1[1] = (cy == 1) ? 1 : -1;
+			s2[2] = (cz == 1) ? 1 : -1;
+		}
+		else if (ny != 0){ // Y固定 → 接線XZ
+			s1[0] = (cx == 1) ? 1 : -1;
+			s2[2] = (cz == 1) ? 1 : -1;
+		}
+		else { // Z固定 → 接線XY
+			s1[0] = (cx == 1) ? 1 : -1;
+			s2[2] = (cy == 1) ? 1 : -1;
+		}
+
+		int side1 = world.IsSolid(bx + s1[0], by + s1[1], bz + s1[2]) ? 1 : 0;
+		int side2 = world.IsSolid(bx + s2[0], by + s2[1], bz + s2[2]) ? 1 : 0;
+		int corner = world.IsSolid(bx + s1[0] + s2[0], by + s1[1] + s2[1], bz + s1[1] + s2[2]) ? 1 : 0;
+
 		ModelVertex v = {};
 		v.position[0] = faceVertices[faceDir][i][0] + x;
 		v.position[1] = faceVertices[faceDir][i][1] + y;
 		v.position[2] = faceVertices[faceDir][i][2] + z;
-		v.normal[0] = faceNormals[faceDir][0];
-		v.normal[1] = faceNormals[faceDir][1];
-		v.normal[2] = faceNormals[faceDir][2];
+		v.normal[0] = (float)nx;
+		v.normal[1] = (float)ny;
+		v.normal[2] = (float)nz;
 		v.uv[0] = faceUVs[i][0];
 		v.uv[1] = faceUVs[i][1];
+		v.ambientOcclusion = (float)ao[i];
 		vertices.push_back(v);
 	}
 
-	indices.push_back(baseIndex + 0);
-	indices.push_back(baseIndex + 2);
-	indices.push_back(baseIndex + 1);
-	indices.push_back(baseIndex + 0);
-	indices.push_back(baseIndex + 3);
-	indices.push_back(baseIndex + 2);
+	uint16_t b = baseIndex;
+	if (ao[0] + ao[2] <= ao[1] + ao[3]) {
+		indices.push_back(b + 0);
+		indices.push_back(b + 2);
+		indices.push_back(b + 1);
+		indices.push_back(b + 0);
+		indices.push_back(b + 3);
+		indices.push_back(b + 2);
+	}
+	else {
+		indices.push_back(b + 1);
+		indices.push_back(b + 3);
+		indices.push_back(b + 2);
+		indices.push_back(b + 1);
+		indices.push_back(b + 0);
+		indices.push_back(b + 3);
+	}
 }
 
 int Chunk::GetHeightAt(int worldX, int worldZ) {

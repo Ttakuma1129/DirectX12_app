@@ -75,6 +75,20 @@ public:
 		return m_chunks;
 	}
 
+	void SetSeed(uint32_t seed) {
+		m_seed = seed;
+	}
+
+	uint32_t GetSeed() {
+		return m_seed;
+	}
+
+	void ClearChunks() {
+		m_chunks.clear();
+	}
+
 private:
+	uint32_t m_seed = 0;
+
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunks;
 };

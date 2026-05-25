@@ -236,9 +236,6 @@
     <ClInclude Include="Engine\Resources\ModelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Resources\CubeMapTexture.h">
-      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Graphics\Skybox.h">
       <Filter>ヘッダー ファイル\Engine\Graphics</Filter>
     </ClInclude>
@@ -246,9 +243,6 @@
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
     <ClInclude Include="App\World\BlockType.h">
-      <Filter>ヘッダー ファイル\App\World</Filter>
-    </ClInclude>
-    <ClInclude Include="App\World\Chunk.h">
       <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
     <ClInclude Include="App\World\BlockTexture.h">
@@ -268,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Math\Frustum.h">
       <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Resources\CubeMapTexture.h">
+      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\Chunk.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

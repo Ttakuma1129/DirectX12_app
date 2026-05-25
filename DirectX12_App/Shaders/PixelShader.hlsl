@@ -62,7 +62,7 @@ float4 main(PSInput input) : SV_TARGET{
     
     // アンビエントオクルージョン
     float ao01 = saturate(input.ambientOcclusion / 3.0);
-    float aoFactor = lerp(0.0, 1.0, ao01);
+    float aoFactor = lerp(0.5, 1.0, ao01);
     
     // 出力される最終色
     float3 diffuse = lightColor.rgb * NdotL;

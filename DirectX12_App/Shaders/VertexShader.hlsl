@@ -4,6 +4,7 @@ struct VSInput{
     float3 pos : POSITION;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
+    float ambientOcclusion : AO;
 };
 
 struct VSOutput{
@@ -11,6 +12,7 @@ struct VSOutput{
     float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+    float ambientOcclusion : TEXCOORD2;
 };
 
 VSOutput main(VSInput input){

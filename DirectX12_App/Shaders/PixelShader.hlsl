@@ -10,6 +10,7 @@ struct PSInput{
     float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD0;
+    float ambientOcclusion : TEXCOORD2;
 };
 
 float4 main(PSInput input) : SV_TARGET{

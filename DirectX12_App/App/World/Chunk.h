@@ -16,7 +16,7 @@ public:
 	void GenerateFlat();
 	
 	// パーリンノイズで地形を生成
-	void GenerateNoise(int chunkX, int chunkZ);
+	void GenerateNoise(int chunkX, int chunkZ, uint32_t seed);
 
 	void SetBlock(int x, int y, int z, BlockType type);
 
@@ -32,5 +32,5 @@ private:
 	void AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType type, const World& world, std::vector<ModelVertex>& vertices, std::vector<uint16_t>& indices) const;
 	
 	// パーリンノイズを使用して座標ごとの高さ(Y)を返す
-	int GetHeightAt(int worldX, int worldZ);
+	int GetHeightAt(int worldX, int worldZ, uint32_t seed);
 };

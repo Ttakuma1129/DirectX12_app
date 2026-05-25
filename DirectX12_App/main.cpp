@@ -1,4 +1,5 @@
 #include <string>
+#include <random>
 
 #include "Engine/Core/Window.h"
 #include "Engine/Graphics/GfxDevice.h"
@@ -92,6 +93,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ƒ`ƒƒƒ“ƒN‚ğ¶¬
 	World world;
+	world.SetSeed(std::random_device{}());
 	for (int cx = 0; cx < 4; ++cx) {
 		for (int cz = 0; cz < 4; ++cz) {
 			world.GenerateChunk(cx, cz);

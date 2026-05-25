@@ -28,7 +28,7 @@ void Chunk::GenerateFlat() {
 	}
 }
 
-void Chunk::GenerateNoise(int chunkX, int chunkZ) {
+void Chunk::GenerateNoise(int chunkX, int chunkZ, uint32_t seed) {
 	// ベースとなるワールド座標
 	int baseWorldX = chunkX * CHUNK_SIZE;
 	int baseWorldZ = chunkZ * CHUNK_SIZE;
@@ -38,7 +38,7 @@ void Chunk::GenerateNoise(int chunkX, int chunkZ) {
 			int worldX = baseWorldX + x;
 			int worldZ = baseWorldZ + z;
 
-			int surfaceY = GetHeightAt(worldX, worldZ);
+			int surfaceY = GetHeightAt(worldX, worldZ, seed);
 
 			for (int y = 0;y < HEIGHT; ++y) {
 				BlockType type;
@@ -231,13 +231,21 @@ void Chunk::AddFace(int faceDir, int x, int y, int z, int wx, int wz, BlockType 
 	}
 }
 
-int Chunk::GetHeightAt(int worldX, int worldZ) {
+int Chunk::GetHeightAt(int worldX, int worldZ, uint32_t seed) {
 	const float scale = 0.05f;	// 地形の変化の度合(大きいほど急激に変化)
 	const int minHeight = 4;
 	const int maxHeight = 12;
 
-	float nx = worldX * scale;
-	float nz = worldZ * scale;
+	// シードから X/Z用の独立したオフセットを作る
+	uint32_t hx = seed * 0x9E3779B1u;
+	uint32_t hz = seed * 0x85EBCA77u + 0x165667Bau;
+
+	// オフセットを256周期に収める
+	float offsetX = (float)hx / 4294967296.0f * 256.0f;
+	float offsetZ = (float)hz / 4294967296.0f * 256.0f;
+
+	float nx = worldX * scale + offsetX;
+	float nz = worldZ * scale + offsetZ;
 	float noise = stb_perlin_noise3(nx, 0.0f, nz, 0, 0, 0);
 	float normalizedNoise = (noise + 1.0f) * 0.5f;	// 0～1の間にノイズを正規化
 	int height = minHeight + static_cast<int>(normalizedNoise * (maxHeight - minHeight));

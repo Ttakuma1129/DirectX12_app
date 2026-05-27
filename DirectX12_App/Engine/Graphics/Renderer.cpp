@@ -705,6 +705,36 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 	return true;
 }
 
+int Renderer::CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 空きスロットがあれば再利用、無ければ末尾に追加
+	uint32_t meshIndex;
+	if (!m_freeMeshSlots.empty()) {
+		meshIndex = m_freeMeshSlots.back();
+		m_freeMeshSlots.pop_back();
+	}
+	else {
+		meshIndex = static_cast<uint32_t>(m_meshes.size());
+		m_meshes.push_back(Mesh());
+		m_modelPaths.push_back("__chunk");
+	}
+
+	if (vertices.empty()) {
+		m_meshes[meshIndex] = Mesh();
+		return static_cast<int>(meshIndex);
+	}
+
+	if (!CreateMeshWithUpload(device, commandQueue, vertices.data(),
+			static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)),sizeof(ModelVertex), 
+			indices.data(),static_cast<uint32_t>(indices.size()), m_meshes[meshIndex])) {
+		return -1;
+	}
+	return static_cast<int>(meshIndex);
+}
+
 bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh) {
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
 	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));

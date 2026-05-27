@@ -53,6 +53,9 @@ public:
 
 	bool UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex);
 
+	// チャンクのメッシュを生成し、meshIndexを返す
+	int CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}

@@ -65,6 +65,22 @@ public:
 	// 面を表示するかどうか
 	bool IsSolid(int worldX, int worldY, int worldZ) const;
 
+	// チャンクが存在しているか
+	bool HasChunk(const ChunkCoord& coord) const {
+		return m_chunks.find(coord) != m_chunks.end();
+	}
+
+	// 該当チャンクを消去
+	void RemoveChunk(const ChunkCoord& coord) {
+		m_chunks.erase(coord);
+	}
+
+	// 該当チャンクのポインタを取得
+	Chunk* GetChunkPtr(const ChunkCoord& coord) {
+		auto it = m_chunks.find(coord);
+		return (it == m_chunks.end()) ? nullptr : it->second.get();
+	}
+
 	// Worldからチャンクを生成・登録するための関数
 	Chunk* GenerateChunk(int chunkX, int chunkZ);
 

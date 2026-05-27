@@ -87,13 +87,15 @@ namespace {
 
 					SceneObject object;
 					sprintf_s(object.name, "Chunk %d_%d", coord.x, coord.z);
-					object.texturePath = "App/Texture_atlas.png";
+					object.texturePath = "App/Textures/texture_atlas.png";
 					object.position[0] = (float)(coord.x * Chunk::CHUNK_SIZE);
 					object.position[1] = 0.0f;
 					object.position[2] = (float)(coord.z * Chunk::CHUNK_SIZE);
 					object.meshIndex = (uint32_t)meshIndex;
 					object.textureIndex = renderer.LoadTexture(gfx.GetDevice(), gfx.GetCommandQueue(), object.texturePath);
 					
+					scene.GetObjects().push_back(object);
+
 					loaded[coord] = { (uint32_t)meshIndex };
 					++made;
 				}
@@ -102,7 +104,7 @@ namespace {
 	}
 
 	// 更新したチャンクの隣接するチャンクを更新
-	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, uint32_t, ChunkCoordHash>& chunkMeshMap) {
+	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
 		// 書き換えたブロックが属するチャンク座標とローカル座標を計算
 		int chunkX = WorldCoord::FloorDiv(worldX, Chunk::CHUNK_SIZE);
 		int chunkZ = WorldCoord::FloorDiv(worldZ, Chunk::CHUNK_SIZE);
@@ -133,17 +135,17 @@ namespace {
 		//各チャンクを更新
 		for (const auto& coord : toUpdate) {
 			auto chunkIt = world.GetChunks().find(coord);
-			auto meshIt = chunkMeshMap.find(coord);
+			auto meshIt = loaded.find(coord);
 
 			// チャンクが存在しない or meshIndex未登録の場合描画をスキップ
 			if (chunkIt == world.GetChunks().end()) {
 				continue;
 			}
-			if (meshIt == chunkMeshMap.end()) {
+			if (meshIt == loaded.end()) {
 				continue;
 			}
 
-			renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, coord.x, coord.z, meshIt->second);
+			renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, coord.x, coord.z, meshIt->second.meshIndex);
 		}
 	}
 }
@@ -181,34 +183,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// チャンクを生成
 	World world;
 	world.SetSeed(std::random_device{}());
-	for (int cx = 0; cx < 4; ++cx) {
-		for (int cz = 0; cz < 4; ++cz) {
-			world.GenerateChunk(cx, cz);
-		}
-	}
 
-	std::unordered_map<ChunkCoord, uint32_t, ChunkCoordHash> chunkMeshMap;
-
-	// 各チャンクをRendererに登録
-	for (const auto& pair : world.GetChunks()) {
-		const ChunkCoord& coord = pair.first;
-		const Chunk& chunk = *pair.second;
-
-		SceneObject chunkObj;
-		sprintf_s(chunkObj.name, "Chunk %d_%d", coord.x, coord.z);
-		chunkObj.texturePath = "App/Textures/texture_atlas.png";
-		chunkObj.position[0] = static_cast<float>(coord.x * Chunk::CHUNK_SIZE);
-		chunkObj.position[1] = 0.0f;
-		chunkObj.position[2] = static_cast<float>(coord.z * Chunk::CHUNK_SIZE);
-		chunkObj.scale = 1.0f;
-
-		renderer.RegisterChunk(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), chunk, world, coord.x, coord.z, chunkObj.texturePath, chunkObj);
-
-		// meshIndexを保存
-		chunkMeshMap[coord] = chunkObj.meshIndex;
-
-		scene.GetObjects().push_back(chunkObj);
-	}
+	std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash> loaded;
 
 	// スカイボックス初期化
 	std::string skyFaces[6] = {
@@ -293,7 +269,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (ray.hit) {
 					world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Air);
 					// チャンクメッシュ更新
-					UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
+					UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, loaded);
 				}
 			}
 			if (mouse.rightClicked) {
@@ -324,13 +300,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					if (!player.IntersectsBlock(ray.blockX, ray.blockY, ray.blockZ)) {
 						world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
 						// チャンクメッシュ更新
-						UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, chunkMeshMap);
+						UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, loaded);
 					}
 				}
 			}
 		}
 
 		window.ResetMouseDelta();
+
+		UpdateStreaming(world, renderer, gfxDevice, scene, loaded);
 
 		gfxDevice.BeginFrame();
 

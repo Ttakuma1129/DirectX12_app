@@ -14,6 +14,93 @@
 #include "Engine/ThirdParty/imgui/backends/imgui_impl_win32.h"
 
 namespace {
+	const int RENDER_DISTANCE = 4; //メッシュを表示する範囲
+	const int MAX_LOADS_PER_FRAME = 2; // 1フレームに作るメッシュ数の上限
+
+	struct LoadedChunk { uint32_t meshIndex; };
+
+	// プレイヤーの位置に合わせてチャンクをロード・アンロードする
+	void UpdateStreaming(World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
+						 std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
+		// プレイヤーが「どのチャンクにいるか」を計算
+		DirectX::XMFLOAT3 playerPos = scene.GetPlayer().GetPosition();
+		int playerChunkX = WorldCoord::FloorDiv((int)floorf(playerPos.x), Chunk::CHUNK_SIZE);
+		int playerChunkZ = WorldCoord::FloorDiv((int)floorf(playerPos.z), Chunk::CHUNK_SIZE);
+
+		// RENDER_DISTANCE+2より遠いメッシュとデータを破棄
+		std::vector<ChunkCoord> toUnload;
+		for (auto& kv : loaded) {
+			if ((std::max)(abs(kv.first.x - playerChunkX), abs(kv.first.z - playerChunkZ)) > RENDER_DISTANCE + 2) {
+				toUnload.push_back(kv.first);
+			}
+		}
+		if (!toUnload.empty()) {
+			gfx.WaitForGPU();
+			for (auto& chunkCoord : toUnload) {
+				renderer.ReleaseChunkMesh(loaded[chunkCoord].meshIndex);
+				world.RemoveChunk(chunkCoord);
+				loaded.erase(chunkCoord);
+				// 対応するSceneObjectを名前で探して外す
+				auto& objects = scene.GetObjects();
+				char name[32];
+				sprintf_s(name, "Chunk %d_%d", chunkCoord.x, chunkCoord.z);
+				for (size_t i = 0;i < objects.size(); ++i) {
+					if (strcmp(objects[i].name, name) == 0) {
+						objects.erase(objects.begin() + i);
+						break;
+					}
+				}
+			}
+		}
+
+		//  RENDER_DISTANCE+1の距離にあるチャンクのデータを確保
+		for (int dataZ = -(RENDER_DISTANCE + 1); dataZ <= RENDER_DISTANCE + 1; ++dataZ) {
+			for (int dataX = -(RENDER_DISTANCE + 1); dataX <= RENDER_DISTANCE + 1; ++dataX) {
+				ChunkCoord coord{ playerChunkX + dataX, playerChunkZ + dataZ };
+				if (!world.HasChunk(coord)) {
+					world.GenerateChunk(coord.x, coord.z);
+				}
+			}
+		}
+
+		// RENDER_DISTANCE内のチャンクのメッシュを近い順にMAX_LOADS_PER_FRAMEだけ生成
+		int made = 0;
+		for (int distance = 0;distance <= RENDER_DISTANCE && made < MAX_LOADS_PER_FRAME; ++distance) {
+			for (int dataZ = -distance; dataZ <= distance && made < MAX_LOADS_PER_FRAME; ++dataZ) {
+				for (int dataX = -distance; dataX <= distance && made < MAX_LOADS_PER_FRAME; ++dataX) {
+					if ((std::max)(abs(dataX), abs(dataZ)) != distance) {
+						continue;
+					}
+					ChunkCoord coord{ playerChunkX + dataX, playerChunkZ + dataZ };
+					if (loaded.find(coord) != loaded.end()) {
+						continue;
+					}
+
+					Chunk* chunk = world.GetChunkPtr(coord);
+					if (!chunk) {
+						continue;
+					}
+					int meshIndex = renderer.CreateChunkMesh(gfx.GetDevice(), gfx.GetCommandQueue(), *chunk, world, coord.x, coord.z);
+					if (meshIndex < 0) {
+						continue;
+					}
+
+					SceneObject object;
+					sprintf_s(object.name, "Chunk %d_%d", coord.x, coord.z);
+					object.texturePath = "App/Texture_atlas.png";
+					object.position[0] = (float)(coord.x * Chunk::CHUNK_SIZE);
+					object.position[1] = 0.0f;
+					object.position[2] = (float)(coord.z * Chunk::CHUNK_SIZE);
+					object.meshIndex = (uint32_t)meshIndex;
+					object.textureIndex = renderer.LoadTexture(gfx.GetDevice(), gfx.GetCommandQueue(), object.texturePath);
+					
+					loaded[coord] = { (uint32_t)meshIndex };
+					++made;
+				}
+			}
+		}
+	}
+
 	// 更新したチャンクの隣接するチャンクを更新
 	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, uint32_t, ChunkCoordHash>& chunkMeshMap) {
 		// 書き換えたブロックが属するチャンク座標とローカル座標を計算

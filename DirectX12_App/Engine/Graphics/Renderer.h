@@ -56,6 +56,9 @@ public:
 	// チャンクのメッシュを生成し、meshIndexを返す
 	int CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
 
+	// チャンクのリソースを解放する
+	void ReleaseChunkMesh(uint32_t meshIndex);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}
@@ -83,7 +86,7 @@ public:
 
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
-	static constexpr uint32_t MAX_OBJECTS = 64;
+	static constexpr uint32_t MAX_OBJECTS = 128;
 	static constexpr uint32_t MAX_TEXTURES = 32;
 	static constexpr uint32_t SHADOW_MAP_SIZE = 2048;
 	static constexpr uint32_t SHADOW_SRV_SLOT = MAX_TEXTURES - 1;

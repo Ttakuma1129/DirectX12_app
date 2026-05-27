@@ -735,6 +735,14 @@ int Renderer::CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQ
 	return static_cast<int>(meshIndex);
 }
 
+void Renderer::ReleaseChunkMesh(uint32_t meshIndex) {
+	if (meshIndex >= m_meshes.size()) {
+		return;
+	}
+	m_meshes[meshIndex] = Mesh();
+	m_freeMeshSlots.push_back(meshIndex);
+}
+
 bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh) {
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
 	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));

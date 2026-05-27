@@ -101,6 +101,7 @@ private:
 	// メッシュ管理
 	std::vector<Mesh> m_meshes;
 	std::vector<std::string> m_modelPaths;
+	std::vector<uint32_t> m_freeMeshSlots;
 	std::unordered_map<std::string, uint32_t> m_meshMap;
 
 	// テクスチャ管理

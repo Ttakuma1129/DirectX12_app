@@ -749,10 +749,13 @@ void Renderer::FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice
 	m_pendingUploadSlots.clear();
 }
 
-void Renderer::ReleaseChunkMesh(uint32_t meshIndex) {
+void Renderer::ReleaseChunkMesh(uint32_t meshIndex, GfxDevice gfxDevice) {
 	if (meshIndex >= m_meshes.size()) {
 		return;
 	}
+	// 中間バッファを遅延解放
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVertexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIndexBuffer());
 	m_meshes[meshIndex] = Mesh();
 	m_freeMeshSlots.push_back(meshIndex);
 }

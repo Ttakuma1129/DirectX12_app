@@ -58,10 +58,10 @@ public:
 	int CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
 
 	// m_pendingUploadSlotsのコピーコマンドを今フレームのコマンドリストに記録
-	void FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, gfxDevice& gfxDevice);
+	void FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice& gfxDevice);
 
 	// チャンクのリソースを解放する
-	void ReleaseChunkMesh(uint32_t meshIndex);
+	void ReleaseChunkMesh(uint32_t meshIndex, GfxDevice gfxDevice);
 
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;

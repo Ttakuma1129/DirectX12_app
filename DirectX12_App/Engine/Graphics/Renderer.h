@@ -18,7 +18,7 @@
 #include "../Resources/SceneObject.h"
 #include "../Math/Frustum.h"
 
-class gfxDevice;
+class GfxDevice;
 class Scene;
 class Chunk;
 class World;
@@ -61,7 +61,7 @@ public:
 	void FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice& gfxDevice);
 
 	// チャンクのリソースを解放する
-	void ReleaseChunkMesh(uint32_t meshIndex, GfxDevice gfxDevice);
+	void ReleaseChunkMesh(uint32_t meshIndex, GfxDevice& gfxDevice);
 
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;

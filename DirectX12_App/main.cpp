@@ -35,9 +35,8 @@ namespace {
 			}
 		}
 		if (!toUnload.empty()) {
-			gfx.WaitForGPU();
 			for (auto& chunkCoord : toUnload) {
-				renderer.ReleaseChunkMesh(loaded[chunkCoord].meshIndex);
+				renderer.ReleaseChunkMesh(loaded[chunkCoord].meshIndex, gfx);
 				world.RemoveChunk(chunkCoord);
 				loaded.erase(chunkCoord);
 				// ‘Î‰ž‚·‚éSceneObject‚ð–¼‘O‚Å’T‚µ‚ÄŠO‚·
@@ -80,7 +79,7 @@ namespace {
 					if (!chunk) {
 						continue;
 					}
-					int meshIndex = renderer.CreateChunkMesh(gfx.GetDevice(), gfx.GetCommandQueue(), *chunk, world, coord.x, coord.z);
+					int meshIndex = renderer.CreateChunkMesh(gfx.GetDevice(), *chunk, world, coord.x, coord.z);
 					if (meshIndex < 0) {
 						continue;
 					}
@@ -311,6 +310,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		UpdateStreaming(world, renderer, gfxDevice, scene, loaded);
 
 		gfxDevice.BeginFrame();
+
+		renderer.FlushPendingUploads(gfxDevice.GetCommandList(), gfxDevice);
 
 		renderer.Render(
 			gfxDevice.GetCommandList(),

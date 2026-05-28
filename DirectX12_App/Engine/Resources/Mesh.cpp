@@ -177,7 +177,7 @@ bool Mesh::CreateDeferred(ID3D12Device* device, const void* vertices, uint32_t v
 		&uploadHeap,
 		D3D12_HEAP_FLAG_NONE,
 		&vbDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&m_vbUploadBuffer));
 	if (FAILED(hr)) {
@@ -213,7 +213,7 @@ bool Mesh::CreateDeferred(ID3D12Device* device, const void* vertices, uint32_t v
 		&uploadHeap,
 		D3D12_HEAP_FLAG_NONE,
 		&ibDesc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&m_ibUploadBuffer));
 	if (FAILED(hr)) {
@@ -227,7 +227,7 @@ bool Mesh::CreateDeferred(ID3D12Device* device, const void* vertices, uint32_t v
 	memcpy(mapped, indices, ibSize);
 	m_ibUploadBuffer->Unmap(0, nullptr);
 
-	m_indexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.BufferLocation = m_indexBuffer->GetGPUVirtualAddress();
 	m_indexBufferView.SizeInBytes = ibSize;
 	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
 

@@ -749,7 +749,7 @@ void Renderer::FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice
 	m_pendingUploadSlots.clear();
 }
 
-void Renderer::ReleaseChunkMesh(uint32_t meshIndex, GfxDevice gfxDevice) {
+void Renderer::ReleaseChunkMesh(uint32_t meshIndex, GfxDevice& gfxDevice) {
 	if (meshIndex >= m_meshes.size()) {
 		return;
 	}

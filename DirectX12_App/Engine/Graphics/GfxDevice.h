@@ -3,6 +3,8 @@
 #include <dxgi1_6.h>
 #include <wrl/client.h>
 #include <cstdint>
+#include <vector>
+#include <utility>
 
 #include "DescriptorHeap.h"
 #include "../Resources/FrameResources.h"
@@ -88,6 +90,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
 	FrameResources m_frames[FRAME_COUNT]; // フレームリソース
+	// このフレーム中にEnqueueされたフェンス値が決まっていないリソース
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_pendingThisFrame;
+	// {fence値, リソース} フェンス値とペアの解放待機リソース
+	std::vector<std::pair<uint64_t, Microsoft::WRL::ComPtr<ID3D12Resource>>> m_releaseQueue;
 
 	UINT64 m_fenceValue = 0;
 	HANDLE m_fenceEvent = nullptr;

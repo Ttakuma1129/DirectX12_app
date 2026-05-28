@@ -55,7 +55,7 @@ public:
 	bool UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex);
 
 	// チャンクのメッシュを生成し、meshIndexを返す
-	int CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
+	int CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
 
 	// チャンクのリソースを解放する
 	void ReleaseChunkMesh(uint32_t meshIndex);
@@ -109,6 +109,7 @@ private:
 	std::vector<Mesh> m_meshes;
 	std::vector<std::string> m_modelPaths;
 	std::vector<uint32_t> m_freeMeshSlots;
+	std::vector<uint32_t> m_pendingUploadSlots;
 	std::unordered_map<std::string, uint32_t> m_meshMap;
 
 	// テクスチャ管理

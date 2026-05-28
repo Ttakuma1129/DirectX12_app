@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "GfxDevice.h"
 #include "../../App/Scene.h"
 #include "../../App/World/Chunk.h"
 #include "CommandContext.h"
@@ -727,12 +728,11 @@ int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const Wo
 		return static_cast<int>(meshIndex);
 	}
 
-	if (!CreateMeshWithUpload(device, commandQueue, vertices.data(),
-			static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)),sizeof(ModelVertex), 
-			indices.data(),static_cast<uint32_t>(indices.size()), m_meshes[meshIndex])) {
+	if (!m_meshes[meshIndex].CreateDeferred(device,vertices.data(),(uint32_t)(vertices.size()*sizeof(ModelVertex)), sizeof(ModelVertex),indices.data(),(uint32_t)indices.size())) {
 		return -1;
 	}
-	return static_cast<int>(meshIndex);
+	m_pendingUploadSlots.push_back(meshIndex);
+	return (int)meshIndex;
 }
 
 void Renderer::ReleaseChunkMesh(uint32_t meshIndex) {

@@ -128,9 +128,6 @@ namespace {
 			toUpdate.push_back({ chunkX, chunkZ + 1 });
 		}
 
-		// GPU処理待ち
-		gfxDevice.WaitForGPU();
-
 		//各チャンクを更新
 		for (const auto& coord : toUpdate) {
 			auto chunkIt = world.GetChunks().find(coord);
@@ -144,7 +141,7 @@ namespace {
 				continue;
 			}
 
-			renderer.UpdateChunkMesh(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), *chunkIt->second, world, coord.x, coord.z, meshIt->second.meshIndex);
+			renderer.UpdateChunkMeshDeferred(gfxDevice.GetDevice(), *chunkIt->second, world, coord.x, coord.z, meshIt->second.meshIndex, gfxDevice);
 		}
 	}
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "RootSignature.h"
 #include "PipelineState.h"
@@ -115,7 +116,7 @@ private:
 	std::vector<Mesh> m_meshes;
 	std::vector<std::string> m_modelPaths;
 	std::vector<uint32_t> m_freeMeshSlots;
-	std::vector<uint32_t> m_pendingUploadSlots;
+	std::unordered_set<uint32_t> m_pendingUploadSlots;
 	std::unordered_map<std::string, uint32_t> m_meshMap;
 
 	// テクスチャ管理

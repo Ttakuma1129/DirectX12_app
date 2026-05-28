@@ -734,7 +734,7 @@ void Renderer::UpdateChunkMeshDeferred(ID3D12Device* device, const Chunk& chunk,
 		indices.data(), (uint32_t)indices.size())) {
 		return;
 	}
-	m_pendingUploadSlots.push_back(meshIndex);
+	m_pendingUploadSlots.insert(meshIndex);
 }
 
 int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
@@ -762,7 +762,7 @@ int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const Wo
 	if (!m_meshes[meshIndex].CreateDeferred(device,vertices.data(),(uint32_t)(vertices.size()*sizeof(ModelVertex)), sizeof(ModelVertex),indices.data(),(uint32_t)indices.size())) {
 		return -1;
 	}
-	m_pendingUploadSlots.push_back(meshIndex);
+	m_pendingUploadSlots.insert(meshIndex);
 	return (int)meshIndex;
 }
 

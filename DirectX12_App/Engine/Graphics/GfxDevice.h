@@ -31,6 +31,13 @@ public:
 
 	void EndFrame();
 
+	// このフレームのGPU処理完了後に解放したいリソースを登録
+	void EnqueueDeffedRelease(Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
+		if (resource) {
+			m_pendingThisFrame.push_back(std::move(resource));
+		}
+	}
+
 	// 外部から取得するためのゲッター
 	ID3D12Device* GetDevice() const {
 		return m_device.Get();

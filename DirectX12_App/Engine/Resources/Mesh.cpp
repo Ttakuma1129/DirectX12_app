@@ -138,6 +138,103 @@ bool Mesh::Create(ID3D12Device* device, ID3D12GraphicsCommandList* cmdList, cons
 	return true;
 }
 
+bool Mesh::CreateDeferred(ID3D12Device* device, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount) {
+	
+	HRESULT hr;
+	
+	D3D12_HEAP_PROPERTIES uploadHeap = {};
+	uploadHeap.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+	D3D12_HEAP_PROPERTIES defaultHeap = {};
+	defaultHeap.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	auto bufferDesc = [](uint64_t bytes) {
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		desc.Width = bytes;
+		desc.Height = 1;
+		desc.DepthOrArraySize = 1;
+		desc.MipLevels = 1;
+		desc.Format = DXGI_FORMAT_UNKNOWN;
+		desc.SampleDesc.Count = 1;
+		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		return desc;
+	};
+
+	// 頂点バッファ作成
+	D3D12_RESOURCE_DESC vbDesc = bufferDesc(vertexSize);
+	hr = device->CreateCommittedResource(
+		&defaultHeap,
+		D3D12_HEAP_FLAG_NONE,
+		&vbDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_vertexBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+	hr = device->CreateCommittedResource(
+		&uploadHeap,
+		D3D12_HEAP_FLAG_NONE,
+		&vbDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_vbUploadBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	void* mapped = nullptr;
+	hr = m_vbUploadBuffer->Map(0, nullptr, &mapped);
+	if (FAILED(hr)) {
+		return false;
+	}
+	memcpy(mapped, vertices, vertexSize);
+	m_vbUploadBuffer->Unmap(0, nullptr);
+
+	m_vertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_vertexBufferView.SizeInBytes = vertexSize;
+	m_vertexBufferView.StrideInBytes = stride;
+
+	// インデックスバッファ作成
+	uint32_t ibSize = indexCount * sizeof(uint16_t);
+	D3D12_RESOURCE_DESC ibDesc = bufferDesc(ibSize);
+	hr = device->CreateCommittedResource(
+		&defaultHeap,
+		D3D12_HEAP_FLAG_NONE,
+		&ibDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_indexBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+	hr = device->CreateCommittedResource(
+		&uploadHeap,
+		D3D12_HEAP_FLAG_NONE,
+		&ibDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(&m_ibUploadBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	hr = m_ibUploadBuffer->Map(0, nullptr, &mapped);
+	if (FAILED(hr)) {
+		return false;
+	}
+	memcpy(mapped, indices, ibSize);
+	m_ibUploadBuffer->Unmap(0, nullptr);
+
+	m_indexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
+	m_indexBufferView.SizeInBytes = ibSize;
+	m_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+
+	m_indexCount = indexCount;
+	return true;
+}
+
 void Mesh::ReleaseUploadBuffer() {
 	m_vbUploadBuffer.Reset();
 	m_ibUploadBuffer.Reset();

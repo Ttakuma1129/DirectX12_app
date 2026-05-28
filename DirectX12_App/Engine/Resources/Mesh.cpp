@@ -235,6 +235,22 @@ bool Mesh::CreateDeferred(ID3D12Device* device, const void* vertices, uint32_t v
 	return true;
 }
 
+void Mesh::RecordUpload(ID3D12GraphicsCommandList* cmdList) {
+	cmdList->CopyBufferRegion(m_vertexBuffer.Get(), 0, m_vbUploadBuffer.Get(), 0, m_vertexBufferView.SizeInBytes);
+	cmdList->CopyBufferRegion(m_indexBuffer.Get(), 0, m_ibUploadBuffer.Get(), 0, m_indexBufferView.SizeInBytes);
+
+	D3D12_RESOURCE_BARRIER barrier[2] = {};
+	barrier[0].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier[0].Transition.pResource = m_vertexBuffer.Get();
+	barrier[0].Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier[0].Transition.StateAfter = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+	barrier[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier[1] = barrier[0];
+	barrier[1].Transition.pResource = m_indexBuffer.Get();
+	barrier[1].Transition.StateAfter = D3D12_RESOURCE_STATE_INDEX_BUFFER;
+	cmdList->ResourceBarrier(2, barrier);
+}
+
 void Mesh::ReleaseUploadBuffer() {
 	m_vbUploadBuffer.Reset();
 	m_ibUploadBuffer.Reset();

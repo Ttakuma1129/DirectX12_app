@@ -57,6 +57,9 @@ public:
 	// チャンクのメッシュを生成し、meshIndexを返す
 	int CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
 
+	// m_pendingUploadSlotsのコピーコマンドを今フレームのコマンドリストに記録
+	void FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, gfxDevice& gfxDevice);
+
 	// チャンクのリソースを解放する
 	void ReleaseChunkMesh(uint32_t meshIndex);
 

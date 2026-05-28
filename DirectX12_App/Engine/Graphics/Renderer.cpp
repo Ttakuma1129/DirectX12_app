@@ -735,6 +735,20 @@ int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const Wo
 	return (int)meshIndex;
 }
 
+void Renderer::FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice& gfxDevice) {
+	for (uint32_t slot : m_pendingUploadSlots) {
+		if (m_meshes[slot].IsEmpty()) {
+			continue;
+		}
+		// フレームにコピー＆バリアを記録
+		m_meshes[slot].RecordUpload(cmdList);
+		// 中間バッファを遅延解放
+		gfxDevice.EnqueueDeffedRelease(m_meshes[slot].TakeVbUpload());
+		gfxDevice.EnqueueDeffedRelease(m_meshes[slot].TakeIbUpload());
+	}
+	m_pendingUploadSlots.clear();
+}
+
 void Renderer::ReleaseChunkMesh(uint32_t meshIndex) {
 	if (meshIndex >= m_meshes.size()) {
 		return;

@@ -54,6 +54,9 @@ public:
 
 	bool UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex);
 
+	// チャンクを遅延更新する
+	void UpdateChunkMeshDeferred(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex, GfxDevice& gfxDevice);
+
 	// チャンクのメッシュを生成し、meshIndexを返す
 	int CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
 

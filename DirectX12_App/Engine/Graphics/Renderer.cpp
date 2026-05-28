@@ -706,6 +706,37 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 	return true;
 }
 
+void Renderer::UpdateChunkMeshDeferred(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex, GfxDevice& gfxDevice) {
+	if (meshIndex >= m_meshes.size()) {
+		return;
+	}
+
+	// 新しいメッシュデータを作成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 古いバッファは遅延解放する
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVertexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIndexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVbUpload());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIbUpload());
+
+	// 空チャンクになった場合
+	if (vertices.empty()) {
+		m_meshes[meshIndex] = Mesh();
+		return;
+	}
+
+	// 新バッファを作成(COPY_DEST)し、コピーはFlushPendingUploadで記録
+	if (!m_meshes[meshIndex].CreateDeferred(device, vertices.data(),
+		(uint32_t)(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex),
+		indices.data(), (uint32_t)indices.size())) {
+		return;
+	}
+	m_pendingUploadSlots.push_back(meshIndex);
+}
+
 int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
 	std::vector<ModelVertex> vertices;
 	std::vector<uint16_t> indices;

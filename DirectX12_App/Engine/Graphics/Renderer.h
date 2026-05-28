@@ -18,6 +18,7 @@
 #include "../Resources/SceneObject.h"
 #include "../Math/Frustum.h"
 
+class gfxDevice;
 class Scene;
 class Chunk;
 class World;

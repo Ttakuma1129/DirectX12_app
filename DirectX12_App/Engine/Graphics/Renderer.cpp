@@ -705,7 +705,7 @@ bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* command
 	return true;
 }
 
-int Renderer::CreateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
+int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
 	std::vector<ModelVertex> vertices;
 	std::vector<uint16_t> indices;
 	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);

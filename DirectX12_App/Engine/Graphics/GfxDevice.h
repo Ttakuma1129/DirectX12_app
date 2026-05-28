@@ -97,7 +97,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
 	FrameResources m_frames[FRAME_COUNT]; // フレームリソース
-	// このフレーム中にEnqueueされたフェンス値が決まっていないリソース
+	// このフレーム中にEnqueueされたフェンス値が決まっていないリソースを一時的に貯めておくバッファ
 	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_pendingThisFrame;
 	// {fence値, リソース} フェンス値とペアの解放待機リソース
 	std::vector<std::pair<uint64_t, Microsoft::WRL::ComPtr<ID3D12Resource>>> m_releaseQueue;

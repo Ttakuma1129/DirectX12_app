@@ -1,6 +1,9 @@
+#include <iostream>
+#include <algorithm>
+
 #include "GfxDevice.h"
 #include "../ThirdParty/stb_image.h"
-#include <iostream>
+
 
 GfxDevice::~GfxDevice() {
 	// フレームのGPU処理完了を待つ
@@ -249,4 +252,10 @@ void GfxDevice::EndFrame() {
 	// GPUの処理が終わったらm_fenceValueを増やす
 	m_frames[m_frameIndex].fenceValue = ++m_fenceValue;
 	m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
+
+	// このフレームで登録された遅延解放をfence値に紐づける
+	for (auto& release : m_pendingThisFrame) {
+		m_releaseQueue.emplace_back(m_fenceValue, std::move(release));
+	}
+	m_pendingThisFrame.clear();
 }

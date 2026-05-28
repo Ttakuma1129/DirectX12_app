@@ -200,6 +200,13 @@ void GfxDevice::BeginFrame() {
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
+	// 完了済みのフェンス値のリソースを解放
+	uint64_t completed = m_fence->GetCompletedValue();
+	m_releaseQueue.erase(std::remove_if(
+		m_releaseQueue.begin(), m_releaseQueue.end(), [completed](const auto& e) {
+			return e.first <= completed;
+		}), m_releaseQueue.end());
+
 	// コマンド記録開始
 	m_commandContext.Begin(m_frames[m_frameIndex].GetAllocator());
 

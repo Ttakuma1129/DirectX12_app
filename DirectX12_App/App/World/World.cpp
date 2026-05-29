@@ -37,11 +37,13 @@ void World::SetBlockAt(int worldX, int worldY, int worldZ, BlockType type) {
 		return;
 	}
 
+	// ロード中のチャンクに適応
 	auto it = m_chunks.find({ chunkX, chunkZ });
 	if (it != m_chunks.end()) {
 		it->second->SetBlock(localX, worldY, localZ, type);
 	}
 
+	// 差分を記録
 	auto& edits = m_edits[{chunkX, chunkZ}];
 	for (auto& e : edits) {
 		if (e.x = localX && e.y == worldY && e.z == localZ) {
@@ -60,6 +62,15 @@ bool World::IsSolid(int worldX, int worldY, int worldZ)const {
 Chunk* World::GenerateChunk(int chunkX, int chunkZ) {
 	auto chunk = std::make_unique<Chunk>();
 	chunk->GenerateNoise(chunkX, chunkZ, m_seed);
+
+	// 過去の編集を再適用
+	auto it = m_edits.find({ chunkX,chunkZ });
+	if (it != m_edits.end()) {
+		for (const auto& e : it->second) {
+			chunk->SetBlock(e.x, e.y, e.z, e.type);
+		}
+	}
+
 	Chunk* ptr = chunk.get();
 	m_chunks[{chunkX, chunkZ}] = std::move(chunk);
 	return ptr;

@@ -26,24 +26,31 @@ BlockType World::GetBlock(int worldX, int worldY, int worldZ)const {
 }
 
 void World::SetBlockAt(int worldX, int worldY, int worldZ, BlockType type) {
-	if (worldY < 0 || worldY >= Chunk::HEIGHT) {
-		return;
-	}
-
 	// どのチャンクに存在しているかを取得
 	int chunkX = WorldCoord::FloorDiv(worldX, Chunk::CHUNK_SIZE);
 	int chunkZ = WorldCoord::FloorDiv(worldZ, Chunk::CHUNK_SIZE);
-
-	auto it = m_chunks.find({ chunkX,chunkZ });
-	if (it == m_chunks.end()) {
-		return;
-	}
-
 	// チャンク内のローカル座標での位置を計算
 	int localX = WorldCoord::Mod(worldX, Chunk::CHUNK_SIZE);
 	int localZ = WorldCoord::Mod(worldZ, Chunk::CHUNK_SIZE);
 
-	it->second->SetBlock(localX, worldY, localZ, type);
+	if (worldY < 0 || worldY >= Chunk::HEIGHT) {
+		return;
+	}
+
+	auto it = m_chunks.find({ chunkX, chunkZ });
+	if (it != m_chunks.end()) {
+		it->second->SetBlock(localX, worldY, localZ, type);
+	}
+
+	auto& edits = m_edits[{chunkX, chunkZ}];
+	for (auto& e : edits) {
+		if (e.x = localX && e.y == worldY && e.z == localZ) {
+			e.type = type;
+			return;
+		}
+	}
+
+	edits.push_back({ localX, worldY, localZ, type });
 }
 
 bool World::IsSolid(int worldX, int worldY, int worldZ)const {

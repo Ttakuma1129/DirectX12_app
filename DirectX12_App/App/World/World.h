@@ -45,6 +45,12 @@ struct ChunkCoordHash {
 	}
 };
 
+// 編集された1ブロック分の情報(チャンク内ローカル座標)
+struct LocalBlockEdit{
+	int x, y, z;
+	BlockType type;
+};
+
 // レイキャストの計算結果
 struct RaycastResult {
 	bool hit;	// 当たったかどうか

@@ -113,4 +113,5 @@ private:
 	uint32_t m_seed = 0;
 
 	std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash> m_chunks;
+	std::unordered_map<ChunkCoord, std::vector<LocalBlockEdit>, ChunkCoordHash> m_edits;
 };

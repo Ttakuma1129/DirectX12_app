@@ -15,6 +15,8 @@ struct alignas(256) SceneConstant {
 	DirectX::XMFLOAT4 specularParams; // x:強度 y:鋭さ
 	DirectX::XMFLOAT4X4 lightViewProj; // ライトのVP行列
 	DirectX::XMFLOAT4 shadowParams; // x:偏り y:シャドウマップのサイズ
+	DirectX::XMFLOAT4 fogColor; // rgb:色, a:未使用
+	DirectX::XMFLOAT4 fogParams; // x:開始距離 y:終了距離
 };
 
 // オブジェクトごと(M行列)

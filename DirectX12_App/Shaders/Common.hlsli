@@ -12,6 +12,8 @@ cbuffer SceneConstant : register(b0){
     float4 specularParams; // x:強度 y:鋭さ
     float4x4 lightViewProj;
     float4 shadowParams; // x:バイアス y:シャドウマップサイズ
+    float4 fogColor;
+    float4 fogParams;
 };
 
 // オブジェクトごとの定数

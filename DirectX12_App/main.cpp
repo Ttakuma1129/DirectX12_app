@@ -153,6 +153,19 @@ namespace {
 			renderer.UpdateChunkMeshDeferred(gfxDevice.GetDevice(), *chunkIt->second, world, coord.x, coord.z, meshIt->second.meshIndex, gfxDevice);
 		}
 	}
+
+	ImU32 BlockTypeToColor(BlockType t) {
+		switch (t) {
+		case BlockType::Grass:
+			return IM_COL32(110, 175, 70, 255);
+		case BlockType::Dirt:
+			return IM_COL32(140, 95, 55, 255);
+		case BlockType::Stone:
+			return IM_COL32(150, 150, 150, 255);
+		default:
+			return IM_COL32(0, 0, 0, 0);
+		}
+	}
 }
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -352,6 +365,34 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImU32 cross = IM_COL32(255, 255, 255, 220);
 			drawList->AddLine(ImVec2(captureX - arm, captureY), ImVec2(captureX + arm, captureY), cross, 2.0f);
 			drawList->AddLine(ImVec2(captureX, captureY - arm), ImVec2(captureX, captureY + arm), cross, 2.0f);
+		}
+
+		// ホットバー
+		const float SLOT = 56.0f;
+		const float GAP = 4.0f;
+		float totalWidth = HOTBAR_SIZE * SLOT + (HOTBAR_SIZE - 1) * GAP;
+		float startX = (screen.x - totalWidth) * 0.5;
+		float y = screen.y - SLOT - 24.0f;
+		
+		for (int i = 0; i < HOTBAR_SIZE; ++i) {
+			float x = startX + i * (SLOT + GAP);
+			ImVec2 a(x, y), b(x + SLOT, y + SLOT);
+
+			// 背景
+			drawList->AddRectFilled(a, b, IM_COL32(0, 0, 0, 170), 4.0f);
+
+			// アイコン代わりのブロックの色
+			ImU32 col = BlockTypeToColor(g_hotbar[i]);
+			drawList->AddRectFilled(ImVec2(a.x + 8, a.y + 8), ImVec2(b.x - 8, b.y - 8), col, 3.0f);
+
+			// 枠 選択中は太くなる
+			bool select = (i == g_selectedSlot);
+			drawList->AddRect(a, b, select ? IM_COL32(255, 255, 255, 255) : IM_COL32(255, 255, 255, 255, 80), 4.0f, 0, select ? 3.0f : 1.0f);
+			
+			// 番号
+			char num[4];
+			sprintf_s(num, "%d", i + 1);
+			drawList->AddText(ImVec2(a.x + 6, a.y + 2), IM_COL32(255, 255, 255, 200), num);
 		}
 
 		// デバッグウィンドウ

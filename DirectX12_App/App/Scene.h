@@ -56,6 +56,15 @@ public:
 	float GetShadowBias() const {
 		return m_shadowBias;
 	}
+	const float* GetFogColor() const{
+		return m_fogColor;
+	}
+	float GetFogStart() const{
+		return m_fogStart;
+	}
+	float GetFogEnd() const{
+		return m_fogEnd;
+	}
 
 	// ImGui用
 	FPSCamera& GetFPSCamera() {
@@ -85,6 +94,15 @@ public:
 	float& GetShadowBias() {
 		return m_shadowBias;
 	}
+	float* GetFogColor() {
+		return m_fogColor;
+	}
+	float& GetFogStart() {
+		return m_fogStart;
+	}
+	float& GetFogEnd() {
+		return m_fogEnd;
+	}
 
 private:
 	FPSCamera m_fpsCamera;
@@ -105,6 +123,10 @@ private:
 
 	float m_shadowBias = 0.0003f;
 
+	// フォグ
+	float m_fogColor[3] = { 0.87f,0.91f,0.93 };
+	float m_fogStart = 40.0f; // フォグの開始位置
+	float m_fogEnd = 64.0f; // 終了位置
 
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 };

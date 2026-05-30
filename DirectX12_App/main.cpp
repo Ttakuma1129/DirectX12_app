@@ -17,6 +17,15 @@ namespace {
 	const int RENDER_DISTANCE = 4; //メッシュを表示する範囲
 	const int MAX_LOADS_PER_FRAME = 2; // 1フレームに作るメッシュ数の上限
 
+	const int HOTBAR_SIZE = 5;
+
+	BlockType g_hotbar[HOTBAR_SIZE] = {
+		BlockType::Grass,
+		BlockType::Dirt,
+		BlockType::Stone,
+	};
+	int g_selectedSlot = 0;
+
 	struct LoadedChunk { uint32_t meshIndex; };
 
 	// プレイヤーの位置に合わせてチャンクをロード・アンロードする

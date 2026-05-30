@@ -340,6 +340,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+
+		ImDrawList* drawList = ImGui::GetForegroundDrawList();
+		ImVec2 screen = ImGui::GetIO().DisplaySize;
+
+		// クロスヘア
+		if (window.IsMouseCaptured()) {
+			float captureX = screen.x * 0.5f;
+			float captureY = screen.y * 0.5f;
+			float arm = 8.0f;
+			ImU32 cross = IM_COL32(255, 255, 255, 220);
+			drawList->AddLine(ImVec2(captureX - arm, captureY), ImVec2(captureX + arm, captureY), cross, 2.0f);
+			drawList->AddLine(ImVec2(captureX, captureY - arm), ImVec2(captureX, captureY + arm), cross, 2.0f);
+		}
+
+		// デバッグウィンドウ
 		ImGui::Begin("Debug");
 		ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
 

@@ -46,7 +46,7 @@ void World::SetBlockAt(int worldX, int worldY, int worldZ, BlockType type) {
 	// ç∑ï™ÇãLò^
 	auto& edits = m_edits[{chunkX, chunkZ}];
 	for (auto& e : edits) {
-		if (e.x = localX && e.y == worldY && e.z == localZ) {
+		if (e.x == localX && e.y == worldY && e.z == localZ) {
 			e.type = type;
 			return;
 		}

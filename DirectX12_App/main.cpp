@@ -428,6 +428,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Text("Visible Chunks; %u / %u", renderer.GetVisibleChunkCount(), renderer.GetTotalChunkCount());
 
 		ImGui::Separator();
+		ImGui::Text("Fog");
+		ImGui::ColorEdit3("Fog Color", scene.GetFogColor());
+		ImGui::SliderFloat("Fog Start", &scene.GetFogStart(), 0.0f, 200.0f);
+		ImGui::SliderFloat("Fog End", &scene.GetFogEnd(), 0.0f, 200.0f);
+
+		ImGui::Separator();
 		ImGui::Text("Objects (%d)", scene.GetObjectCount());
 
 		auto& objects = scene.GetObjects();

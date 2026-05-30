@@ -438,6 +438,11 @@ void Renderer::Render(
 	XMStoreFloat4x4(&mapped->lightViewProj, XMMatrixTranspose(lightVP));
 	mapped->shadowParams = { scene.GetShadowBias(),static_cast<float>(SHADOW_MAP_SIZE),0.0f,0.0f };
 	
+	// フォグ情報を書き込み
+	const float* fog = scene.GetFogColor();
+	mapped->fogColor = { fog[0], fog[1], fog[2], 1.0f };
+	mapped->fogParams = { scene.GetFogStart(), scene.GetFogEnd(), 0.0f,0.0f };
+
 	// オブジェクトごとのModel行列を書き込む
 	for (uint32_t o = 0; o < count; ++o) {
 		if (objects[o].meshIndex >= m_meshes.size()) {

@@ -266,6 +266,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			window.SetMouseCaptured(!window.IsMouseCaptured());
 		}
 
+		// 数字キーでホットバー切り替え
+		for (int i = 0;i < HOTBAR_SIZE;++i) {
+			if (GetAsyncKeyState('1' + i) & 0x8000) {
+				g_selectedSlot = i;
+			}
+		}
+
 		// キャプチャ中のときのみ視点操作
 		if (window.IsMouseCaptured()) {
 			fpsCam.Rotate(static_cast<float>(mouse.deltaX), static_cast<float>(mouse.deltaY));

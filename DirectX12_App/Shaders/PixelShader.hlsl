@@ -69,5 +69,10 @@ float4 main(PSInput input) : SV_TARGET{
     float3 ambient = ambientColor.rgb;
     float3 finalColor = texColor.rgb * (ambient + diffuse * shadow) * aoFactor + lightColor.rgb * specular * shadow;
     
+    // フォグを適用
+    float distFormCam = length(input.worldPos - cameraPos.xyz);
+    float fogFactor = saturate((distFormCam - fogParams.x) / (fogParams.y - fogParams.x));
+    finalColor.rgb = lerp(finalColor.rgb, fogColor.rgb, fogFactor);
+    
     return float4(finalColor, texColor.a);
 }

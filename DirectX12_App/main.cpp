@@ -310,7 +310,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 					// プレイヤーと重なる位置には設置しない
 					if (!player.IntersectsBlock(ray.blockX, ray.blockY, ray.blockZ)) {
-						world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, BlockType::Stone);
+						world.SetBlockAt(ray.blockX, ray.blockY, ray.blockZ, g_hotbar[g_selectedSlot]);
 						// チャンクメッシュ更新
 						UpdateChunkNeighbors(ray.blockX, ray.blockY, ray.blockZ, world, renderer, gfxDevice, loaded);
 					}

@@ -166,7 +166,7 @@ RaycastResult World::Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMF
 	return result;
 }
 
-bool World::SaveTofile(const std::string& path)const {
+bool World::SaveToFile(const std::string& path)const {
 	std::ofstream file(path, std::ios::binary);
 	if (!file) {
 		return false;

@@ -437,6 +437,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Fog End", &scene.GetFogEnd(), 0.0f, 200.0f);
 
 		ImGui::Separator();
+		ImGui::Text("World");
+		if (ImGui::Button("Save")) {
+			world.SaveToFile("world.dat");
+		}
+
+		ImGui::Separator();
 		ImGui::Text("Objects (%d)", scene.GetObjectCount());
 
 		auto& objects = scene.GetObjects();
@@ -515,7 +521,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ImGuiシャットダウン
 	gfxDevice.WaitForGPU();
-	world.SaveTofile(savePath);
+	world.SaveToFile(savePath);
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

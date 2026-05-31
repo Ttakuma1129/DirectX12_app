@@ -199,3 +199,67 @@ bool World::SaveTofile(const std::string& path)const {
 	}
 	return static_cast<bool>(file);
 }
+
+bool World::LoadFromFile(const std::string& path) {
+	std::ifstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+
+	char magic[4];
+	uint32_t version;
+	file.read(magic, 4);
+	file.read(reinterpret_cast<char*>(&version), sizeof(version));
+	if (!file || magic[0] != 'V' || magic[0] != 'X' || magic[0] != 'L'|| magic[0] != 'W') {
+		return false;
+	}
+	if (version != 1) {
+		return false;
+	}
+
+	uint32_t seed = 0;
+	file.read(reinterpret_cast<char*>(&seed), sizeof(seed));
+	if (!file) {
+		return false;
+	}
+
+	// 現在のワールドをクリア
+	m_chunks.clear();
+	m_edits.clear();
+	m_seed = seed;
+
+	// チャンク情報と編集情報を読み込む
+	uint32_t chunkCount = 0;
+	file.read(reinterpret_cast<char*>(&chunkCount), sizeof(chunkCount));
+	if (!file) {
+		return false;
+	}
+
+	for (uint32_t i = 0; i < chunkCount; ++i) {
+		int32_t cx, cz;
+		uint32_t editCount;
+		file.read(reinterpret_cast<char*>(&cx), sizeof(cx));
+		file.read(reinterpret_cast<char*>(&cz), sizeof(cz));
+		file.read(reinterpret_cast<char*>(&editCount), sizeof(editCount));
+		if (!file) {
+			return false;
+		}
+
+		std::vector<LocalBlockEdit> edits;
+		edits.reserve(editCount);
+		for (uint32_t j = 0; j < editCount; ++j) {
+			int32_t x, y, z;
+			uint32_t type;
+			file.read(reinterpret_cast<char*>(&x), sizeof(x));
+			file.read(reinterpret_cast<char*>(&y), sizeof(y));
+			file.read(reinterpret_cast<char*>(&z), sizeof(z));
+			file.read(reinterpret_cast<char*>(&type), sizeof(type));
+			if (!file) {
+				return false;
+			}
+			edits.push_back({ x,y,z,static_cast<BlockType>(type) });
+		}
+		m_edits[{cx, cz}] = std::move(edits);
+	}
+	return true;
+}

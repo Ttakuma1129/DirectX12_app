@@ -1,5 +1,6 @@
 #include <string>
 #include <random>
+#include <filesystem>
 
 #include "Engine/Core/Window.h"
 #include "Engine/Graphics/GfxDevice.h"
@@ -19,6 +20,8 @@ namespace {
 
 	const int HOTBAR_SIZE = 5;
 
+	const std::string SAVE_DIRECTORY = "saves";
+
 	BlockType g_hotbar[HOTBAR_SIZE] = {
 		BlockType::Grass,
 		BlockType::Dirt,
@@ -27,6 +30,19 @@ namespace {
 	int g_selectedSlot = 0;
 
 	struct LoadedChunk { uint32_t meshIndex; };
+
+	ImU32 BlockTypeToColor(BlockType t) {
+		switch (t) {
+		case BlockType::Grass:
+			return IM_COL32(110, 175, 70, 255);
+		case BlockType::Dirt:
+			return IM_COL32(140, 95, 55, 255);
+		case BlockType::Stone:
+			return IM_COL32(150, 150, 150, 255);
+		default:
+			return IM_COL32(0, 0, 0, 0);
+		}
+	}
 
 	// プレイヤーの位置に合わせてチャンクをロード・アンロードする
 	void UpdateStreaming(World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
@@ -154,17 +170,9 @@ namespace {
 		}
 	}
 
-	ImU32 BlockTypeToColor(BlockType t) {
-		switch (t) {
-		case BlockType::Grass:
-			return IM_COL32(110, 175, 70, 255);
-		case BlockType::Dirt:
-			return IM_COL32(140, 95, 55, 255);
-		case BlockType::Stone:
-			return IM_COL32(150, 150, 150, 255);
-		default:
-			return IM_COL32(0, 0, 0, 0);
-		}
+	std::string GetSavePath(int slot) {
+		std::filesystem::create_directory(SAVE_DIRECTORY);
+		return SAVE_DIRECTORY + "/world" + std::to_string(slot) + ".dat";
 	}
 }
 

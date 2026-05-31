@@ -1,4 +1,5 @@
 #include <cfloat>
+#include <fstream>
 
 #include "World.h"
 
@@ -163,4 +164,38 @@ RaycastResult World::Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMF
 		}
 	}
 	return result;
+}
+
+bool World::SaveTofile(const std::string& path)const {
+	std::ofstream file(path, std::ios::binary);
+	if (!file) {
+		return false;
+	}
+
+	const char magic[4] = { 'V','X','L','W' };
+	uint32_t version = 1;
+	file.write(magic, 4);
+	file.write(reinterpret_cast<const char*>(&version), sizeof(version));
+	file.write(reinterpret_cast<const char*>(&m_seed), sizeof(m_seed));
+
+	uint32_t chunkCount = static_cast<uint32_t>(m_edits.size());
+	file.write(reinterpret_cast<const char*>(&chunkCount), sizeof(chunkCount));
+
+	for (const auto& [coord, edits] : m_edits) {
+		int32_t cx = coord.x, cz = coord.z;
+		uint32_t editCount = static_cast<uint32_t>(edits.size());
+		file.write(reinterpret_cast<const char*>(&cx), sizeof(cx));
+		file.write(reinterpret_cast<const char*>(&cz), sizeof(cz));
+		file.write(reinterpret_cast<const char*>(&editCount), sizeof(editCount));
+
+		for (const auto& e : edits) {
+			int32_t x = e.x, y = e.y, z;
+			uint32_t type = static_cast<uint32_t>(e.type);
+			file.write(reinterpret_cast<const char*>(&x), sizeof(x));
+			file.write(reinterpret_cast<const char*>(&y), sizeof(y));
+			file.write(reinterpret_cast<const char*>(&z), sizeof(z));
+			file.write(reinterpret_cast<const char*>(&type), sizeof(type));
+		}
+	}
+	return static_cast<bool>(file);
 }

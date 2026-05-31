@@ -92,6 +92,9 @@ public:
 
 	RaycastResult Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMFLOAT3& dir, float maxDist) const;
 
+	// ワールドの編集情報とシード値を保存する
+	bool SaveTofile(const std::string& path)const;
+
 	// 全チャンクの取得
 	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunks() const {
 		return m_chunks;

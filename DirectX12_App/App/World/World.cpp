@@ -189,7 +189,7 @@ bool World::SaveTofile(const std::string& path)const {
 		file.write(reinterpret_cast<const char*>(&editCount), sizeof(editCount));
 
 		for (const auto& e : edits) {
-			int32_t x = e.x, y = e.y, z;
+			int32_t x = e.x, y = e.y, z = e.z;
 			uint32_t type = static_cast<uint32_t>(e.type);
 			file.write(reinterpret_cast<const char*>(&x), sizeof(x));
 			file.write(reinterpret_cast<const char*>(&y), sizeof(y));

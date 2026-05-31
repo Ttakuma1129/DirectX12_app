@@ -200,7 +200,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// チャンクを生成
 	World world;
-	world.SetSeed(std::random_device{}());
+	const std::string savePath = "world.dat";
+	if (!world.LoadFromFile(savePath)) {
+		world.SetSeed(std::random_device{}());
+	}
 
 	std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash> loaded;
 
@@ -512,6 +515,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ImGuiシャットダウン
 	gfxDevice.WaitForGPU();
+	world.SaveTofile(savePath);
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

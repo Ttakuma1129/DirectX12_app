@@ -210,7 +210,7 @@ bool World::LoadFromFile(const std::string& path) {
 	uint32_t version;
 	file.read(magic, 4);
 	file.read(reinterpret_cast<char*>(&version), sizeof(version));
-	if (!file || magic[0] != 'V' || magic[0] != 'X' || magic[0] != 'L'|| magic[0] != 'W') {
+	if (!file || magic[0] != 'V' || magic[1] != 'X' || magic[2] != 'L'|| magic[3] != 'W') {
 		return false;
 	}
 	if (version != 1) {

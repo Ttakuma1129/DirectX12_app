@@ -21,6 +21,8 @@ namespace {
 	const int HOTBAR_SIZE = 5;
 
 	const std::string SAVE_DIRECTORY = "saves";
+	const int SAVE_SLOT_COUNT = 4;
+	int g_currentSlot = 1; // 起動時に開いたスロット
 
 	BlockType g_hotbar[HOTBAR_SIZE] = {
 		BlockType::Grass,
@@ -208,8 +210,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// チャンクを生成
 	World world;
-	const std::string savePath = "world.dat";
-	if (!world.LoadFromFile(savePath)) {
+	if (!world.LoadFromFile(GetSavePath(g_currentSlot))) {
 		world.SetSeed(std::random_device{}());
 	}
 
@@ -529,7 +530,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ImGuiシャットダウン
 	gfxDevice.WaitForGPU();
-	world.SaveToFile(savePath);
+	world.SaveToFile(GetSavePath(g_currentSlot));
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

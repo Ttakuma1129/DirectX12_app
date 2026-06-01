@@ -173,21 +173,6 @@ namespace {
 		return names;
 	}
 
-	// スロットに入っているワールドデータを読み込む
-	void LoadWorldFromSlot(int slot, World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
-						std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
-		// 現在のワールドを破棄する
-		UnloadAllChunks(world, renderer, gfx, scene, loaded);
-
-		// スロットのファイルをロード
-		if (!world.LoadFromFile(GetSavePath(slot))) {
-			// 失敗した場合、編集データをを消去して新規ワールドを作成
-			world.ClearEdits();
-			world.SetSeed(std::random_device{}());
-		}
-		g_currentSlot = slot;
-	}
-
 	// 更新したチャンクの隣接するチャンクを更新
 	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
 		// 書き換えたブロックが属するチャンク座標とローカル座標を計算
@@ -500,32 +485,69 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Fog End", &scene.GetFogEnd(), 0.0f, 200.0f);
 
 		ImGui::Separator();
-		ImGui::Text("World Slots");
-		for (int slot = 1;slot <= SAVE_SLOT_COUNT;++slot) {
-			ImGui::PushID(slot);
+		ImGui::Text("World: %s", g_currentWorld.c_str());
 
-			std::string path = GetSavePath(slot);
-			bool exists = std::filesystem::exists(path);
-			bool current = (slot == g_currentSlot);
+		// 名前を入力して新規セーブを作成
+		static char saveNameBuffer[64] = "";
+		ImGui::InputText("Save Name", saveNameBuffer, sizeof(saveNameBuffer));
+		ImGui::SameLine();
 
-			char label[32];
-			sprintf_s(label, "Slot %d%s", slot, current ? "(current)" : "");
-			ImGui::Text("%s", label);
+		// 名前が空の場合、ボタンを無効化
+		bool canSave = (saveNameBuffer[0] != '\0');
+		if (!canSave) {
+			ImGui::BeginDisabled();
+		}
+		if (ImGui::Button("Save")) {
+			world.SaveToFile(MakeSavePath(saveNameBuffer));
+			g_currentWorld = saveNameBuffer;
+			saveNameBuffer[0] = '\0';
+		}
+		if (!canSave) {
+			ImGui::EndDisabled();
+		}
 
-			ImGui::SameLine();
-			if (ImGui::Button("Save")) {
-				world.SaveToFile(GetSavePath(slot));
-				g_currentSlot = slot;
+		// 現在のワールドに上書き保存
+		ImGui::SameLine();
+		if (ImGui::Button("Overwrite")) {
+			world.SaveToFile(MakeSavePath(g_currentWorld));
+		}
+
+		// セーブ
+		ImGui::Separator();
+		ImGui::Text("Saved Worlds");
+
+		auto saves = ListSaveFile();
+		if (saves.empty()) {
+			ImGui::TextDisabled("(no saves)");
+		}
+		else {
+			for (const auto& name : saves) {
+				ImGui::PushID(name.c_str());
+
+				bool isCurrent = (name == g_currentWorld);
+				if (isCurrent) {
+					ImGui::TextColored(ImVec4(0.6f, 1.0f, 0.6f, 1.0f), "%s", name.c_str());
+				}
+				else {
+					ImGui::Text("%s", name.c_str());
+				}
+
+				ImGui::SameLine();
+				if (ImGui::Button("Load")) {
+					UnloadAllChunks(world, renderer, gfxDevice, scene, loaded);
+					if (!world.LoadFromFile(MakeSavePath(name))) {
+						world.ClearChunks();
+						world.ClearEdits();
+						world.SetSeed(std::random_device{}());
+					}
+					g_currentWorld = name;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Delete") && !isCurrent) {
+					std::filesystem::remove(MakeSavePath(name));
+				}
+				ImGui::PopID();
 			}
-
-			ImGui::SameLine();
-			if (exists && ImGui::Button("Load")) {
-				LoadWorldFromSlot(slot, world, renderer, gfxDevice, scene, loaded);
-			}
-			ImGui::SameLine();
-			ImGui::TextDisabled(exists ? "[saved]" : "[empty]");
-
-			ImGui::PopID();
 		}
 
 		ImGui::Separator();

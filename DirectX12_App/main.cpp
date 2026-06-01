@@ -487,7 +487,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Separator();
 		ImGui::Text("World: %s", g_currentWorld.c_str());
 
+		// 新規ワールドを作る
+		ImGui::Text("Generate New World");
+		if (ImGui::Button("New")) {
+			UnloadAllChunks(world, renderer, gfxDevice, scene, loaded);
+			world.ClearEdits();
+			world.SetSeed(std::random_device{}());
+			g_currentWorld = "NewWorld";
+		}
+
 		// 名前を入力して新規セーブを作成
+		ImGui::Separator();
 		static char saveNameBuffer[64] = "";
 		ImGui::InputText("Save Name", saveNameBuffer, sizeof(saveNameBuffer));
 		ImGui::SameLine();
@@ -506,12 +516,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::EndDisabled();
 		}
 
-		// 現在のワールドに上書き保存
+		// 現在開いているワールドフォルダに上書き保存
 		ImGui::SameLine();
 		if (ImGui::Button("Overwrite")) {
 			world.SaveToFile(MakeSavePath(g_currentWorld));
 		}
-
+		
 		// セーブ
 		ImGui::Separator();
 		ImGui::Text("Saved Worlds");

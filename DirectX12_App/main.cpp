@@ -129,6 +129,27 @@ namespace {
 		}
 	}
 
+	// すべてのチャンクをクリアする
+	void UnloadAllChunks(World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
+						std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
+		// GPUの処理を待つ
+		gfx.WaitForGPU();
+
+		// Rendererのチャンクメッシュを解放
+		for (auto& [coord, loadedChunk] : loaded) {
+			renderer.ReleaseChunkMesh(loadedChunk.meshIndex, gfx);
+		}
+		loaded.clear();
+
+		// SceneからチャンクのSceneObjectを削除する
+		auto& objects = scene.GetObjects();
+		objects.erase(std::remove_if(objects.begin(), objects.end(), [](const SceneObject& object) {
+			return strncmp(object.name, "Chunk", 5) == 0;}), objects.end());
+
+		// Worldのチャンクデータをクリア
+		world.ClearChunks();
+	}
+
 	// 更新したチャンクの隣接するチャンクを更新
 	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
 		// 書き換えたブロックが属するチャンク座標とローカル座標を計算

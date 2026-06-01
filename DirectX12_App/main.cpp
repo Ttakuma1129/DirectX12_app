@@ -150,6 +150,20 @@ namespace {
 		world.ClearChunks();
 	}
 
+	// スロットに入っているワールドデータを読み込む
+	void LoadWorldFromSlot(int slot, World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
+						std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
+		// 現在のワールドを破棄する
+		UnloadAllChunks(world, renderer, gfx, scene, loaded);
+
+		// スロットのファイルをロード
+		if (!world.LoadFromFile(GetSavePath(slot))) {
+			// 失敗した場合新規ワールドを作成
+			world.SetSeed(std::random_device{}());
+		}
+		g_currentSlot = slot;
+	}
+
 	// 更新したチャンクの隣接するチャンクを更新
 	void UpdateChunkNeighbors(int worldX, int worldY, int worldZ, World& world, Renderer& renderer, GfxDevice& gfxDevice, const std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
 		// 書き換えたブロックが属するチャンク座標とローカル座標を計算

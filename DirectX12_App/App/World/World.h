@@ -81,6 +81,11 @@ public:
 		m_chunks.erase(coord);
 	}
 
+	// ワールド編集データを消去
+	void ClearEdits() {
+		m_edits.clear();
+	}
+
 	// 該当チャンクのポインタを取得
 	Chunk* GetChunkPtr(const ChunkCoord& coord) {
 		auto it = m_chunks.find(coord);

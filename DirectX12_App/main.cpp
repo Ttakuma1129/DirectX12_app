@@ -21,8 +21,9 @@ namespace {
 	const int HOTBAR_SIZE = 5;
 
 	const std::string SAVE_DIRECTORY = "saves";
+	const std::string SAVE_EXTENSION = ".dat";
 	const int SAVE_SLOT_COUNT = 4;
-	int g_currentSlot = 1; // 起動時に開いたスロット
+	std::string g_currentWorld = "default";
 
 	BlockType g_hotbar[HOTBAR_SIZE] = {
 		BlockType::Grass,
@@ -46,9 +47,10 @@ namespace {
 		}
 	}
 
-	std::string GetSavePath(int slot) {
+	// セーブフォルダのパスを作る フォルダが無ければ作る
+	std::string MakeSavePath(const std::string& name) {
 		std::filesystem::create_directory(SAVE_DIRECTORY);
-		return SAVE_DIRECTORY + "/world" + std::to_string(slot) + ".dat";
+		return SAVE_DIRECTORY + "/" + name + SAVE_EXTENSION;
 	}
 
 	// プレイヤーの位置に合わせてチャンクをロード・アンロードする
@@ -155,6 +157,22 @@ namespace {
 		world.ClearChunks();
 	}
 
+	// savesにあるセーブフォルダのリストを取得
+	std::vector<std::string> ListSaveFile() {
+		std::vector<std::string> names;
+		if (!std::filesystem::exists(SAVE_DIRECTORY)) {
+			return names;
+		}
+
+		for (const auto& entry : std::filesystem::directory_iterator(SAVE_DIRECTORY)) {
+			if (entry.is_regular_file() && entry.path().extension() == SAVE_EXTENSION) {
+				names.push_back(entry.path().stem().string());
+			}
+		}
+		std::sort(names.begin(), names.end());
+		return names;
+	}
+
 	// スロットに入っているワールドデータを読み込む
 	void LoadWorldFromSlot(int slot, World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
 						std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
@@ -246,7 +264,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// チャンクを生成
 	World world;
-	if (!world.LoadFromFile(GetSavePath(g_currentSlot))) {
+	if (!world.LoadFromFile(MakeSavePath(g_currentWorld))) {
 		world.SetSeed(std::random_device{}());
 	}
 
@@ -589,7 +607,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ImGuiシャットダウン
 	gfxDevice.WaitForGPU();
-	world.SaveToFile(GetSavePath(g_currentSlot));
+	world.SaveToFile(MakeSavePath(g_currentWorld));
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

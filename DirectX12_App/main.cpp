@@ -46,6 +46,11 @@ namespace {
 		}
 	}
 
+	std::string GetSavePath(int slot) {
+		std::filesystem::create_directory(SAVE_DIRECTORY);
+		return SAVE_DIRECTORY + "/world" + std::to_string(slot) + ".dat";
+	}
+
 	// プレイヤーの位置に合わせてチャンクをロード・アンロードする
 	void UpdateStreaming(World& world, Renderer& renderer, GfxDevice& gfx, Scene& scene,
 						 std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash>& loaded) {
@@ -158,7 +163,8 @@ namespace {
 
 		// スロットのファイルをロード
 		if (!world.LoadFromFile(GetSavePath(slot))) {
-			// 失敗した場合新規ワールドを作成
+			// 失敗した場合、編集データをを消去して新規ワールドを作成
+			world.ClearEdits();
 			world.SetSeed(std::random_device{}());
 		}
 		g_currentSlot = slot;
@@ -205,11 +211,6 @@ namespace {
 
 			renderer.UpdateChunkMeshDeferred(gfxDevice.GetDevice(), *chunkIt->second, world, coord.x, coord.z, meshIt->second.meshIndex, gfxDevice);
 		}
-	}
-
-	std::string GetSavePath(int slot) {
-		std::filesystem::create_directory(SAVE_DIRECTORY);
-		return SAVE_DIRECTORY + "/world" + std::to_string(slot) + ".dat";
 	}
 }
 
@@ -481,9 +482,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SliderFloat("Fog End", &scene.GetFogEnd(), 0.0f, 200.0f);
 
 		ImGui::Separator();
-		ImGui::Text("World");
-		if (ImGui::Button("Save")) {
-			world.SaveToFile("world.dat");
+		ImGui::Text("World Slots");
+		for (int slot = 1;slot <= SAVE_SLOT_COUNT;++slot) {
+			ImGui::PushID(slot);
+
+			std::string path = GetSavePath(slot);
+			bool exists = std::filesystem::exists(path);
+			bool current = (slot == g_currentSlot);
+
+			char label[32];
+			sprintf_s(label, "Slot %d%s", slot, current ? "(current)" : "");
+			ImGui::Text("%s", label);
+
+			ImGui::SameLine();
+			if (ImGui::Button("Save")) {
+				world.SaveToFile(GetSavePath(slot));
+				g_currentSlot = slot;
+			}
+
+			ImGui::SameLine();
+			if (exists && ImGui::Button("Load")) {
+				LoadWorldFromSlot(slot, world, renderer, gfxDevice, scene, loaded);
+			}
+			ImGui::SameLine();
+			ImGui::TextDisabled(exists ? "[saved]" : "[empty]");
+
+			ImGui::PopID();
 		}
 
 		ImGui::Separator();

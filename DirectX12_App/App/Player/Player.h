@@ -6,7 +6,7 @@ class World;
 class Player {
 public:
 	void Initialize(const DirectX::XMFLOAT3& spawnPos);
-	
+
 	// 入力によって位置と速度を更新
 	void Update(float deltaTime, const World& world, bool forward, bool backward, bool left, bool right, bool jump, float yaw);
 
@@ -15,6 +15,10 @@ public:
 
 	DirectX::XMFLOAT3 GetPosition() const {
 		return m_position;
+	}
+
+	void SetPosition(const DirectX::XMFLOAT3& pos) {
+		m_position = pos;
 	}
 
 	// 目(カメラ)の位置
@@ -37,7 +41,7 @@ private:
 	static constexpr float JUMP_SPEED = 9.0f;
 	static constexpr float GRAVITY = 28.0f;
 
-	DirectX::XMFLOAT3 m_position = { 0, 0, 0 }; // 足元の中心
+	DirectX::XMFLOAT3 m_position = { 0, 0, 0 }; // 足元の位置
 	DirectX::XMFLOAT3 m_velocity = { 0, 0, 0 };
 
 	bool m_onGround = false; // 地面に触れているかどうか(trueで地面に触れている)

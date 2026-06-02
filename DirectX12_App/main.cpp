@@ -255,6 +255,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	if (!world.LoadFromFile(MakeSavePath(g_currentWorld), spawnPos)) {
 		world.SetSeed(std::random_device{}());
 	}
+	scene.GetPlayer().SetPosition(spawnPos);
 
 	std::unordered_map<ChunkCoord, LoadedChunk, ChunkCoordHash> loaded;
 
@@ -496,6 +497,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			UnloadAllChunks(world, renderer, gfxDevice, scene, loaded);
 			world.ClearEdits();
 			world.SetSeed(std::random_device{}());
+			scene.GetPlayer().SetPosition({ 0.0f,30.0f,0.0f });
 			g_currentWorld = "NewWorld";
 		}
 

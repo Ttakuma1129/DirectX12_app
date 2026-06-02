@@ -247,9 +247,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		renderer.RegisterObject(gfxDevice.GetDevice(), gfxDevice.GetCommandQueue(), obj);
 	}
 
+	// プレイヤーの初期スポーン
+	DirectX::XMFLOAT3 spawnPos = { 0.0f,30.0f,0.0f };
+
 	// チャンクを生成
 	World world;
-	if (!world.LoadFromFile(MakeSavePath(g_currentWorld))) {
+	if (!world.LoadFromFile(MakeSavePath(g_currentWorld), spawnPos)) {
 		world.SetSeed(std::random_device{}());
 	}
 
@@ -508,7 +511,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			ImGui::BeginDisabled();
 		}
 		if (ImGui::Button("Save")) {
-			world.SaveToFile(MakeSavePath(saveNameBuffer));
+			world.SaveToFile(MakeSavePath(saveNameBuffer), scene.GetPlayer().GetPosition());
 			g_currentWorld = saveNameBuffer;
 			saveNameBuffer[0] = '\0';
 		}
@@ -519,7 +522,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 現在開いているワールドフォルダに上書き保存
 		ImGui::SameLine();
 		if (ImGui::Button("Overwrite")) {
-			world.SaveToFile(MakeSavePath(g_currentWorld));
+			world.SaveToFile(MakeSavePath(g_currentWorld), scene.GetPlayer().GetPosition());
 		}
 		
 		// セーブ
@@ -545,7 +548,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				ImGui::SameLine();
 				if (ImGui::Button("Load")) {
 					UnloadAllChunks(world, renderer, gfxDevice, scene, loaded);
-					if (!world.LoadFromFile(MakeSavePath(name))) {
+					DirectX::XMFLOAT3 newPos = { 0.0f,30.0f,0.0f };
+					if (!world.LoadFromFile(MakeSavePath(name),newPos)) {
 						world.ClearChunks();
 						world.ClearEdits();
 						world.SetSeed(std::random_device{}());
@@ -639,7 +643,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// ImGuiシャットダウン
 	gfxDevice.WaitForGPU();
-	world.SaveToFile(MakeSavePath(g_currentWorld));
+	world.SaveToFile(MakeSavePath(g_currentWorld),scene.GetPlayer().GetPosition());
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

@@ -101,7 +101,7 @@ public:
 	bool SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerPos)const;
 
 	// ファイルの情報からワールドをロードする
-	bool LoadFromFile(const std::string& path);
+	bool LoadFromFile(const std::string& path, DirectX::XMFLOAT3& outPlayerPos);
 
 	// 全チャンクの取得
 	const std::unordered_map<ChunkCoord, std::unique_ptr<Chunk>, ChunkCoordHash>& GetChunks() const {

@@ -172,6 +172,7 @@ bool World::SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerP
 		return false;
 	}
 
+	// バージョン、シード値、プレイヤーの位置を書き込む
 	const char magic[4] = { 'V','X','L','W' };
 	uint32_t version = 2;
 	file.write(magic, 4);
@@ -181,9 +182,11 @@ bool World::SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerP
 	file.write(reinterpret_cast<const char*>(&playerPos.y), sizeof(float));
 	file.write(reinterpret_cast<const char*>(&playerPos.x), sizeof(float));
 
+	// チャンクカウントを書き込む
 	uint32_t chunkCount = static_cast<uint32_t>(m_edits.size());
 	file.write(reinterpret_cast<const char*>(&chunkCount), sizeof(chunkCount));
 
+	// 編集された位置とブロック情報を書き込む
 	for (const auto& [coord, edits] : m_edits) {
 		int32_t cx = coord.x, cz = coord.z;
 		uint32_t editCount = static_cast<uint32_t>(edits.size());
@@ -203,7 +206,7 @@ bool World::SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerP
 	return static_cast<bool>(file);
 }
 
-bool World::LoadFromFile(const std::string& path) {
+bool World::LoadFromFile(const std::string& path, DirectX::XMFLOAT3& outPlayerPos) {
 	std::ifstream file(path, std::ios::binary);
 	if (!file) {
 		return false;
@@ -216,7 +219,7 @@ bool World::LoadFromFile(const std::string& path) {
 	if (!file || magic[0] != 'V' || magic[1] != 'X' || magic[2] != 'L'|| magic[3] != 'W') {
 		return false;
 	}
-	if (version != 1) {
+	if (version != 2) {
 		return false;
 	}
 
@@ -230,6 +233,11 @@ bool World::LoadFromFile(const std::string& path) {
 	m_chunks.clear();
 	m_edits.clear();
 	m_seed = seed;
+
+	// プレイヤーの位置を読み込む
+	file.read(reinterpret_cast<char*>(&outPlayerPos.x), sizeof(float));
+	file.read(reinterpret_cast<char*>(&outPlayerPos.y), sizeof(float));
+	file.read(reinterpret_cast<char*>(&outPlayerPos.z), sizeof(float));
 
 	// チャンク情報と編集情報を読み込む
 	uint32_t chunkCount = 0;

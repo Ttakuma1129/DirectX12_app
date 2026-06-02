@@ -166,17 +166,20 @@ RaycastResult World::Raycast(const DirectX::XMFLOAT3& origin, const DirectX::XMF
 	return result;
 }
 
-bool World::SaveToFile(const std::string& path)const {
+bool World::SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerPos)const {
 	std::ofstream file(path, std::ios::binary);
 	if (!file) {
 		return false;
 	}
 
 	const char magic[4] = { 'V','X','L','W' };
-	uint32_t version = 1;
+	uint32_t version = 2;
 	file.write(magic, 4);
 	file.write(reinterpret_cast<const char*>(&version), sizeof(version));
 	file.write(reinterpret_cast<const char*>(&m_seed), sizeof(m_seed));
+	file.write(reinterpret_cast<const char*>(&playerPos.x), sizeof(float));
+	file.write(reinterpret_cast<const char*>(&playerPos.y), sizeof(float));
+	file.write(reinterpret_cast<const char*>(&playerPos.x), sizeof(float));
 
 	uint32_t chunkCount = static_cast<uint32_t>(m_edits.size());
 	file.write(reinterpret_cast<const char*>(&chunkCount), sizeof(chunkCount));

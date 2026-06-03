@@ -87,14 +87,17 @@ Windows SDK 10.0.x
 
 ## ディレクトリ構成
 
-App/        ゲームロジック（Player, Scene, World, Chunk）
-Engine/     エンジン層
-|- Core/      （Window, FPSCamera）
-|- Graphics/  （GfxDevice, Renderer, PSO, Skybox など）
-|-  Math/      （Frustum）
-|- Resources/ （Mesh, Texture, ModelLoader など）
-Shaders/    HLSL シェーダー
-ThirdParty/ 外部ライブラリ
+```text
+DirectX12_App/
+├─ App/        ゲームロジック（Player, Scene, World, Chunk）
+├─ Engine/     エンジン層
+│  ├─ Core/      （Window, FPSCamera）
+│  ├─ Graphics/  （GfxDevice, Renderer, PSO, Skybox など）
+│  ├─ Math/      （Frustum）
+│  └─ Resources/ （Mesh, Texture, ModelLoader など）
+├─ Shaders/    HLSL シェーダー
+└─ ThirdParty/ 外部ライブラリ
+```
 
 
 ## 今後実装していきたいこと

@@ -180,7 +180,7 @@ bool World::SaveToFile(const std::string& path, const DirectX::XMFLOAT3& playerP
 	file.write(reinterpret_cast<const char*>(&m_seed), sizeof(m_seed));
 	file.write(reinterpret_cast<const char*>(&playerPos.x), sizeof(float));
 	file.write(reinterpret_cast<const char*>(&playerPos.y), sizeof(float));
-	file.write(reinterpret_cast<const char*>(&playerPos.x), sizeof(float));
+	file.write(reinterpret_cast<const char*>(&playerPos.z), sizeof(float));
 
 	// チャンクカウントを書き込む
 	uint32_t chunkCount = static_cast<uint32_t>(m_edits.size());

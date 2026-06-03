@@ -556,6 +556,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 						world.ClearEdits();
 						world.SetSeed(std::random_device{}());
 					}
+					scene.GetPlayer().SetPosition(newPos);
 					g_currentWorld = name;
 				}
 				ImGui::SameLine();

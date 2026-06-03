@@ -1,6 +1,9 @@
+#include <iostream>
+#include <algorithm>
+
 #include "GfxDevice.h"
 #include "../ThirdParty/stb_image.h"
-#include <iostream>
+
 
 GfxDevice::~GfxDevice() {
 	// フレームのGPU処理完了を待つ
@@ -200,6 +203,13 @@ void GfxDevice::BeginFrame() {
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
+	// 完了済みのフェンス値のリソースを解放
+	uint64_t completed = m_fence->GetCompletedValue();
+	m_releaseQueue.erase(std::remove_if(
+		m_releaseQueue.begin(), m_releaseQueue.end(), [completed](const auto& e) {
+			return e.first <= completed;
+		}), m_releaseQueue.end());
+
 	// コマンド記録開始
 	m_commandContext.Begin(m_frames[m_frameIndex].GetAllocator());
 
@@ -218,6 +228,14 @@ void GfxDevice::BeginFrame() {
 	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
+void GfxDevice::WaitForGPU() {
+	m_commandQueue->Signal(m_fence.Get(), ++m_fenceValue);
+	if (m_fence->GetCompletedValue() < m_fenceValue) {
+		m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
+		WaitForSingleObject(m_fenceEvent, INFINITE);
+	}
+}
+
 void GfxDevice::EndFrame() {
 	// RENDER_TARGETからPRESENTへバリアを変更
 	m_commandContext.TransitionBarrier(m_backBuffers[m_frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
@@ -234,4 +252,10 @@ void GfxDevice::EndFrame() {
 	// GPUの処理が終わったらm_fenceValueを増やす
 	m_frames[m_frameIndex].fenceValue = ++m_fenceValue;
 	m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
+
+	// このフレームで登録された遅延解放をfence値に紐づける
+	for (auto& release : m_pendingThisFrame) {
+		m_releaseQueue.emplace_back(m_fenceValue, std::move(release));
+	}
+	m_pendingThisFrame.clear();
 }

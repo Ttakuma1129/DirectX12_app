@@ -8,6 +8,16 @@ struct MouseInput {
 	int wheelDelta = 0;
 	bool leftDown = false;
 	bool middleDown = false;
+	bool rightDown = false;
+	bool leftClicked = false;
+	bool rightClicked = false;
+};
+
+struct KeyboardInput{
+	bool w = false, a = false, s = false, d = false;
+	bool space = false, shift = false;
+	bool escape = false;
+	bool escapePressed = false;
 };
 
 class Window {
@@ -22,9 +32,20 @@ public:
 
 	void ResetMouseDelta();
 
+	void SetMouseCaptured(bool capture);
+
+	bool IsMouseCaptured() const {
+		return m_mouseCaptured;
+	}
+
 	// マウス入力を返す
 	const MouseInput& GetMouseInput() const {
 		return m_mouse;
+	}
+
+	// キー入力を返す
+	const KeyboardInput& GetKeyboardInput() const {
+		return m_keyboard;
 	}
 
 	// DirectXの初期化に必要なハンドル
@@ -50,6 +71,9 @@ private:
 	MouseInput m_mouse;
 	int m_lastMouseX = 0;
 	int m_lastMouseY = 0;
+	bool m_mouseCaptured = false;
+
+	KeyboardInput m_keyboard;
 
 	static Window* s_instance;
 };

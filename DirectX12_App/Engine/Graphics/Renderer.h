@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "RootSignature.h"
 #include "PipelineState.h"
@@ -16,8 +17,12 @@
 #include "../Resources/Texture.h"
 #include "../Resources/ModelLoader.h"
 #include "../Resources/SceneObject.h"
+#include "../Math/Frustum.h"
 
-class  Scene;
+class GfxDevice;
+class Scene;
+class Chunk;
+class World;
 
 class Renderer{
 public:
@@ -28,7 +33,7 @@ public:
 	bool InitializeShadow(ID3D12Device* device);
 
 	// メッシュを読み込みインデックスを返す
-	int LoadMesh(ID3D12Device* device, const std::string& filepath);
+	int LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath);
 
 	// テクスチャを読み込みインデックスを返す
 	int LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath);
@@ -46,6 +51,22 @@ public:
 	// オブジェクト登録
 	int RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj);
 
+	int RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, const std::string& texturePath, SceneObject& obj);
+
+	bool UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex);
+
+	// チャンクを遅延更新する
+	void UpdateChunkMeshDeferred(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex, GfxDevice& gfxDevice);
+
+	// チャンクのメッシュを生成し、meshIndexを返す
+	int CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ);
+
+	// m_pendingUploadSlotsのコピーコマンドを今フレームのコマンドリストに記録
+	void FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice& gfxDevice);
+
+	// チャンクのリソースを解放する
+	void ReleaseChunkMesh(uint32_t meshIndex, GfxDevice& gfxDevice);
+
 	DescriptorHeap& GetImGuiSrvHeap() {
 		return m_imguiSrvHeap;
 	}
@@ -60,9 +81,20 @@ public:
 		return m_skyboxEnabled;
 	}
 
+	// ImGui用ゲッター
+	uint32_t GetVisibleChunkCount() const {
+		return m_visibleChunkCount;
+	}
+	uint32_t GetTotalChunkCount() const {
+		return m_totalChunkCount;
+	}
+	bool& GetCullingEnabled() {
+		return m_cullingEnabled;
+	}
+
 private:
 	static constexpr uint32_t FRAME_COUNT = 2;
-	static constexpr uint32_t MAX_OBJECTS = 16;
+	static constexpr uint32_t MAX_OBJECTS = 128;
 	static constexpr uint32_t MAX_TEXTURES = 32;
 	static constexpr uint32_t SHADOW_MAP_SIZE = 2048;
 	static constexpr uint32_t SHADOW_SRV_SLOT = MAX_TEXTURES - 1;
@@ -72,12 +104,19 @@ private:
 	DescriptorHeap m_srvHeap; // srv
 	DescriptorHeap m_imguiSrvHeap; // ImGUI用ディスクリプタヒープ
 	Skybox m_skybox;
+	Frustum m_frustum;
+
+	bool m_cullingEnabled = true;
+	uint32_t m_visibleChunkCount = 0;
+	uint32_t m_totalChunkCount = 0;
 
 	bool m_skyboxEnabled = false;
 	
 	// メッシュ管理
 	std::vector<Mesh> m_meshes;
 	std::vector<std::string> m_modelPaths;
+	std::vector<uint32_t> m_freeMeshSlots;
+	std::unordered_set<uint32_t> m_pendingUploadSlots;
 	std::unordered_map<std::string, uint32_t> m_meshMap;
 
 	// テクスチャ管理
@@ -93,4 +132,6 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_objectCB[FRAME_COUNT][MAX_OBJECTS]; // オブジェクトごとの定数バッファ
 	ObjectConstant* m_objectMapped[FRAME_COUNT][MAX_OBJECTS] = {}; // オブジェクトごとのマップ
+
+	bool CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh);
 };

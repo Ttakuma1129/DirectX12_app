@@ -61,6 +61,24 @@
     <Filter Include="ヘッダー ファイル\ThirdParty\ImGUI\backends">
       <UniqueIdentifier>{b758be67-2a04-4f56-acc7-51362f2ec075}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\App\World">
+      <UniqueIdentifier>{e3e9292e-3593-40d9-be55-defb59b96c8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\World">
+      <UniqueIdentifier>{e34f5500-f828-431b-b35d-9581b1d1dc7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\App\Player">
+      <UniqueIdentifier>{ec7d4b88-41f3-4a3c-a99a-b27afdafb04e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\App\Player">
+      <UniqueIdentifier>{4bf1a560-9381-4e4d-b1e5-1d442e42ff52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Engine\Math">
+      <UniqueIdentifier>{bde81f4b-ed1f-4b99-8d80-2201a770ff99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Engine\Math">
+      <UniqueIdentifier>{5c027e9f-07e8-4a87-8f1e-4f047309d6d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,8 +150,23 @@
     <ClCompile Include="Engine\Graphics\Skybox.cpp">
       <Filter>ソース ファイル\Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Camera.cpp">
+    <ClCompile Include="App\World\Chunk.cpp">
+      <Filter>ソース ファイル\App\World</Filter>
+    </ClCompile>
+    <ClCompile Include="App\World\World.cpp">
+      <Filter>ソース ファイル\App\World</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ThirdParty\stb_perlin_impl.cpp">
+      <Filter>ソース ファイル\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\FPSCamera.cpp">
       <Filter>ソース ファイル\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="App\Player\Player.cpp">
+      <Filter>ソース ファイル\App\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Math\Frustum.cpp">
+      <Filter>ソース ファイル\Engine\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,21 +236,45 @@
     <ClInclude Include="Engine\Resources\ModelLoader.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Resources\CubeMapTexture.h">
-      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Graphics\Skybox.h">
       <Filter>ヘッダー ファイル\Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Resources\SceneObject.h">
       <Filter>ヘッダー ファイル\Engine\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Camera.h">
+    <ClInclude Include="App\World\BlockType.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\BlockTexture.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\World.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ThirdParty\stb_perlin.h">
+      <Filter>ヘッダー ファイル\ThirdParty</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\FPSCamera.h">
       <Filter>ヘッダー ファイル\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="App\Player\Player.h">
+      <Filter>ヘッダー ファイル\App\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Math\Frustum.h">
+      <Filter>ヘッダー ファイル\Engine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Resources\CubeMapTexture.h">
+      <Filter>ヘッダー ファイル\Engine\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="App\World\Chunk.h">
+      <Filter>ヘッダー ファイル\App\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shaders\Common.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Shaders\PixelShader.hlsl">

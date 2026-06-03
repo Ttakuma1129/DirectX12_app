@@ -47,7 +47,7 @@ bool RootSignature::Initialize(ID3D12Device* device) {
 
 	// StaticSamplerÇÃê›íË
 	D3D12_STATIC_SAMPLER_DESC smpDesc = {};
-	smpDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	smpDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
 	smpDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	smpDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 	smpDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

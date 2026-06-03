@@ -3,6 +3,8 @@
 #include <dxgi1_6.h>
 #include <wrl/client.h>
 #include <cstdint>
+#include <vector>
+#include <utility>
 
 #include "DescriptorHeap.h"
 #include "../Resources/FrameResources.h"
@@ -25,7 +27,16 @@ public:
 
 	void BeginFrame();
 
+	void WaitForGPU();
+
 	void EndFrame();
+
+	// このフレームのGPU処理完了後に解放したいリソースを登録
+	void EnqueueDeffedRelease(Microsoft::WRL::ComPtr<ID3D12Resource> resource) {
+		if (resource) {
+			m_pendingThisFrame.push_back(std::move(resource));
+		}
+	}
 
 	// 外部から取得するためのゲッター
 	ID3D12Device* GetDevice() const {
@@ -86,6 +97,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_backBuffers[FRAME_COUNT]; // バックバッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> m_depthBuffer; // 深度バッファ
 	FrameResources m_frames[FRAME_COUNT]; // フレームリソース
+	// このフレーム中にEnqueueされたフェンス値が決まっていないリソースを一時的に貯めておくバッファ
+	std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> m_pendingThisFrame;
+	// {fence値, リソース} フェンス値とペアの解放待機リソース
+	std::vector<std::pair<uint64_t, Microsoft::WRL::ComPtr<ID3D12Resource>>> m_releaseQueue;
 
 	UINT64 m_fenceValue = 0;
 	HANDLE m_fenceEvent = nullptr;

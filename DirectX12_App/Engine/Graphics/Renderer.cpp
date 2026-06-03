@@ -1,5 +1,7 @@
 #include "Renderer.h"
+#include "GfxDevice.h"
 #include "../../App/Scene.h"
+#include "../../App/World/Chunk.h"
 #include "CommandContext.h"
 
 #include "../ThirdParty/stb_image.h"
@@ -18,7 +20,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	hr = D3DCompileFromFile(
 		L"Shaders/VertexShader.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -38,7 +40,7 @@ bool Renderer::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	hr = D3DCompileFromFile(
 		L"Shaders/PixelShader.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -177,7 +179,7 @@ bool Renderer::InitializeShadow(ID3D12Device* device) {
 	hr = D3DCompileFromFile(
 		L"Shaders/ShadowVS.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -255,7 +257,7 @@ bool Renderer::InitializeShadow(ID3D12Device* device) {
 	return true;
 }
 
-int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
+int Renderer::LoadMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const std::string& filepath) {
 	// 読み込み済みならインデックスを返す
 	auto it = m_meshMap.find(filepath);
 	if (it != m_meshMap.end()) {
@@ -270,15 +272,16 @@ int Renderer::LoadMesh(ID3D12Device* device, const std::string& filepath) {
 
 	// メッシュ作成
 	Mesh mesh;
-	if (!mesh.Create(
+	if (!CreateMeshWithUpload(
 		device,
+		commandQueue,
 		modelData.vertices.data(),
 		static_cast<uint32_t>(modelData.vertices.size() * sizeof(ModelVertex)),
 		sizeof(ModelVertex),
 		modelData.indices.data(),
-		static_cast<uint32_t>(modelData.indices.size()))) {
+		static_cast<uint32_t>(modelData.indices.size()),
+		mesh)) {
 		return -1;
-
 	}
 
 	uint32_t index = static_cast<uint32_t>(m_meshes.size());
@@ -296,7 +299,7 @@ int Renderer::LoadTexture(ID3D12Device* device, ID3D12CommandQueue* commandQueue
 	}
 
 	// スロット上限かチェック
-	if (m_srvSlot >= MAX_TEXTURES) {
+	if (m_srvSlot >= SHADOW_SRV_SLOT) {
 		OutputDebugStringA("Texture slot limit reached\n");
 		return -1;
 	}
@@ -380,10 +383,27 @@ void Renderer::Render(
 	const auto& objects = scene.GetObjects();
 	uint32_t count = min(static_cast<uint32_t>(objects.size()), MAX_OBJECTS);
 
+	// プレイヤーの位置
+	DirectX::XMFLOAT3 playerPos = scene.GetPlayer().GetPosition();
+
+	const float SHADOW_AREA = 40.f;
+	
+	// 1テクセルが何ワールド単位かを計算
+	float worldUnitsPerTexel = SHADOW_AREA / static_cast<float>(SHADOW_MAP_SIZE);
+
+	// プレイヤー位置をテクセル境界にスナップ
+	float snappedX = floorf(playerPos.x / worldUnitsPerTexel) * worldUnitsPerTexel;
+	float snappedZ = floorf(playerPos.z / worldUnitsPerTexel) * worldUnitsPerTexel;
+
+	// 影を落とす位置の中心
+	XMVECTOR sceneCenter = XMVectorSet(snappedX, playerPos.y, snappedZ, 0.0f);
+
 	// ライトのVP行列を計算
 	const float* dir = scene.GetLightDir();
 	XMVECTOR lightDir = XMVector3Normalize(XMVectorSet(dir[0], dir[1], dir[2], 0.0f));
-	XMVECTOR lightPos = -lightDir * 20.0f;
+	
+	// 中心から見て光源側へ離れた位置にライトカメラを置く
+	XMVECTOR lightPos = sceneCenter - lightDir * 40.0f;
 	XMVECTOR up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 	// ライトが真上、真下を向いているときのup補正
@@ -391,13 +411,13 @@ void Renderer::Render(
 		up = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
-	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, XMVectorZero(), up);
-	XMMATRIX lightProj = XMMatrixOrthographicLH(20.0f, 20.0f, 0.1f, 50.0f);
+	XMMATRIX lightView = XMMatrixLookAtLH(lightPos, sceneCenter, up);
+	XMMATRIX lightProj = XMMatrixOrthographicLH(SHADOW_AREA, SHADOW_AREA, 0.1f, 150.0f);
 	XMMATRIX lightVP = lightView * lightProj;	
 
 	// 定数バッファを書き込み
 	SceneConstant* mapped = frame.GetConstantMapped();
-	const Camera& camera = scene.GetCamera();
+	const FPSCamera& camera = scene.GetFPSCamera();
 	XMStoreFloat4x4(&mapped->view, XMMatrixTranspose(camera.GetViewMatrix()));
 	XMStoreFloat4x4(&mapped->proj, XMMatrixTranspose(camera.GetProjMatrix()));
 
@@ -418,6 +438,11 @@ void Renderer::Render(
 	XMStoreFloat4x4(&mapped->lightViewProj, XMMatrixTranspose(lightVP));
 	mapped->shadowParams = { scene.GetShadowBias(),static_cast<float>(SHADOW_MAP_SIZE),0.0f,0.0f };
 	
+	// フォグ情報を書き込み
+	const float* fog = scene.GetFogColor();
+	mapped->fogColor = { fog[0], fog[1], fog[2], 1.0f };
+	mapped->fogParams = { scene.GetFogStart(), scene.GetFogEnd(), 0.0f,0.0f };
+
 	// オブジェクトごとのModel行列を書き込む
 	for (uint32_t o = 0; o < count; ++o) {
 		if (objects[o].meshIndex >= m_meshes.size()) {
@@ -535,9 +560,44 @@ void Renderer::Render(
 		cmdList->SetGraphicsRootDescriptorTable(3, m_srvHeap.GetGPUHandle(SHADOW_SRV_SLOT));
 	}
 
+	// フラムカリング
+	// VP行列を計算
+	XMMATRIX view = scene.GetFPSCamera().GetViewMatrix();
+	XMMATRIX proj = scene.GetFPSCamera().GetProjMatrix();
+	XMMATRIX viewProj = view * proj;
+
+	// 6平面を抽出
+	m_frustum.ExtractFormMatrix(viewProj);
+
+	// カウンタをリセット
+	m_visibleChunkCount = 0;
+	m_totalChunkCount = 0;
+
 	// 描画ループ
-	for (uint32_t o = 0; o < count; ++o) {
-		const auto& obj = objects[o];
+	for (uint32_t i = 0;i < count;++i) {
+		const auto& obj = objects[i];
+
+		// チャンク判定
+		bool isChunk = (strncmp(obj.name, "Chunk", 5) == 0);
+
+		if (isChunk) {
+			++m_totalChunkCount;
+
+			if (m_cullingEnabled) {
+				// チャンクのAABBを計算
+				XMFLOAT3 mn = { obj.position[0], obj.position[1], obj.position[2] };
+				XMFLOAT3 mx = {
+					obj.position[0] + (float)Chunk::CHUNK_SIZE,
+					obj.position[1] + (float)Chunk::HEIGHT,
+					obj.position[2] + (float)Chunk::CHUNK_SIZE,
+				};
+				// フラスタム外ならスキップ
+				if (!m_frustum.IntersectsAABB(mn, mx)) {
+					continue;
+				}
+			}
+			++m_visibleChunkCount;
+		}
 
 		// メッシュが存在するかを確認
 		if (obj.meshIndex >= m_meshes.size()) {
@@ -545,11 +605,16 @@ void Renderer::Render(
 		}
 
 		// オブジェクト定数をバインド
-		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][o]->GetGPUVirtualAddress());
+		cmdList->SetGraphicsRootConstantBufferView(1, m_objectCB[frameIndex][i]->GetGPUVirtualAddress());
 
 		// オブジェクトごとにテクスチャを切り替え
 		if (obj.textureIndex < m_srvSlot) {
 			cmdList->SetGraphicsRootDescriptorTable(2, m_srvHeap.GetGPUHandle(obj.textureIndex));
+		}
+
+		// メッシュが空なら描画をスキップ
+		if (m_meshes[obj.meshIndex].IsEmpty()) {
+			continue;
 		}
 
 		// メッシュをバインドして描画
@@ -565,7 +630,7 @@ void Renderer::Render(
 
 int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQueue, SceneObject& obj) {
 	// メッシュ登録
-	int meshIdx = LoadMesh(device, obj.modelPath);
+	int meshIdx = LoadMesh(device, commandQueue, obj.modelPath);
 	if (meshIdx<0) {
 		return -1;
 	}
@@ -579,4 +644,188 @@ int Renderer::RegisterObject(ID3D12Device* device, ID3D12CommandQueue* commandQu
 	obj.textureIndex=texIdx;
 
 	return 0;
+}
+
+int Renderer::RegisterChunk(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world,int chunkX, int chunkZ, const std::string& texturePath, SceneObject& obj) {
+	// チャンクからメッシュデータを生成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	if (vertices.empty()) {
+		return -1;
+	}
+
+	// Meshを作成して登録
+	Mesh mesh;
+	if (!CreateMeshWithUpload(
+		device,
+		commandQueue,
+		vertices.data(),
+		static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)),
+		sizeof(ModelVertex),
+		indices.data(),
+		static_cast<uint32_t>(indices.size()),
+		mesh)) {
+		return -1;
+	}
+
+	// チャンク専用メッシュ
+	uint32_t meshIndex = static_cast<uint32_t>(m_meshes.size());
+	m_meshes.push_back(std::move(mesh));
+	m_modelPaths.push_back("__chunk_" + std::to_string(meshIndex));
+	m_meshMap["__chunk_" + std::to_string(meshIndex)] = meshIndex;
+
+	obj.meshIndex = meshIndex;
+
+	// テクスチャ登録
+	int texIndex = LoadTexture(device, commandQueue, texturePath);
+	if (texIndex < 0) {
+		return -1;
+	}
+	obj.textureIndex = texIndex;
+
+	return 0;
+}
+
+bool Renderer::UpdateChunkMesh(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex) {
+	// チャンクからメッシュデータを生成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 頂点が空の場合
+	if (vertices.empty()) {
+		m_meshes[meshIndex] = Mesh();
+		return true;
+	}
+
+	if (meshIndex >= m_meshes.size()) {
+		return false;
+	}
+
+	if (!CreateMeshWithUpload(device, commandQueue, vertices.data(), static_cast<uint32_t>(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex), indices.data(), static_cast<uint32_t>(indices.size()), m_meshes[meshIndex])) {
+		return false;
+	}
+
+	return true;
+}
+
+void Renderer::UpdateChunkMeshDeferred(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ, uint32_t meshIndex, GfxDevice& gfxDevice) {
+	if (meshIndex >= m_meshes.size()) {
+		return;
+	}
+
+	// 新しいメッシュデータを作成
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 古いバッファは遅延解放する
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVertexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIndexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVbUpload());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIbUpload());
+
+	// 空チャンクになった場合
+	if (vertices.empty()) {
+		m_meshes[meshIndex] = Mesh();
+		return;
+	}
+
+	// 新バッファを作成(COPY_DEST)し、コピーはFlushPendingUploadで記録
+	if (!m_meshes[meshIndex].CreateDeferred(device, vertices.data(),
+		(uint32_t)(vertices.size() * sizeof(ModelVertex)), sizeof(ModelVertex),
+		indices.data(), (uint32_t)indices.size())) {
+		return;
+	}
+	m_pendingUploadSlots.insert(meshIndex);
+}
+
+int Renderer::CreateChunkMesh(ID3D12Device* device, const Chunk& chunk, const World& world, int chunkX, int chunkZ){
+	std::vector<ModelVertex> vertices;
+	std::vector<uint16_t> indices;
+	chunk.BuildMesh(world, chunkX, chunkZ, vertices, indices);
+
+	// 空きスロットがあれば再利用、無ければ末尾に追加
+	uint32_t meshIndex;
+	if (!m_freeMeshSlots.empty()) {
+		meshIndex = m_freeMeshSlots.back();
+		m_freeMeshSlots.pop_back();
+	}
+	else {
+		meshIndex = static_cast<uint32_t>(m_meshes.size());
+		m_meshes.push_back(Mesh());
+		m_modelPaths.push_back("__chunk");
+	}
+
+	if (vertices.empty()) {
+		m_meshes[meshIndex] = Mesh();
+		return static_cast<int>(meshIndex);
+	}
+
+	if (!m_meshes[meshIndex].CreateDeferred(device,vertices.data(),(uint32_t)(vertices.size()*sizeof(ModelVertex)), sizeof(ModelVertex),indices.data(),(uint32_t)indices.size())) {
+		return -1;
+	}
+	m_pendingUploadSlots.insert(meshIndex);
+	return (int)meshIndex;
+}
+
+void Renderer::FlushPendingUploads(ID3D12GraphicsCommandList* cmdList, GfxDevice& gfxDevice) {
+	for (uint32_t slot : m_pendingUploadSlots) {
+		if (m_meshes[slot].IsEmpty()) {
+			continue;
+		}
+		// フレームにコピー＆バリアを記録
+		m_meshes[slot].RecordUpload(cmdList);
+		// 中間バッファを遅延解放
+		gfxDevice.EnqueueDeffedRelease(m_meshes[slot].TakeVbUpload());
+		gfxDevice.EnqueueDeffedRelease(m_meshes[slot].TakeIbUpload());
+	}
+	m_pendingUploadSlots.clear();
+}
+
+void Renderer::ReleaseChunkMesh(uint32_t meshIndex, GfxDevice& gfxDevice) {
+	if (meshIndex >= m_meshes.size()) {
+		return;
+	}
+	// 中間バッファを遅延解放
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeVertexBuffer());
+	gfxDevice.EnqueueDeffedRelease(m_meshes[meshIndex].TakeIndexBuffer());
+	m_meshes[meshIndex] = Mesh();
+	m_freeMeshSlots.push_back(meshIndex);
+}
+
+bool Renderer::CreateMeshWithUpload(ID3D12Device* device, ID3D12CommandQueue* commandQueue, const void* vertices, uint32_t vertexSize, uint32_t stride, const uint16_t* indices, uint32_t indexCount, Mesh& outMesh) {
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> allocator;
+	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&allocator));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	CommandContext uploadCtx;
+	uploadCtx.Initialize(device, allocator.Get());
+	uploadCtx.Begin(allocator.Get());
+
+	if (!outMesh.Create(device, uploadCtx.GetCommandList(), vertices, vertexSize, stride, indices, indexCount)) {
+		uploadCtx.End();
+		return false;
+	}
+
+	uploadCtx.End();
+	uploadCtx.Execute(commandQueue);
+
+
+	// GPU完了待ち
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
+	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HANDLE event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	commandQueue->Signal(fence.Get(), 1);
+	fence->SetEventOnCompletion(1, event);
+	WaitForSingleObject(event, INFINITE);
+	CloseHandle(event);
+
+	// 中間バッファ解放
+	outMesh.ReleaseUploadBuffer();
+	return true;
 }

@@ -1,18 +1,4 @@
-cbuffer SceneConstant : register(b0){
-    float4x4 view;
-    float4x4 proj;
-    float4 lightDir;
-    float4 lightColor;
-    float4 ambientColor;
-    float4 cameraPos;
-    float4 specularPrams;
-    float4x4 lightViewProj;
-    float4 shadowParams;
-};
-
-cbuffer ObjectConstant : register(b1){
-    float4x4 model;
-};
+#include "Common.hlsli"
 
 struct VSInput{
     float3 pos : POSITION;

@@ -6,7 +6,8 @@
 #include <string>
 
 #include "../Engine/Resources/SceneObject.h"
-#include "../Engine/Core/Camera.h"
+#include "../Engine/Core/FPSCamera.h"
+#include "Player/Player.h"
 
 class Scene {
 public:
@@ -28,8 +29,11 @@ public:
 	}
 
 	// Renderer用
-	const Camera& GetCamera() const {
-		return m_camera;
+	const FPSCamera& GetFPSCamera() const {
+		return m_fpsCamera;
+	}
+	const Player& GetPlayer() const {
+		return m_player;
 	}
 	const std::vector<SceneObject>& GetObjects() const {
 		return m_objects;
@@ -52,10 +56,22 @@ public:
 	float GetShadowBias() const {
 		return m_shadowBias;
 	}
+	const float* GetFogColor() const{
+		return m_fogColor;
+	}
+	float GetFogStart() const{
+		return m_fogStart;
+	}
+	float GetFogEnd() const{
+		return m_fogEnd;
+	}
 
 	// ImGui用
-	Camera& GetCamera() {
-		return m_camera;
+	FPSCamera& GetFPSCamera() {
+		return m_fpsCamera;
+	}
+	Player& GetPlayer() {
+		return m_player;
 	}
 	std::vector<SceneObject>& GetObjects() {
 		return m_objects;
@@ -78,25 +94,39 @@ public:
 	float& GetShadowBias() {
 		return m_shadowBias;
 	}
+	float* GetFogColor() {
+		return m_fogColor;
+	}
+	float& GetFogStart() {
+		return m_fogStart;
+	}
+	float& GetFogEnd() {
+		return m_fogEnd;
+	}
 
 private:
-	Camera m_camera;
+	FPSCamera m_fpsCamera;
+	Player m_player;
 
 	std::vector<SceneObject> m_objects;
 
 	float m_elapsed = 0.0f;
-	float m_rotationSpeed = 0.5f;
+	float m_rotationSpeed = 0.0f;
 	float m_scale = 2.0f;
 
 	// ライトパラメータ
 	float m_lightDir[3] = { -0.5f, -1.0, 0.5f };
 	float m_lightColor[3] = { 1.0f, 1.0f, 1.0f };
-	float m_ambientColor[3] = { 0.15f, 0.15f, 0.15f };
+	float m_ambientColor[3] = { 0.25f, 0.25f, 0.25f };
 	float m_specIntensity = 0.5f; // スペキュラー強度
 	float m_specShininess = 32.0f; // ハイライトの鋭さ
 
-	float m_shadowBias = 0.005f;
+	float m_shadowBias = 0.0003f;
 
+	// フォグ
+	float m_fogColor[3] = { 0.87f,0.91f,0.93 };
+	float m_fogStart = 40.0f; // フォグの開始位置
+	float m_fogEnd = 64.0f; // 終了位置
 
 	std::chrono::high_resolution_clock::time_point m_startTime; // フレームの開始時間を保存
 };

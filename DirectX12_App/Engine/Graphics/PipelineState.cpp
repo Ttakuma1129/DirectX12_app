@@ -32,6 +32,15 @@ bool PipelineState::Initialize(
 			24,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
 			0
+		},
+		{
+			"AO",
+			0,
+			DXGI_FORMAT_R32_FLOAT,
+			0,
+			32,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
 		}
 	};
 

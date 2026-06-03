@@ -11,5 +11,6 @@ struct SceneObject {
 	float position[3] = { 0,0,0 }; //オブジェクトの位置
 	float rotation[3] = { 0,0,0 }; // オブジェクトの回転(ラジアン)
 	float scale = 1.0f;
+	bool autoRotate = false;
 	char name[32] = "Object"; // ImGuiで表示する名前
 };

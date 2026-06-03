@@ -62,7 +62,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	hr = D3DCompileFromFile(
 		L"Shaders/SkyboxVS.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -82,7 +82,7 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	hr = D3DCompileFromFile(
 		L"Shaders/SkyboxPS.hlsl",
 		nullptr,
-		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"main",
 		"ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
@@ -175,8 +175,13 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 		20,21,22, 20,22,23,
 	};
 
+	CommandContext uploadContext;
+	uploadContext.Initialize(device, allocator);
+	uploadContext.Begin(allocator);
+
 	// キューブメッシュ作成
-	if (!m_cubeMesh.Create(device, skyVertices, sizeof(skyVertices), sizeof(float) * 3, skyIndices, 36)) {
+	if (!m_cubeMesh.Create(device, uploadContext.GetCommandList(), skyVertices, sizeof(skyVertices), sizeof(float) * 3, skyIndices, 36)) {
+		uploadContext.End();
 		return false;
 	}
 
@@ -184,10 +189,6 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	if (!m_srvHeap.Initialize(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1, true)) {
 		return false;
 	}
-
-	CommandContext uploadContext;
-	uploadContext.Initialize(device, allocator);
-	uploadContext.Begin(allocator);
 
 	if (!m_cubeMap.Create(device, uploadContext.GetCommandList(), faceFiles, m_srvHeap.GetCPUHandle(0))) {
 		return false;
@@ -209,6 +210,8 @@ bool Skybox::Initialize(ID3D12Device* device, ID3D12CommandQueue* commandQueue, 
 	WaitForSingleObject(event, INFINITE);
 	CloseHandle(event);
 
+	// 中間バッファ解放
+	m_cubeMesh.ReleaseUploadBuffer();
 	m_cubeMap.ReleaseUploadBuffer();
 
 	return true;

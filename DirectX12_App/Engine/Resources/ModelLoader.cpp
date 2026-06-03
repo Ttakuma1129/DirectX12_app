@@ -52,6 +52,8 @@ bool ModelLoader::LoadOBJ(const std::string& filepath, ModelData& outData) {
 				// V‚µ‚¢’¸“_‚ğì¬
 				ModelVertex vertex = {};
 
+				vertex.ambientOcclusion = 3.0f;
+
 				// ˆÊ’u
 				vertex.position[0] = attrib.vertices[3 * index.vertex_index + 0];
 				vertex.position[1] = attrib.vertices[3 * index.vertex_index + 1];

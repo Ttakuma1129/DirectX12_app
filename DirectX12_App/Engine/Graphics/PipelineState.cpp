@@ -16,11 +16,29 @@ bool PipelineState::Initialize(
 			0
 		},
 		{
-			"COLOR",
+			"NORMAL",
 			0,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			DXGI_FORMAT_R32G32B32_FLOAT,
 			0,
 			12,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"TEXCOORD",
+			0,
+			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			24,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"AO",
+			0,
+			DXGI_FORMAT_R32_FLOAT,
+			0,
+			32,
 			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
 			0
 		}
@@ -67,8 +85,13 @@ bool PipelineState::Initialize(
 	psoDesc.BlendState = blendDesc;
 
 	// DepthStencil
-	psoDesc.DepthStencilState.DepthEnable = FALSE;
+	psoDesc.DepthStencilState.DepthEnable = TRUE;
+	psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
+
+	// 深度バッファのフォーマットを指定
+	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 	// トポロジータイプ
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

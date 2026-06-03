@@ -2,6 +2,24 @@
 #include <Windows.h>
 #include <cstdint>
 
+struct MouseInput {
+	int deltaX = 0; // フレーム内の移動量
+	int deltaY = 0;
+	int wheelDelta = 0;
+	bool leftDown = false;
+	bool middleDown = false;
+	bool rightDown = false;
+	bool leftClicked = false;
+	bool rightClicked = false;
+};
+
+struct KeyboardInput{
+	bool w = false, a = false, s = false, d = false;
+	bool space = false, shift = false;
+	bool escape = false;
+	bool escapePressed = false;
+};
+
 class Window {
 public:
 	// コンストラクタ
@@ -11,6 +29,24 @@ public:
 
 	// メッセージループの処理
 	bool ProcessMessage();
+
+	void ResetMouseDelta();
+
+	void SetMouseCaptured(bool capture);
+
+	bool IsMouseCaptured() const {
+		return m_mouseCaptured;
+	}
+
+	// マウス入力を返す
+	const MouseInput& GetMouseInput() const {
+		return m_mouse;
+	}
+
+	// キー入力を返す
+	const KeyboardInput& GetKeyboardInput() const {
+		return m_keyboard;
+	}
 
 	// DirectXの初期化に必要なハンドル
 	HWND GetHwnd() const {
@@ -31,4 +67,13 @@ private:
 	WNDCLASSEX m_wndClass = {}; // ウィンドウクラス情報
 	uint32_t m_width = 0;
 	uint32_t m_height = 0;
+
+	MouseInput m_mouse;
+	int m_lastMouseX = 0;
+	int m_lastMouseY = 0;
+	bool m_mouseCaptured = false;
+
+	KeyboardInput m_keyboard;
+
+	static Window* s_instance;
 };

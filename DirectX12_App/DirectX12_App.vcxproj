@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -91,6 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -105,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -119,6 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,25 +132,73 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App\Player\Player.cpp" />
+    <ClCompile Include="App\Scene.cpp" />
+    <ClCompile Include="App\World\Chunk.cpp" />
+    <ClCompile Include="App\World\World.cpp" />
+    <ClCompile Include="Engine\Core\FPSCamera.cpp" />
     <ClCompile Include="Engine\Core\Window.cpp" />
     <ClCompile Include="Engine\Graphics\CommandContext.cpp" />
     <ClCompile Include="Engine\Graphics\DescriptorHeap.cpp" />
     <ClCompile Include="Engine\Graphics\GfxDevice.cpp" />
     <ClCompile Include="Engine\Graphics\PipelineState.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer.cpp" />
     <ClCompile Include="Engine\Graphics\RootSignature.cpp" />
+    <ClCompile Include="Engine\Graphics\Skybox.cpp" />
+    <ClCompile Include="Engine\Math\Frustum.cpp" />
+    <ClCompile Include="Engine\Resources\CubeMapTexture.cpp" />
     <ClCompile Include="Engine\Resources\FrameResources.cpp" />
+    <ClCompile Include="Engine\Resources\Mesh.cpp" />
+    <ClCompile Include="Engine\Resources\ModelLoader.cpp" />
+    <ClCompile Include="Engine\Resources\Texture.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Engine\ThirdParty\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Engine\ThirdParty\stb_image_impl.cpp" />
+    <ClCompile Include="Engine\ThirdParty\stb_perlin_impl.cpp" />
+    <ClCompile Include="Engine\ThirdParty\tiny_object_loader_impl.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App\Player\Player.h" />
+    <ClInclude Include="App\Scene.h" />
+    <ClInclude Include="App\World\BlockTexture.h" />
+    <ClInclude Include="App\World\BlockType.h" />
+    <ClInclude Include="App\World\Chunk.h" />
+    <ClInclude Include="App\World\World.h" />
+    <ClInclude Include="Engine\Core\FPSCamera.h" />
     <ClInclude Include="Engine\Core\Window.h" />
     <ClInclude Include="Engine\Graphics\CommandContext.h" />
     <ClInclude Include="Engine\Graphics\DescriptorHeap.h" />
     <ClInclude Include="Engine\Graphics\GfxDevice.h" />
     <ClInclude Include="Engine\Graphics\PipelineState.h" />
+    <ClInclude Include="Engine\Graphics\Renderer.h" />
     <ClInclude Include="Engine\Graphics\RootSignature.h" />
+    <ClInclude Include="Engine\Graphics\Skybox.h" />
+    <ClInclude Include="Engine\Math\Frustum.h" />
+    <ClInclude Include="Engine\Resources\CubeMapTexture.h" />
     <ClInclude Include="Engine\Resources\FrameResources.h" />
+    <ClInclude Include="Engine\Resources\Mesh.h" />
+    <ClInclude Include="Engine\Resources\ModelLoader.h" />
+    <ClInclude Include="Engine\Resources\SceneObject.h" />
+    <ClInclude Include="Engine\Resources\Texture.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_dx12.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\backends\imgui_impl_win32.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imconfig.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imgui_internal.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_textedit.h" />
+    <ClInclude Include="Engine\ThirdParty\imgui\imstb_truetype.h" />
+    <ClInclude Include="Engine\ThirdParty\stb_image.h" />
+    <ClInclude Include="Engine\ThirdParty\stb_perlin.h" />
+    <ClInclude Include="Engine\ThirdParty\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
+
     <CustomBuild Include="Shaders\PixelShader.hlsl">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -171,7 +223,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

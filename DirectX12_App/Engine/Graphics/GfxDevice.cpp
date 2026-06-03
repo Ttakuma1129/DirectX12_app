@@ -1,5 +1,9 @@
-#include "GfxDevice.h"
 #include <iostream>
+#include <algorithm>
+
+#include "GfxDevice.h"
+#include "../ThirdParty/stb_image.h"
+
 
 GfxDevice::~GfxDevice() {
 	// フレームのGPU処理完了を待つ
@@ -26,6 +30,8 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 #endif // _DEBUG
 
 	HRESULT hr;
+	m_width = width;
+	m_height = height;
 
 	// DXGIファクトリーの作成
 	hr = CreateDXGIFactory2(createFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory));
@@ -88,7 +94,7 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 	// IDXGISwapChain4にキャストして保存
 	swapChain.As(&m_swapChain);
 
-	// ディスクリプタヒープの作成
+	// RTV用ディスクリプタヒープの作成
 	if (!m_rtvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, FRAME_COUNT, false)) {
 		return false;
 	}
@@ -104,6 +110,55 @@ bool GfxDevice::Initialize(HWND hwnd, uint32_t width, uint32_t height) {
 			m_rtvHeap.GetCPUHandle(i)
 		);
 	}
+
+	// DSV用ディスクリプタヒープの作成
+	if (!m_dsvHeap.Initialize(m_device.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false)) {
+		return false;
+	}
+
+	// 深度バッファの設定
+	D3D12_HEAP_PROPERTIES depthHeapProps = {};
+	depthHeapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+	D3D12_RESOURCE_DESC depthResDesc = {};
+	depthResDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	depthResDesc.Width = width;
+	depthResDesc.Height = height;
+	depthResDesc.DepthOrArraySize = 1;
+	depthResDesc.MipLevels = 1;
+	depthResDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthResDesc.SampleDesc.Count = 1;
+	depthResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	depthResDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+	// クリア値設定
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = DXGI_FORMAT_D32_FLOAT;
+	clearValue.DepthStencil.Depth = 1.0f;
+	clearValue.DepthStencil.Stencil = 0;
+
+	// 深度バッファの作成
+	hr = m_device->CreateCommittedResource(
+		&depthHeapProps,
+		D3D12_HEAP_FLAG_NONE,
+		&depthResDesc,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
+		&clearValue,
+		IID_PPV_ARGS(&m_depthBuffer));
+	if (FAILED(hr)) {
+		return false;
+	}
+
+	//DSVの作成
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+
+	m_device->CreateDepthStencilView(
+		m_depthBuffer.Get(),
+		&dsvDesc,
+		m_dsvHeap.GetCPUHandle(0));
 
 	return true;
 }
@@ -134,63 +189,6 @@ bool GfxDevice::InitializeFrameResources() {
 		return false;
 	}
 
-	// RootSignatureの初期化
-	if (!m_rootSignature.Initialize(m_device.Get())) {
-		return false;
-	}
-
-	// シェーダーコンパイル
-	Microsoft::WRL::ComPtr<ID3D10Blob> vsBlob, psBlob, errorBlob;
-
-	hr = D3DCompileFromFile(
-		L"Shaders/VertexShader.hlsl",
-		nullptr,
-		nullptr,
-		"main",
-		"vs_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&vsBlob,
-		&errorBlob
-	);
-	if (FAILED(hr)) {
-		// ファイルが見つからない場合はerrorBlobもnull
-		if (errorBlob) {
-			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
-		}
-		OutputDebugStringA("VS compile failed\n");
-		return false;
-	}
-
-	hr = D3DCompileFromFile(
-		L"Shaders/PixelShader.hlsl",
-		nullptr,
-		nullptr,
-		"main",
-		"ps_5_0",
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-		0,
-		&psBlob,
-		&errorBlob
-	);
-	if (FAILED(hr)) {
-		// ファイルが見つからない場合はerrorBlobもnull
-		if (errorBlob) {
-			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
-		}
-		OutputDebugStringA("VS compile failed\n");
-		return false;
-	}
-
-	// パイプラインステートオブジェクトの作成
-	if (!m_pipelineState.Initialize(
-		m_device.Get(),
-		m_rootSignature.GetRootSignature(),
-		vsBlob->GetBufferPointer(), vsBlob->GetBufferSize(),
-		psBlob->GetBufferPointer(), psBlob->GetBufferSize())) {
-		return false;
-	}
-
 	return true;
 }
 
@@ -205,6 +203,13 @@ void GfxDevice::BeginFrame() {
 		WaitForSingleObject(m_fenceEvent, INFINITE);
 	}
 
+	// 完了済みのフェンス値のリソースを解放
+	uint64_t completed = m_fence->GetCompletedValue();
+	m_releaseQueue.erase(std::remove_if(
+		m_releaseQueue.begin(), m_releaseQueue.end(), [completed](const auto& e) {
+			return e.first <= completed;
+		}), m_releaseQueue.end());
+
 	// コマンド記録開始
 	m_commandContext.Begin(m_frames[m_frameIndex].GetAllocator());
 
@@ -214,6 +219,21 @@ void GfxDevice::BeginFrame() {
 	// レンダーターゲットをクリア
 	const float clearColor[] = { 0.0f, 0.2f,0.4f,1.0f };
 	m_commandContext.ClearRenderTarget(m_rtvHeap.GetCPUHandle(m_frameIndex), clearColor);
+
+	// コマンドリストを取得
+	auto* cmdList = m_commandContext.GetCommandList();
+	
+	// 深度バッファをクリア
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = m_dsvHeap.GetCPUHandle(0);
+	cmdList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void GfxDevice::WaitForGPU() {
+	m_commandQueue->Signal(m_fence.Get(), ++m_fenceValue);
+	if (m_fence->GetCompletedValue() < m_fenceValue) {
+		m_fence->SetEventOnCompletion(m_fenceValue, m_fenceEvent);
+		WaitForSingleObject(m_fenceEvent, INFINITE);
+	}
 }
 
 void GfxDevice::EndFrame() {
@@ -232,4 +252,10 @@ void GfxDevice::EndFrame() {
 	// GPUの処理が終わったらm_fenceValueを増やす
 	m_frames[m_frameIndex].fenceValue = ++m_fenceValue;
 	m_commandQueue->Signal(m_fence.Get(), m_fenceValue);
+
+	// このフレームで登録された遅延解放をfence値に紐づける
+	for (auto& release : m_pendingThisFrame) {
+		m_releaseQueue.emplace_back(m_fenceValue, std::move(release));
+	}
+	m_pendingThisFrame.clear();
 }

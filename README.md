@@ -89,10 +89,10 @@ Windows SDK 10.0.x
 
 App/        ゲームロジック（Player, Scene, World, Chunk）
 Engine/     エンジン層
-├── Core/      （Window, FPSCamera）
-├── Graphics/  （GfxDevice, Renderer, PSO, Skybox など）
-├── Math/      （Frustum）
-└── Resources/ （Mesh, Texture, ModelLoader など）
+|- Core/      （Window, FPSCamera）
+|- Graphics/  （GfxDevice, Renderer, PSO, Skybox など）
+|-  Math/      （Frustum）
+|- Resources/ （Mesh, Texture, ModelLoader など）
 Shaders/    HLSL シェーダー
 ThirdParty/ 外部ライブラリ
 

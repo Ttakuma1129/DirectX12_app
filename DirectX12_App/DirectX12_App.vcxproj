@@ -198,7 +198,6 @@
     <ClInclude Include="Engine\ThirdParty\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
-
     <CustomBuild Include="Shaders\PixelShader.hlsl">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -223,7 +222,16 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-
+    <None Include="Shaders\Common.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\ShadowVS.hlsl" />
+    <CustomBuild Include="Shaders\SkyboxPS.hlsl">
+      <FileType>Document</FileType>
+    </CustomBuild>
+    <CustomBuild Include="Shaders\SkyboxVS.hlsl">
+      <FileType>Document</FileType>
+    </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
